@@ -11,6 +11,62 @@ class Token_transfers extends MY_Controller {
 		$this->load->model('employee_m');
 	}
 
+	public function index()
+	{
+		$data = array(
+			'page_title' => 'История передач',
+			'active_nav' => 'transfer_history',
+		);
+		$this->load->view('templates/header', $data);
+		$this->load->view('transfer_history/index', $data);
+		$this->load->view('templates/footer', $data);
+	}
+
+	public function list_json()
+	{
+		$search    = trim((string) $this->input->get('q'));
+		$date_from = $this->parse_utc_datetime($this->input->get('date_from'));
+		$date_to   = $this->parse_utc_datetime($this->input->get('date_to'));
+
+		if ($date_from && $date_to && $date_from > $date_to)
+		{
+			$this->json_error('Дата начала не может быть позже даты окончания', 422);
+			return;
+		}
+
+		$filters = array(
+			'search'    => $search,
+			'date_from' => $date_from,
+			'date_to'   => $date_to,
+		);
+		$rows  = $this->token_transfer_m->list_filtered($filters);
+		$total = $this->token_transfer_m->count_filtered($filters);
+		$this->json_ok($rows, array('count' => count($rows), 'total' => $total));
+	}
+
+	private function parse_utc_datetime($value)
+	{
+		$value = is_string($value) ? trim($value) : '';
+		if ($value === '')
+		{
+			return NULL;
+		}
+
+		$dt = DateTime::createFromFormat('Y-m-d H:i:s', $value, new DateTimeZone('UTC'));
+		if ($dt && $dt->format('Y-m-d H:i:s') === $value)
+		{
+			return $value;
+		}
+
+		$dt = DateTime::createFromFormat('Y-m-d', $value, new DateTimeZone('UTC'));
+		if ($dt && $dt->format('Y-m-d') === $value)
+		{
+			return $dt->format('Y-m-d') . ' 00:00:00';
+		}
+
+		return NULL;
+	}
+
 	public function create($token_id)
 	{
 		$this->require_post();

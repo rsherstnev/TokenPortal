@@ -360,6 +360,15 @@
         return p(d.getDate()) + '.' + p(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
     };
 
+    App.localDateToUtc = function (dateStr, endOfDay) {
+        if (!dateStr) return '';
+        const d = new Date(dateStr + (endOfDay ? 'T23:59:59' : 'T00:00:00'));
+        if (isNaN(d.getTime())) return '';
+        const p = (n) => String(n).padStart(2, '0');
+        return d.getUTCFullYear() + '-' + p(d.getUTCMonth() + 1) + '-' + p(d.getUTCDate())
+            + ' ' + p(d.getUTCHours()) + ':' + p(d.getUTCMinutes()) + ':' + p(d.getUTCSeconds());
+    };
+
     App.debounce = function (fn, wait) {
         let timer;
         return function () {
@@ -522,6 +531,10 @@
                 const statusHtml = statuses.map(function (s) {
                     return '<span class="status-badge ' + App.escape(s.code) + '">' + App.statusIcon(s.code) + App.escape(s.label || '') + '</span>';
                 }).join('');
+                const isIssued = statuses.some(function (s) { return s.code === 'issued'; });
+                const issuedAtHtml = (isIssued && r.last_issued_at)
+                    ? '<span class="status-badge issued" title="Выдан последний раз"><i class="bi bi-calendar3"></i>' + App.escape(App.formatDate(r.last_issued_at)) + '</span>'
+                    : '';
                 const employee = r.employee_fullname && r.employee_fullname.trim().length
                     ? App.highlightMatch(r.employee_fullname, query)
                     : '<span class="text-muted">—</span>';
@@ -530,7 +543,7 @@
                     +   '<td>' + employee + '</td>'
                     +   '<td>' + App.highlightMatch(r.model_name || '', query) + '</td>'
                     +   '<td>' + App.highlightMatch(r.serial_number || '', query) + '</td>'
-                    +   '<td>' + statusHtml + '</td>'
+                    +   '<td class="status-cell">' + statusHtml + issuedAtHtml + '</td>'
                     +   '<td class="actions-cell">'
                     +     '<button type="button" class="btn-icon history action-history"  data-id="' + App.escape(r.id) + '" title="История передач"><i class="bi bi-clock-history"></i></button>'
                     +     '<button type="button" class="btn-icon transfer action-transfer" data-id="' + App.escape(r.id) + '" title="Передать"><i class="bi bi-arrow-left-right"></i></button>'
@@ -936,4 +949,96 @@
     };
 
     $(function () { Employees.init(); });
+})(jQuery);
+
+// =============================================================================
+// Transfer history page logic
+// =============================================================================
+(function ($) {
+    'use strict';
+    if (!$('#transfer-history-page').length) return;
+    const App = window.App;
+
+    const TransferHistory = {
+        $list: $('#transfer-history-list'),
+        $search: $('#transfer-history-search'),
+        $dateFrom: $('#transfer-history-date-from'),
+        $dateTo: $('#transfer-history-date-to'),
+        $count: $('#transfer-history-count'),
+        sortState: { col: 'transferred_at', dir: 'desc' },
+
+        init() {
+            this.$thead = this.$list.closest('table').find('thead');
+            App.makeSortable(this.$thead, this.sortState, () => this.refresh());
+            App.updateSortIcons(this.$thead, this.sortState);
+            this.$search.on('input', App.debounce(() => this.refresh(), 250));
+            this.$search.on('keydown', (e) => { if (e.key === 'Escape') { this.$search.val(''); this.refresh(); } });
+            this.$dateFrom.on('change', () => this.refresh());
+            this.$dateTo.on('change', () => this.refresh());
+            $('#transfer-history-reset-dates').on('click', () => this.resetDates());
+            this.refresh();
+        },
+
+        resetDates() {
+            this.$dateFrom.val('');
+            this.$dateTo.val('');
+            this.refresh();
+        },
+
+        refresh() {
+            const query = this.$search.val();
+            const params = { q: query };
+            const dateFrom = App.localDateToUtc(this.$dateFrom.val(), false);
+            const dateTo = App.localDateToUtc(this.$dateTo.val(), true);
+            if (dateFrom) params.date_from = dateFrom;
+            if (dateTo) params.date_to = dateTo;
+
+            App.getJSON('transfer_history/list', params)
+                .then((res) => this.render(res.data || [], res.total, query))
+                .catch((xhr) => {
+                    const res = xhr && xhr.responseJSON ? xhr.responseJSON : null;
+                    App.toast((res && res.message) || 'Не удалось загрузить историю передач', 'error');
+                });
+        },
+
+        render(rows, total, query) {
+            rows = App.sortRows(rows, this.sortState, function (r, key) {
+                if (key === 'transferred_at') return r.transferred_at || '';
+                if (key === 'from_fullname' || key === 'to_fullname') {
+                    const name = r[key] && r[key].trim() ? r[key] : 'Склад';
+                    return name;
+                }
+                return r[key] || '';
+            });
+            const n = rows.length;
+            this.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
+            if (!rows.length) {
+                this.$list.html('<tr><td colspan="6" class="empty-cell">Нет записей</td></tr>');
+                return;
+            }
+            const html = rows.map((r) => {
+                const from = r.from_fullname && r.from_fullname.trim()
+                    ? App.highlightMatch(r.from_fullname, query)
+                    : '<span class="text-muted">Склад</span>';
+                const to = r.to_fullname && r.to_fullname.trim()
+                    ? App.highlightMatch(r.to_fullname, query)
+                    : '<span class="text-muted">Склад</span>';
+                const comment = r.comment && r.comment.trim()
+                    ? App.highlightMatch(r.comment, query)
+                    : '<span class="text-muted">—</span>';
+                return ''
+                    + '<tr data-id="' + App.escape(r.id) + '">'
+                    +   '<td>' + App.highlightMatch(r.model_name || '', query) + '</td>'
+                    +   '<td>' + App.highlightMatch(r.serial_number || '', query) + '</td>'
+                    +   '<td>' + from + '</td>'
+                    +   '<td>' + to + '</td>'
+                    +   '<td>' + App.escape(App.formatDate(r.transferred_at)) + '</td>'
+                    +   '<td>' + comment + '</td>'
+                    + '</tr>';
+            }).join('');
+            this.$list.html(html);
+        },
+    };
+
+    $(function () { TransferHistory.init(); });
 })(jQuery);

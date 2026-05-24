@@ -36,7 +36,7 @@
                             <th data-sort-key="employee_fullname">Сотрудник <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th data-sort-key="model_name">Модель <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th data-sort-key="serial_number">Серийный номер <i class="bi bi-arrow-down-up sort-icon"></i></th>
-                            <th data-sort-key="status_label">Статус <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th class="status-cell" data-sort-key="status_label">Статус <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th style="width: 1%;"></th>
                         </tr>
                     </thead>

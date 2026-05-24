@@ -68,6 +68,9 @@ $route['token_models/delete/(:any)']          = 'token_models/delete/$1';
 $route['token_models/get/(:any)']             = 'token_models/get/$1';
 $route['token_models/options']                = 'token_models/options';
 
+$route['transfer_history']                    = 'token_transfers/index';
+$route['transfer_history/list']               = 'token_transfers/list_json';
+
 $route['token_transfers/create/(:any)']       = 'token_transfers/create/$1';
 $route['token_transfers/history/(:any)']      = 'token_transfers/history/$1';
 

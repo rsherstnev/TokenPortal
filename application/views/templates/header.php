@@ -33,6 +33,9 @@ $page_title = isset($page_title) ? $page_title : 'Учёт токенов СКЗ
                 <li class="nav-item">
                     <a class="nav-link <?= $active_nav === 'employees' ? 'active' : '' ?>" href="<?= site_url('employees') ?>">Сотрудники</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= $active_nav === 'transfer_history' ? 'active' : '' ?>" href="<?= site_url('transfer_history') ?>">История передач</a>
+                </li>
             </ul>
         </div>
     </div>

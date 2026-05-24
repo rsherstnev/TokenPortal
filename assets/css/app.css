@@ -152,6 +152,10 @@ html, body {
     text-align: right;
     white-space: nowrap;
 }
+.skzi-table .status-cell {
+    width: 1%;
+    white-space: nowrap;
+}
 .skzi-table .empty-cell {
     text-align: center;
     color: var(--skzi-muted);
@@ -181,6 +185,60 @@ html, body {
 .status-badge.lost    { background: #fde8ea; color: #c0192c; border-color: #f4a8b0; }
 
 .search-input { background-color: #fff; }
+
+.transfer-history-filters {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+}
+.transfer-history-filters-search {
+    flex: 1 1 0;
+    min-width: 0;
+}
+.transfer-history-filters-search .input-group,
+.transfer-history-filters-search .form-control {
+    min-width: 0;
+}
+.transfer-history-filters-dates {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 8px;
+}
+.transfer-history-filters-dates .transfer-history-reset-dates {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    align-self: stretch;
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
+    font-size: 0.875rem;
+    border-color: var(--skzi-border);
+    color: var(--skzi-muted);
+}
+.transfer-history-filters-dates .transfer-history-reset-dates:hover {
+    color: #21252b;
+    background-color: #fff;
+    border-color: #ced4da;
+}
+.transfer-history-filters-date {
+    flex: 0 0 auto;
+}
+.transfer-history-filters-date .input-group {
+    width: auto;
+}
+.transfer-history-filters-date .input-group-text {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+.transfer-history-filters-date input[type="date"].form-control {
+    width: 8.5rem;
+    flex: 0 0 8.5rem;
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
+}
 
 mark.search-highlight {
     background-color: #ffeb3b;
