@@ -25,10 +25,10 @@
                 <table class="skzi-table">
                     <thead>
                         <tr>
-                            <th>ФИО <i class="bi bi-arrow-down-up sort-icon"></i></th>
-                            <th>Email</th>
-                            <th>Кабинет</th>
-                            <th>Статус</th>
+                            <th data-sort-key="fullname">ФИО <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th data-sort-key="email">Email <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th data-sort-key="cabinet">Кабинет <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th data-sort-key="is_active">Статус <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th style="width: 1%;"></th>
                         </tr>
                     </thead>

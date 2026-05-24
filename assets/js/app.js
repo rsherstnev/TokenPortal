@@ -244,6 +244,50 @@
         });
     };
 
+    // ---- Client-side table sorting helpers -----------------------------------
+    App.sortRows = function (rows, state, getVal) {
+        if (!state || !state.col) return rows;
+        const col = state.col, dir = state.dir;
+        return rows.slice().sort(function (a, b) {
+            const va = getVal(a, col);
+            const vb = getVal(b, col);
+            if (va === vb) return 0;
+            if (va === '' || va == null) return 1;
+            if (vb === '' || vb == null) return -1;
+            const sa = typeof va === 'number' ? va : String(va).toLowerCase();
+            const sb = typeof vb === 'number' ? vb : String(vb).toLowerCase();
+            const cmp = sa < sb ? -1 : 1;
+            return dir === 'desc' ? -cmp : cmp;
+        });
+    };
+
+    App.makeSortable = function ($thead, state, onSort) {
+        $thead.on('click', 'th[data-sort-key]', function () {
+            const key = $(this).data('sort-key');
+            if (state.col === key) {
+                state.dir = state.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                state.col = key;
+                state.dir = 'asc';
+            }
+            App.updateSortIcons($thead, state);
+            onSort();
+        });
+    };
+
+    App.updateSortIcons = function ($thead, state) {
+        $thead.find('th[data-sort-key]').each(function () {
+            const $th = $(this);
+            const $icon = $th.find('.sort-icon');
+            $th.removeClass('sort-asc sort-desc');
+            $icon.removeClass('bi-arrow-up bi-arrow-down').addClass('bi-arrow-down-up');
+            if (state.col === $th.data('sort-key')) {
+                $th.addClass('sort-' + state.dir);
+                $icon.removeClass('bi-arrow-down-up').addClass(state.dir === 'asc' ? 'bi-arrow-up' : 'bi-arrow-down');
+            }
+        });
+    };
+
 })(jQuery);
 
 // =============================================================================
@@ -259,8 +303,11 @@
         $search: $('#tokens-search'),
         $status: $('#tokens-status'),
         $count: $('#tokens-count'),
+        sortState: { col: null, dir: 'asc' },
 
         init() {
+            this.$thead = this.$list.closest('table').find('thead');
+            App.makeSortable(this.$thead, this.sortState, () => this.refresh());
             this.bindEvents();
             App.initSelect(this.$status[0], { controlInput: false });
             this.refresh();
@@ -300,6 +347,10 @@
         },
 
         render(rows, total, query) {
+            rows = App.sortRows(rows, this.sortState, function (r, key) {
+                if (key === 'status_label') return (r.status && r.status.label) || '';
+                return r[key] || '';
+            });
             const n = rows.length;
             this.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
             if (!rows.length) {
@@ -345,11 +396,12 @@
                 $form[0].reset();
                 $('#tokenModalTitle').text('Редактирование токена');
                 App.clearErrors($form);
-                TokenModels.fillSelect($form.find('select[name="token_model_id"]'), t.token_model_id);
                 $form.find('[name="id"]').val(t.id);
                 $form.find('[name="serial_number"]').val(t.serial_number);
                 $form.find('[name="is_broken"]').prop('checked', !!Number(t.is_broken));
                 $form.find('[name="is_lost"]').prop('checked', !!Number(t.is_lost));
+                return TokenModels.fillSelect($form.find('select[name="token_model_id"]'), t.token_model_id);
+            }).then(() => {
                 $('#tokenModal').modal('show');
             });
         },
@@ -392,8 +444,11 @@
         $list: $('#token-models-list'),
         $search: $('#models-search'),
         $count: $('#models-count'),
+        sortState: { col: null, dir: 'asc' },
 
         init() {
+            this.$thead = this.$list.closest('table').find('thead');
+            App.makeSortable(this.$thead, this.sortState, () => this.refresh());
             this.$search.on('input', App.debounce(() => this.refresh(), 250));
             this.$search.on('keydown', (e) => { if (e.key === 'Escape') { this.$search.val(''); this.refresh(); } });
             $('#btn-add-model').on('click', () => this.openCreate());
@@ -412,6 +467,7 @@
         },
 
         render(rows, total, query) {
+            rows = App.sortRows(rows, this.sortState, function (r, key) { return r[key] || ''; });
             const n = rows.length;
             this.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
             if (!rows.length) {
@@ -431,12 +487,14 @@
         },
 
         fillSelect($select, selectedId) {
-            App.getJSON('token_models/options').then((res) => {
+            return App.getJSON('token_models/options').then((res) => {
+                const el = $select[0];
+                if (el && el.tomselect) { el.tomselect.destroy(); }
                 const options = (res.data || []).map((m) =>
                     '<option value="' + App.escape(m.id) + '"' + (m.id === selectedId ? ' selected' : '') + '>' + App.escape(m.name) + '</option>'
                 ).join('');
                 $select.html('<option value="">— Не указана —</option>' + options);
-                App.initSelect($select[0]);
+                App.initSelect(el);
             });
         },
 
@@ -595,8 +653,11 @@
         $list: $('#employees-list'),
         $search: $('#employees-search'),
         $count: $('#employees-count'),
+        sortState: { col: null, dir: 'asc' },
 
         init() {
+            this.$thead = this.$list.closest('table').find('thead');
+            App.makeSortable(this.$thead, this.sortState, () => this.refresh());
             this.$search.on('input', App.debounce(() => this.refresh(), 250));
             this.$search.on('keydown', (e) => { if (e.key === 'Escape') { this.$search.val(''); this.refresh(); } });
             $('#btn-add-employee').on('click', () => this.openCreate());
@@ -617,6 +678,10 @@
         },
 
         render(rows, total, query) {
+            rows = App.sortRows(rows, this.sortState, function (r, key) {
+                if (key === 'is_active') return Number(r.is_active);
+                return r[key] || '';
+            });
             const n = rows.length;
             this.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
             if (!rows.length) {

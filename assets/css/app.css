@@ -130,6 +130,16 @@ html, body {
     overflow: auto;
 }
 .skzi-table thead th .sort-icon { opacity: 0.4; margin-left: 2px; }
+.skzi-table thead th[data-sort-key] {
+    cursor: pointer;
+    user-select: none;
+}
+.skzi-table thead th[data-sort-key]:hover { background: #f0f2f5; }
+.skzi-table thead th[data-sort-key].sort-asc .sort-icon,
+.skzi-table thead th[data-sort-key].sort-desc .sort-icon {
+    opacity: 1;
+    color: var(--skzi-primary);
+}
 .skzi-table tbody td {
     padding: 12px;
     border-bottom: 1px solid var(--skzi-border);
@@ -371,6 +381,9 @@ mark.search-highlight {
     border-radius: 0 0 4px 4px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     font-size: 0.9rem;
+    /* Выше z-index модалки Bootstrap (1050), чтобы выпадающий список,
+       перенесённый в <body> через dropdownParent, не прятался под модалкой. */
+    z-index: 1060;
 }
 .ts-dropdown .option.selected,
 .ts-dropdown .option:hover,

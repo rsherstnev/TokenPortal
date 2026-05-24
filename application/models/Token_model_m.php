@@ -82,6 +82,26 @@ class Token_model_m extends CI_Model {
 	}
 
 	/**
+	 * Проверяет, существует ли активная модель с таким названием.
+	 * @param string      $name       название модели
+	 * @param string|null $exclude_id UUID модели, которую нужно исключить (для случая обновления)
+	 * @return bool
+	 */
+	public function exists_by_name($name, $exclude_id = NULL)
+	{
+		$this->db->from('token_models')
+			->where('deleted_at IS NULL', NULL, FALSE)
+			->where('name', $name);
+
+		if ($exclude_id !== NULL)
+		{
+			$this->db->where('id !=', $exclude_id);
+		}
+
+		return $this->db->count_all_results() > 0;
+	}
+
+	/**
 	 * Подсчёт активных (не удалённых) токенов, использующих модель.
 	 */
 	public function tokens_count($id)

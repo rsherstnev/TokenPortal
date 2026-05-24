@@ -183,6 +183,28 @@ class Token_m extends CI_Model {
 			));
 	}
 
+	/**
+	 * Проверяет, существует ли активный токен с такой же моделью и серийным номером.
+	 * @param string      $model_id   UUID модели токена
+	 * @param string      $serial     серийный номер
+	 * @param string|null $exclude_id UUID токена, который нужно исключить (для случая обновления)
+	 * @return bool
+	 */
+	public function exists_by_model_and_serial($model_id, $serial, $exclude_id = NULL)
+	{
+		$this->db->from('tokens')
+			->where('deleted_at IS NULL', NULL, FALSE)
+			->where('token_model_id', $model_id)
+			->where('serial_number', $serial);
+
+		if ($exclude_id !== NULL)
+		{
+			$this->db->where('id !=', $exclude_id);
+		}
+
+		return $this->db->count_all_results() > 0;
+	}
+
 	public function count_all_active()
 	{
 		return (int) $this->db

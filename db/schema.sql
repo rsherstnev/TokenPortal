@@ -52,7 +52,8 @@ CREATE TABLE token_models (
     updated_at  DATETIME  NULL,
     deleted_at  DATETIME  NULL,
     PRIMARY KEY (id),
-    KEY idx_token_models_deleted (deleted_at)
+    KEY idx_token_models_deleted (deleted_at),
+    KEY idx_token_models_name (name(128))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE tokens (
@@ -68,7 +69,8 @@ CREATE TABLE tokens (
     PRIMARY KEY (id),
     KEY idx_tokens_model     (token_model_id),
     KEY idx_tokens_employee  (employee_id),
-    KEY idx_tokens_deleted   (deleted_at)
+    KEY idx_tokens_deleted   (deleted_at),
+    KEY idx_tokens_model_serial (token_model_id, serial_number(128))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE token_transfers (

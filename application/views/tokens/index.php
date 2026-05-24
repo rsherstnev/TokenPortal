@@ -33,10 +33,10 @@
                 <table class="skzi-table">
                     <thead>
                         <tr>
-                            <th>Сотрудник <i class="bi bi-arrow-down-up sort-icon"></i></th>
-                            <th>Модель <i class="bi bi-arrow-down-up sort-icon"></i></th>
-                            <th>Серийный номер <i class="bi bi-arrow-down-up sort-icon"></i></th>
-                            <th>Статус <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th data-sort-key="employee_fullname">Сотрудник <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th data-sort-key="model_name">Модель <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th data-sort-key="serial_number">Серийный номер <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th data-sort-key="status_label">Статус <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th style="width: 1%;"></th>
                         </tr>
                     </thead>
@@ -69,7 +69,7 @@
                 <table class="skzi-table">
                     <thead>
                         <tr>
-                            <th>Модель <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th data-sort-key="name">Модель <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th class="actions-cell">Действия</th>
                         </tr>
                     </thead>

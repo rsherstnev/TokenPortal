@@ -66,7 +66,7 @@ class Token_models extends MY_Controller {
 			return;
 		}
 		$name = trim((string) $this->input->post('name'));
-		$errors = $this->validate_name($name);
+		$errors = $this->validate_name($name, $id);
 		if ( ! empty($errors))
 		{
 			$this->json_error('Проверьте поля формы', 422, $errors);
@@ -98,7 +98,7 @@ class Token_models extends MY_Controller {
 		$this->json_ok(array(), array('message' => 'Модель удалена'));
 	}
 
-	private function validate_name($name)
+	private function validate_name($name, $exclude_id = NULL)
 	{
 		$errors = array();
 		if ($name === '')
@@ -108,6 +108,10 @@ class Token_models extends MY_Controller {
 		elseif (mb_strlen($name) > 128)
 		{
 			$errors['name'] = 'Название слишком длинное (макс. 128 символов)';
+		}
+		elseif ($this->token_model_m->exists_by_name($name, $exclude_id))
+		{
+			$errors['name'] = 'Модель с таким названием уже существует';
 		}
 		return $errors;
 	}

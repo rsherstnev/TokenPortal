@@ -101,7 +101,7 @@ class Tokens extends MY_Controller {
 		$is_broken = (int) (bool) $this->input->post('is_broken');
 		$is_lost   = (int) (bool) $this->input->post('is_lost');
 
-		$errors = $this->validate_input($model_id, $serial);
+		$errors = $this->validate_input($model_id, $serial, $id);
 		if ( ! empty($errors))
 		{
 			$this->json_error('Проверьте поля формы', 422, $errors);
@@ -139,9 +139,10 @@ class Tokens extends MY_Controller {
 		$this->json_ok(array(), array('message' => 'Токен удалён'));
 	}
 
-	private function validate_input($model_id, $serial)
+	private function validate_input($model_id, $serial, $exclude_id = NULL)
 	{
 		$errors = array();
+		$model_valid = FALSE;
 		if ( ! is_uuid($model_id))
 		{
 			$errors['token_model_id'] = 'Выберите модель токена';
@@ -153,6 +154,10 @@ class Tokens extends MY_Controller {
 			{
 				$errors['token_model_id'] = 'Модель не найдена';
 			}
+			else
+			{
+				$model_valid = TRUE;
+			}
 		}
 		if ($serial === '')
 		{
@@ -161,6 +166,10 @@ class Tokens extends MY_Controller {
 		elseif (mb_strlen($serial) > 128)
 		{
 			$errors['serial_number'] = 'Серийный номер слишком длинный (макс. 128 символов)';
+		}
+		elseif ($model_valid && $this->token_m->exists_by_model_and_serial($model_id, $serial, $exclude_id))
+		{
+			$errors['serial_number'] = 'Токен с такой моделью и серийным номером уже существует';
 		}
 		return $errors;
 	}
