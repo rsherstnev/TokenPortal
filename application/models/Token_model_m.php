@@ -55,8 +55,8 @@ class Token_model_m extends CI_Model {
 		$this->db->insert('token_models', array(
 			'id'         => $id,
 			'name'       => $name,
-			'created_at' => date('Y-m-d H:i:s'),
-			'updated_at' => date('Y-m-d H:i:s'),
+			'created_at' => gmdate('Y-m-d H:i:s'),
+			'updated_at' => gmdate('Y-m-d H:i:s'),
 		));
 		return $id;
 	}
@@ -67,7 +67,7 @@ class Token_model_m extends CI_Model {
 			->where('id', $id)
 			->update('token_models', array(
 				'name'       => $name,
-				'updated_at' => date('Y-m-d H:i:s'),
+				'updated_at' => gmdate('Y-m-d H:i:s'),
 			));
 	}
 
@@ -76,8 +76,8 @@ class Token_model_m extends CI_Model {
 		return $this->db
 			->where('id', $id)
 			->update('token_models', array(
-				'deleted_at' => date('Y-m-d H:i:s'),
-				'updated_at' => date('Y-m-d H:i:s'),
+				'deleted_at' => gmdate('Y-m-d H:i:s'),
+				'updated_at' => gmdate('Y-m-d H:i:s'),
 			));
 	}
 

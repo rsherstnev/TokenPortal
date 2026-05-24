@@ -67,7 +67,7 @@ class Employee_m extends CI_Model {
 	public function create($data)
 	{
 		$id = uuid_v4();
-		$now = date('Y-m-d H:i:s');
+		$now = gmdate('Y-m-d H:i:s');
 		$this->db->insert('employees', array(
 			'id'         => $id,
 			'firstname'  => trim($data['firstname']),
@@ -93,7 +93,7 @@ class Employee_m extends CI_Model {
 				'email'      => trim($data['email'] ?? '') ?: NULL,
 				'cabinet'    => trim($data['cabinet'] ?? '') ?: NULL,
 				'is_active'  => isset($data['is_active']) ? (int) (bool) $data['is_active'] : 1,
-				'updated_at' => date('Y-m-d H:i:s'),
+				'updated_at' => gmdate('Y-m-d H:i:s'),
 			));
 	}
 
@@ -102,8 +102,8 @@ class Employee_m extends CI_Model {
 		return $this->db
 			->where('id', $id)
 			->update('employees', array(
-				'deleted_at' => date('Y-m-d H:i:s'),
-				'updated_at' => date('Y-m-d H:i:s'),
+				'deleted_at' => gmdate('Y-m-d H:i:s'),
+				'updated_at' => gmdate('Y-m-d H:i:s'),
 			));
 	}
 }

@@ -16,7 +16,7 @@
             <div class="row no-gutters mb-2">
                 <div class="col-md-9 pr-md-2 mb-2 mb-md-0">
                     <input type="text" class="form-control search-input" id="tokens-search"
-                               placeholder="Поиск по сотруднику, модели, серийному номеру, сломан, утерян…">
+                               placeholder="Поиск по сотруднику, модели, серийному номеру…">
                 </div>
                 <div class="col-md-3">
                     <select class="custom-select" id="tokens-status">

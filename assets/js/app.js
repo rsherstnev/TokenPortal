@@ -81,6 +81,70 @@
         $form.find('.invalid-feedback').remove();
     };
 
+    // ---- ESC key handling in modal text inputs -------------------------------
+    // Disable Bootstrap's default ESC handling and implement custom logic
+    $(document).on('shown.bs.modal', '.skzi-modal', function () {
+        $(this).data('bs.modal')._config.keyboard = false;
+    });
+
+    // Custom ESC handler: clear non-empty inputs first, close modal only when all inputs are empty
+    $(document).on('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+
+        const $modal = $('.skzi-modal.show');
+        if (!$modal.length) return;
+
+        const $focused = $(':focus');
+        const $textInput = $focused.is('input[type="text"], input[type="email"], input[type="search"], textarea') ? $focused : null;
+
+        // If a non-empty text input is focused, just clear it
+        if ($textInput && $textInput.val().trim() !== '') {
+            e.preventDefault();
+            e.stopPropagation();
+            $textInput.val('');
+            return;
+        }
+
+        // Check if any text input in the modal has content
+        const $filledInput = $modal.find('input[type="text"], input[type="email"], input[type="search"], textarea')
+            .filter(function () { return $(this).val().trim() !== ''; })
+            .first();
+
+        if ($filledInput.length) {
+            // Clear the first non-empty input and focus it
+            e.preventDefault();
+            e.stopPropagation();
+            $filledInput.val('');
+            $filledInput.focus();
+            return;
+        }
+
+        // All inputs are empty - close the modal
+        $modal.modal('hide');
+    });
+
+    // ---- Clear modal form on close (backdrop click or empty ESC) -------------
+    $(document).on('hidden.bs.modal', '.skzi-modal', function () {
+        const $form = $(this).find('form');
+        if (!$form.length) return;
+
+        // Reset form fields
+        $form[0].reset();
+
+        // Clear hidden fields (like id)
+        $form.find('input[type="hidden"]').val('');
+
+        // Clear Tom Select dropdowns
+        $form.find('select').each(function () {
+            if (this.tomselect) {
+                this.tomselect.clear(true);
+            }
+        });
+
+        // Remove validation errors
+        App.clearErrors($form);
+    });
+
     App.applyErrors = function ($form, errors) {
         App.clearErrors($form);
         $.each(errors || {}, function (field, message) {
@@ -95,10 +159,12 @@
     App.initSelect = function (el, opts) {
         if (!el) return null;
         if (el.tomselect) { el.tomselect.destroy(); }
+        const inModal = !!(el.closest && el.closest('.modal'));
         return new TomSelect(el, Object.assign({
             allowEmptyOption: true,
             create: false,
             plugins: [],
+            dropdownParent: inModal ? 'body' : null,
             onFocus: function () {
                 this._prevValue = this.getValue();
                 this.clear(true);
@@ -128,7 +194,10 @@
 
     App.formatDate = function (str) {
         if (!str) return '';
-        const d = new Date(str.replace(' ', 'T'));
+        // DATETIME-поля БД хранятся в UTC (см. db/schema.sql), поэтому строку
+        // без таймзоны явно помечаем как UTC, а на экран выводим getHours/etc.,
+        // которые сами переведут в локальное время браузера.
+        const d = new Date(str.replace(' ', 'T') + 'Z');
         if (isNaN(d.getTime())) return str;
         const p = (n) => String(n).padStart(2, '0');
         return p(d.getDate()) + '.' + p(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
@@ -143,18 +212,14 @@
         };
     };
 
-    // ---- Modal ESC: first press clears focused textbox, second closes modal --
-    App.initModalEsc = function ($modal) {
-        $modal.on('keydown', function (e) {
-            if (e.key !== 'Escape') return;
-            const $focused = $(document.activeElement);
-            if ($focused.is('input[type="text"], input[type="email"], input:not([type]), textarea') &&
-                $focused.closest($modal).length &&
-                $focused.val() !== '') {
-                $focused.val('').trigger('input');
-                e.stopPropagation();
-            }
-        });
+    // ---- Text highlight helper ------------------------------------------------
+    App.highlightMatch = function (text, query) {
+        if (!query || !text) return App.escape(text);
+        const escapedText = App.escape(text);
+        const escapedQuery = App.escape(query).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        if (!escapedQuery) return escapedText;
+        const regex = new RegExp('(' + escapedQuery + ')', 'gi');
+        return escapedText.replace(regex, '<mark class="search-highlight">$1</mark>');
     };
 
     // ---- Confirm dialog (uses Bootstrap modal) -------------------------------
@@ -228,12 +293,13 @@
         },
 
         refresh() {
-            App.getJSON('tokens/list', { q: this.$search.val(), status: this.$status.val() })
-                .then((res) => this.render(res.data || [], res.total))
+            const query = this.$search.val();
+            App.getJSON('tokens/list', { q: query, status: this.$status.val() })
+                .then((res) => this.render(res.data || [], res.total, query))
                 .catch(() => App.toast('Не удалось загрузить токены', 'error'));
         },
 
-        render(rows, total) {
+        render(rows, total, query) {
             const n = rows.length;
             this.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
             if (!rows.length) {
@@ -242,12 +308,14 @@
             }
             const html = rows.map((r) => {
                 const status = r.status || {};
-                const employee = r.employee_fullname && r.employee_fullname.trim().length ? App.escape(r.employee_fullname) : '<span class="text-muted">—</span>';
+                const employee = r.employee_fullname && r.employee_fullname.trim().length
+                    ? App.highlightMatch(r.employee_fullname, query)
+                    : '<span class="text-muted">—</span>';
                 return ''
                     + '<tr data-id="' + App.escape(r.id) + '">'
                     +   '<td>' + employee + '</td>'
-                    +   '<td>' + App.escape(r.model_name || '') + '</td>'
-                    +   '<td>' + App.escape(r.serial_number || '') + '</td>'
+                    +   '<td>' + App.highlightMatch(r.model_name || '', query) + '</td>'
+                    +   '<td>' + App.highlightMatch(r.serial_number || '', query) + '</td>'
                     +   '<td><span class="status-badge ' + App.escape(status.code) + '">' + App.statusIcon(status.code) + App.escape(status.label || '') + '</span></td>'
                     +   '<td class="actions-cell">'
                     +     '<button type="button" class="btn-icon history action-history"  data-id="' + App.escape(r.id) + '" title="История передач"><i class="bi bi-clock-history"></i></button>'
@@ -337,12 +405,13 @@
         },
 
         refresh() {
-            App.getJSON('token_models/list', { q: this.$search.val() })
-                .then((res) => { this.render(res.data || [], res.total); this.cache = res.data || []; })
+            const query = this.$search.val();
+            App.getJSON('token_models/list', { q: query })
+                .then((res) => { this.render(res.data || [], res.total, query); this.cache = res.data || []; })
                 .catch(() => App.toast('Не удалось загрузить модели', 'error'));
         },
 
-        render(rows, total) {
+        render(rows, total, query) {
             const n = rows.length;
             this.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
             if (!rows.length) {
@@ -351,7 +420,7 @@
             }
             const html = rows.map((r) => ''
                 + '<tr data-id="' + App.escape(r.id) + '">'
-                +   '<td>' + App.escape(r.name) + '</td>'
+                +   '<td>' + App.highlightMatch(r.name, query) + '</td>'
                 +   '<td class="actions-cell">'
                 +     '<button type="button" class="btn-icon edit action-edit"   data-id="' + App.escape(r.id) + '" title="Редактировать"><i class="bi bi-pencil"></i></button>'
                 +     '<button type="button" class="btn-icon delete action-delete" data-id="' + App.escape(r.id) + '" title="Удалить"><i class="bi bi-trash"></i></button>'
@@ -480,7 +549,7 @@
                 const data = res.data || {};
                 const t = data.token || {};
                 $('#history-token-info').html(
-                    '<span class="token-pill"><i class="bi bi-key"></i>' + App.escape(t.model_name || '') + ', ' + App.escape(t.serial_number || '') + '</span>'
+                    '<span class="token-pill"><i class="bi bi-key"></i>' + App.escape(t.model_name || '') + ' ' + App.escape(t.serial_number || '') + '</span>'
                 );
                 const transfers = data.transfers || [];
                 if (!transfers.length) {
@@ -511,9 +580,6 @@
         TokenModels.init();
         Transfers.init();
         History.open && (window.History = History);
-        App.initModalEsc($('#tokenModal'));
-        App.initModalEsc($('#tokenModelModal'));
-        App.initModalEsc($('#transferModal'));
     });
 })(jQuery);
 
@@ -544,12 +610,13 @@
         },
 
         refresh() {
-            App.getJSON('employees/list', { q: this.$search.val() })
-                .then((res) => this.render(res.data || [], res.total))
+            const query = this.$search.val();
+            App.getJSON('employees/list', { q: query })
+                .then((res) => this.render(res.data || [], res.total, query))
                 .catch(() => App.toast('Не удалось загрузить сотрудников', 'error'));
         },
 
-        render(rows, total) {
+        render(rows, total, query) {
             const n = rows.length;
             this.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
             if (!rows.length) {
@@ -562,9 +629,9 @@
                     : '<span class="status-badge lost">Неактивен</span>';
                 return ''
                     + '<tr data-id="' + App.escape(r.id) + '">'
-                    +   '<td>' + App.escape(r.fullname) + '</td>'
-                    +   '<td>' + App.escape(r.email || '') + '</td>'
-                    +   '<td>' + App.escape(r.cabinet || '') + '</td>'
+                    +   '<td>' + App.highlightMatch(r.fullname, query) + '</td>'
+                    +   '<td>' + App.highlightMatch(r.email || '', query) + '</td>'
+                    +   '<td>' + App.highlightMatch(r.cabinet || '', query) + '</td>'
                     +   '<td>' + active + '</td>'
                     +   '<td class="actions-cell">'
                     +     '<button type="button" class="btn-icon edit action-edit"     data-id="' + App.escape(r.id) + '" title="Редактировать"><i class="bi bi-pencil"></i></button>'
@@ -637,8 +704,5 @@
         },
     };
 
-    $(function () {
-        Employees.init();
-        App.initModalEsc($('#employeeModal'));
-    });
+    $(function () { Employees.init(); });
 })(jQuery);

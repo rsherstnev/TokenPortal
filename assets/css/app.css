@@ -119,6 +119,15 @@ html, body {
     border-top: 1px solid var(--skzi-border);
     border-bottom: 1px solid var(--skzi-border);
     background: #fafbfc;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+/* Scroll table inside its section instead of the page when content overflows */
+.skzi-section > .table-responsive {
+    max-height: calc(100vh - 320px);
+    overflow: auto;
 }
 .skzi-table thead th .sort-icon { opacity: 0.4; margin-left: 2px; }
 .skzi-table tbody td {
@@ -162,10 +171,45 @@ html, body {
 
 .search-input { background-color: #fff; }
 
+mark.search-highlight {
+    background-color: #ffeb3b;
+    color: #21252b;
+    padding: 0 2px;
+    border-radius: 2px;
+    font-weight: 500;
+}
+
 .skzi-modal .modal-header { border-bottom: 1px solid var(--skzi-border); padding: 14px 18px; }
 .skzi-modal .modal-title  { font-size: 1rem; font-weight: 600; }
 .skzi-modal .modal-body   { padding: 18px; }
 .skzi-modal .modal-footer { border-top: 1px solid var(--skzi-border); padding: 12px 18px; }
+
+/* Scroll modal body instead of the page when content overflows */
+.skzi-modal .modal-dialog {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: calc(100% - 1rem);
+    max-height: calc(100% - 1rem);
+}
+.skzi-modal .modal-dialog-centered::before { content: none; }
+.skzi-modal .modal-content {
+    max-height: 100%;
+    overflow: hidden;
+}
+.skzi-modal .modal-content > form { display: contents; }
+.skzi-modal .modal-header,
+.skzi-modal .modal-footer { flex-shrink: 0; }
+.skzi-modal .modal-body {
+    overflow-y: auto;
+    min-height: 0;
+}
+@media (min-width: 576px) {
+    .skzi-modal .modal-dialog {
+        height: calc(100% - 3.5rem);
+        max-height: calc(100% - 3.5rem);
+    }
+}
 
 .form-label-required::after { content: ' *'; color: var(--skzi-delete); }
 

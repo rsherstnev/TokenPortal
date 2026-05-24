@@ -64,25 +64,12 @@ class Token_m extends CI_Model {
 
 		if ($search !== '')
 		{
-			$like = $this->db->escape_like_str($search);
 			$lc = mb_strtolower($search, 'UTF-8');
 			$conditions = array(
 				"LOWER(t.serial_number) LIKE '%".$this->db->escape_like_str($lc)."%'",
 				"LOWER(tm.name) LIKE '%".$this->db->escape_like_str($lc)."%'",
 				"LOWER(TRIM(CONCAT_WS(' ', e.lastname, e.firstname, e.patronymic))) LIKE '%".$this->db->escape_like_str($lc)."%'",
 			);
-
-			$matches_broken = (mb_stripos('сломан', $lc) !== FALSE) || (mb_stripos($lc, 'слом') !== FALSE) || (mb_stripos('неисправен', $lc) !== FALSE);
-			$matches_lost   = (mb_stripos('утерян', $lc) !== FALSE);
-
-			if ($matches_broken)
-			{
-				$conditions[] = 't.is_broken = 1';
-			}
-			if ($matches_lost)
-			{
-				$conditions[] = 't.is_lost = 1';
-			}
 
 			$this->db->where('('.implode(' OR ', $conditions).')', NULL, FALSE);
 		}
@@ -167,8 +154,8 @@ class Token_m extends CI_Model {
 			'is_broken'      => ! empty($data['is_broken']) ? 1 : 0,
 			'is_lost'        => ! empty($data['is_lost']) ? 1 : 0,
 			'employee_id'    => NULL,
-			'created_at'     => date('Y-m-d H:i:s'),
-			'updated_at'     => date('Y-m-d H:i:s'),
+			'created_at'     => gmdate('Y-m-d H:i:s'),
+			'updated_at'     => gmdate('Y-m-d H:i:s'),
 		));
 		return $id;
 	}
@@ -182,7 +169,7 @@ class Token_m extends CI_Model {
 				'serial_number'  => $data['serial_number'],
 				'is_broken'      => ! empty($data['is_broken']) ? 1 : 0,
 				'is_lost'        => ! empty($data['is_lost']) ? 1 : 0,
-				'updated_at'     => date('Y-m-d H:i:s'),
+				'updated_at'     => gmdate('Y-m-d H:i:s'),
 			));
 	}
 
@@ -191,8 +178,8 @@ class Token_m extends CI_Model {
 		return $this->db
 			->where('id', $id)
 			->update('tokens', array(
-				'deleted_at' => date('Y-m-d H:i:s'),
-				'updated_at' => date('Y-m-d H:i:s'),
+				'deleted_at' => gmdate('Y-m-d H:i:s'),
+				'updated_at' => gmdate('Y-m-d H:i:s'),
 			));
 	}
 

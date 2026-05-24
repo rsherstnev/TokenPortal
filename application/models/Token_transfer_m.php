@@ -39,7 +39,7 @@ class Token_transfer_m extends CI_Model {
 		}
 
 		$transfer_id = uuid_v4();
-		$now = date('Y-m-d H:i:s');
+		$now = gmdate('Y-m-d H:i:s');
 
 		$this->db->insert('token_transfers', array(
 			'id'               => $transfer_id,
