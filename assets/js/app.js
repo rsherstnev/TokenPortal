@@ -348,7 +348,10 @@
 
         render(rows, total, query) {
             rows = App.sortRows(rows, this.sortState, function (r, key) {
-                if (key === 'status_label') return (r.status && r.status.label) || '';
+                if (key === 'status_label') {
+                    const ss = Array.isArray(r.status) ? r.status : (r.status ? [r.status] : []);
+                    return ss.map(function (s) { return s.label || ''; }).join(' ');
+                }
                 return r[key] || '';
             });
             const n = rows.length;
@@ -358,7 +361,10 @@
                 return;
             }
             const html = rows.map((r) => {
-                const status = r.status || {};
+                const statuses = Array.isArray(r.status) ? r.status : (r.status ? [r.status] : []);
+                const statusHtml = statuses.map(function (s) {
+                    return '<span class="status-badge ' + App.escape(s.code) + '">' + App.statusIcon(s.code) + App.escape(s.label || '') + '</span>';
+                }).join('');
                 const employee = r.employee_fullname && r.employee_fullname.trim().length
                     ? App.highlightMatch(r.employee_fullname, query)
                     : '<span class="text-muted">—</span>';
@@ -367,7 +373,7 @@
                     +   '<td>' + employee + '</td>'
                     +   '<td>' + App.highlightMatch(r.model_name || '', query) + '</td>'
                     +   '<td>' + App.highlightMatch(r.serial_number || '', query) + '</td>'
-                    +   '<td><span class="status-badge ' + App.escape(status.code) + '">' + App.statusIcon(status.code) + App.escape(status.label || '') + '</span></td>'
+                    +   '<td>' + statusHtml + '</td>'
                     +   '<td class="actions-cell">'
                     +     '<button type="button" class="btn-icon history action-history"  data-id="' + App.escape(r.id) + '" title="История передач"><i class="bi bi-clock-history"></i></button>'
                     +     '<button type="button" class="btn-icon transfer action-transfer" data-id="' + App.escape(r.id) + '" title="Передать"><i class="bi bi-arrow-left-right"></i></button>'
@@ -561,7 +567,7 @@
                 App.clearErrors($form);
                 $form.find('[name="token_id"]').val(t.id);
                 $('#transfer-token-info').html(
-                    '<span class="token-pill"><i class="bi bi-key"></i>' + App.escape(t.model_name || '') + ', ' + App.escape(t.serial_number || '') + '</span>'
+                    '<span class="token-pill"><i class="bi bi-key"></i><span class="token-badge">' + App.escape(t.model_name || '') + '</span><span class="token-badge">' + App.escape(t.serial_number || '') + '</span></span>'
                 );
                 $('#transfer-from').text(t.employee_fullname && t.employee_fullname.trim() ? t.employee_fullname : 'Не выдан');
                 this.fillEmployees($form.find('select[name="to_employee_id"]'), t.employee_id);
@@ -607,7 +613,7 @@
                 const data = res.data || {};
                 const t = data.token || {};
                 $('#history-token-info').html(
-                    '<span class="token-pill"><i class="bi bi-key"></i>' + App.escape(t.model_name || '') + ' ' + App.escape(t.serial_number || '') + '</span>'
+                    '<span class="token-pill"><i class="bi bi-key"></i><span class="token-badge">' + App.escape(t.model_name || '') + '</span><span class="token-badge">' + App.escape(t.serial_number || '') + '</span></span>'
                 );
                 const transfers = data.transfers || [];
                 if (!transfers.length) {

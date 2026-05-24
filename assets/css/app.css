@@ -175,6 +175,7 @@ html, body {
     border-color: #dde1e8;
 }
 .status-badge i { font-size: 0.72rem; }
+.status-badge + .status-badge { margin-left: 4px; }
 .status-badge.issued  { background: #e4f7ed; color: #1a7d44; border-color: #b3e6c8; }
 .status-badge.broken  { background: #fff4e0; color: #a85e00; border-color: #ffd08a; }
 .status-badge.lost    { background: #fde8ea; color: #c0192c; border-color: #f4a8b0; }
@@ -309,13 +310,23 @@ mark.search-highlight {
 .token-pill {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     padding: 2px 8px;
     background: #eef0f3;
     border-radius: 4px;
     font-size: 0.8rem;
     font-weight: 500;
     color: #21252b;
+}
+.token-badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border: 1px solid #c2c8d0;
+    border-radius: 3px;
+    background: #fff;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.4;
 }
 
 .toast-container {

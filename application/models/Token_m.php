@@ -129,19 +129,30 @@ class Token_m extends CI_Model {
 
 	public function compute_status($row)
 	{
+		$statuses = array();
+
 		if ((int) $row['is_lost'] === 1)
 		{
-			return array('code' => 'lost', 'label' => 'Утерян');
+			$statuses[] = array('code' => 'lost', 'label' => 'Утерян');
 		}
 		if ((int) $row['is_broken'] === 1)
 		{
-			return array('code' => 'broken', 'label' => 'Сломан');
+			$statuses[] = array('code' => 'broken', 'label' => 'Сломан');
 		}
-		if ( ! empty($row['employee_id']))
+
+		if (empty($statuses))
 		{
-			return array('code' => 'issued', 'label' => 'Выдан');
+			if ( ! empty($row['employee_id']))
+			{
+				$statuses[] = array('code' => 'issued', 'label' => 'Выдан');
+			}
+			else
+			{
+				$statuses[] = array('code' => 'not_issued', 'label' => 'Не выдан');
+			}
 		}
-		return array('code' => 'not_issued', 'label' => 'Не выдан');
+
+		return $statuses;
 	}
 
 	public function create($data)
