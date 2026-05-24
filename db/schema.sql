@@ -85,17 +85,3 @@ CREATE TABLE token_transfers (
     KEY idx_transfers_token (token_id),
     KEY idx_transfers_date  (transferred_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- =============================================================================
--- Seed
--- =============================================================================
-
-INSERT INTO token_models (id, name, created_at, updated_at) VALUES
-    ('11111111-1111-4111-a111-111111111111', 'Рутокен ЭЦП 2.0',   NOW(), NOW()),
-    ('22222222-2222-4222-a222-222222222222', 'JaCarta-2 SE',      NOW(), NOW()),
-    ('33333333-3333-4333-a333-333333333333', 'eToken PRO 72К',    NOW(), NOW());
-
-INSERT INTO employees (id, firstname, lastname, patronymic, email, cabinet, is_active, created_at, updated_at) VALUES
-    ('aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa', 'Иван',   'Иванов',   'Иванович',   'ivanov@example.com',   '101', 1, NOW(), NOW()),
-    ('bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb', 'Петр',   'Петров',   'Петрович',   'petrov@example.com',   '102', 1, NOW(), NOW()),
-    ('cccccccc-cccc-4ccc-cccc-cccccccccccc', 'Анна',   'Смирнова', 'Сергеевна',  'smirnova@example.com', '103', 1, NOW(), NOW());

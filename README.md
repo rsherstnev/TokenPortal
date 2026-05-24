@@ -1,153 +1,191 @@
 # Учёт токенов СКЗИ
 
 Веб-приложение для учёта токенов СКЗИ: модели токенов, сами токены, сотрудники,
-передачи токенов между сотрудниками, история передач и soft delete.
+передачи токенов между сотрудниками, общая история передач и soft delete.
+
+**Важно:** в приложении **нет входа пользователей и разграничения прав**. Любой,
+кто может открыть сайт в сети, получает полный доступ ко всем данным и операциям
+(CRUD, передачи, удаление). Размещайте только во внутренней сети или за VPN /
+reverse proxy с аутентификацией.
 
 ## Стек
 
-| Компонент    | Версия в этом проекте     | Примечание |
-|--------------|---------------------------|------------|
-| PHP          | 8.5 (Ubuntu 26.04 LTS)    | Изначально запрашивалась PHP 8.0, но она EOL с ноября 2023 и недоступна в стандартных репозиториях Ubuntu 26.04. Установлена последняя доступная стабильная версия. |
-| CodeIgniter  | 3.1.13                    |            |
-| MariaDB      | 11.8+                     |            |
-| Bootstrap    | 4.6.2                     | + jQuery 3.7.1 + Bootstrap Icons 1.11.3, всё лежит локально в `assets/vendor/`. |
-| Apache       | 2.4                       | mod_rewrite обязателен.  |
+| Компонент   | Версия в проекте | Примечание |
+|-------------|------------------|------------|
+| PHP         | 8.1+ (проверено на 8.5) | Расширения: `mysqli`, `mbstring`, `json`, `intl` (желательно). |
+| CodeIgniter | 3.1.13           | Ядро в каталоге `system/`, Composer для runtime не нужен. |
+| MariaDB     | 10.7+ / 11.x     | Нужен тип `UUID` (MariaDB 10.7+). |
+| Apache      | 2.4+             | `mod_rewrite` обязателен. Nginx — см. ниже. |
+| Frontend    | Bootstrap 4.6.2, jQuery 3.7.1, Bootstrap Icons 1.11.3, Tom Select 2.4.3 | Всё локально в `assets/vendor/`, CDN не используется. |
 
-## Установка ПО (Ubuntu 26.04)
+## Требования
+
+- Linux с Apache (или Nginx + php-fpm).
+- MariaDB/MySQL с поддержкой `UUID`.
+- Права на запись для веб-сервера в `application/logs/` и `application/cache/`.
+
+## Установка
+
+Ниже — типовой сценарий для Ubuntu/Debian. Пути можно заменить; далее
+`APP_ROOT` — каталог с `index.php` (рекомендуется `/var/www/skzi-tokens`).
+
+### 1. Системные пакеты
 
 ```bash
 sudo apt update
 sudo apt install -y apache2 mariadb-server \
-    php php-cli php-mysql php-mbstring php-xml php-intl php-curl php-zip libapache2-mod-php \
-    unzip curl
+    php php-cli libapache2-mod-php \
+    php-mysql php-mbstring php-xml php-intl php-json php-curl php-zip \
+    unzip curl git
 sudo a2enmod rewrite
 sudo systemctl enable --now apache2 mariadb
 ```
 
-## База данных
+### 2. Код приложения
 
 ```bash
-sudo mysql <<'SQL'
-CREATE DATABASE IF NOT EXISTS skzi_tokens CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER IF NOT EXISTS 'skzi'@'localhost' IDENTIFIED BY 'skzi';
-GRANT ALL PRIVILEGES ON skzi_tokens.* TO 'skzi'@'localhost';
+sudo mkdir -p /var/www/skzi-tokens
+sudo chown "$USER":www-data /var/www/skzi-tokens
+git clone <URL-репозитория> /var/www/skzi-tokens
+# или скопируйте архив/каталог в APP_ROOT
+cd /var/www/skzi-tokens
+```
+
+### 3. База данных
+
+Задайте **свой** пароль вместо примера `CHANGE_ME`:
+
+```bash
+read -rsp 'Пароль БД для пользователя skzi: ' DB_PASS; echo
+sudo mysql <<SQL
+CREATE DATABASE IF NOT EXISTS skzi_tokens
+    CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER IF NOT EXISTS 'skzi'@'localhost' IDENTIFIED BY '${DB_PASS}';
+GRANT SELECT, INSERT, UPDATE, DELETE ON skzi_tokens.* TO 'skzi'@'localhost';
 FLUSH PRIVILEGES;
 SQL
 
-mysql -u skzi -pskzi skzi_tokens < db/schema.sql
+mysql -u skzi -p"${DB_PASS}" skzi_tokens < db/schema.sql
 ```
 
-Файл `db/schema.sql` содержит полностью преобразованную из PostgreSQL схему
-(см. ниже про правила преобразования) и сидирует:
+Файл `db/schema.sql` создаёт только таблицы (без начальных данных).
 
-- 3 модели токенов (Рутокен ЭЦП 2.0, JaCarta-2 SE, eToken PRO 72К)
-- 3 тестовых сотрудников.
+Настройте подключение в `application/config/database.php` (`hostname`, `username`,
+`password`, `database`). Не коммитьте реальные пароли в git.
 
-### Преобразование схемы PostgreSQL → MariaDB
+### 4. Права на каталоги
 
-| PostgreSQL                     | MariaDB                   |
-|--------------------------------|---------------------------|
-| `uuid`                         | `UUID`                    |
-| `text`                         | `TEXT`                    |
-| `boolean`                      | `TINYINT(1)`              |
-| `timestamp with time zone`     | `DATETIME` (UTC)          |
-| `text DEFAULT ''::text`        | `TEXT NOT NULL DEFAULT ('')` |
-
-### Дополнения относительно исходной схемы
-
-Скриншоты UI содержат тогглы «Неисправен (сломан)» и «Утерян», которых
-**не было в присланной схеме**. Поэтому в таблицу `tokens` добавлены:
-
-```sql
-is_broken TINYINT(1) NOT NULL DEFAULT 0
-is_lost   TINYINT(1) NOT NULL DEFAULT 0
+```bash
+export APP_ROOT=/var/www/skzi-tokens
+sudo chown -R www-data:www-data "$APP_ROOT/application/logs" "$APP_ROOT/application/cache"
+sudo chmod -R 775 "$APP_ROOT/application/logs" "$APP_ROOT/application/cache"
+sudo find "$APP_ROOT" -type f -exec chmod 644 {} \;
+sudo find "$APP_ROOT" -type d -exec chmod 755 {} \;
 ```
 
-Эти поля участвуют в фильтре «Сломанные / Утерянные» и в логике вычисления
-статуса токена в `Token_m::compute_status`.
-
-## Apache vhost
-
-Используется vhost, отдающий `DocumentRoot = /home/norden/tokens`:
+### 5. Apache (VirtualHost)
 
 ```apache
 # /etc/apache2/sites-available/skzi-tokens.conf
 <VirtualHost *:80>
-    ServerName localhost
-    DocumentRoot /home/norden/tokens
+    ServerName skzi.example.local
+    DocumentRoot /var/www/skzi-tokens
 
-    <Directory /home/norden/tokens>
-        Options Indexes FollowSymLinks
+    <Directory /var/www/skzi-tokens>
+        Options -Indexes +FollowSymLinks
         AllowOverride All
         Require all granted
     </Directory>
+
+    # Продакшен: не показывать PHP-ошибки в браузере
+    SetEnv CI_ENV production
 
     ErrorLog ${APACHE_LOG_DIR}/skzi_error.log
     CustomLog ${APACHE_LOG_DIR}/skzi_access.log combined
 </VirtualHost>
 ```
 
-Активация:
-
 ```bash
-sudo a2dissite 000-default
 sudo a2ensite skzi-tokens
+# при необходимости: sudo a2dissite 000-default
+sudo apache2ctl configtest
 sudo systemctl reload apache2
 ```
 
-Для доступа Apache к файлам домашнего каталога:
+Корень сайта — каталог с `index.php` и `.htaccess` (clean URLs).
 
-```bash
-sudo usermod -a -G norden www-data
-sudo chmod 750 /home/norden
-sudo chmod 755 /home/norden/tokens
-sudo chown -R norden:www-data application/logs application/cache
-sudo chmod -R 775 application/logs application/cache
+### 6. Nginx (альтернатива)
+
+```nginx
+server {
+    listen 80;
+    server_name skzi.example.local;
+    root /var/www/skzi-tokens;
+    index index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.5-fpm.sock;
+        fastcgi_param CI_ENV production;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+}
 ```
 
-После этого открыть в браузере: <http://localhost/>.
+### 7. Проверка
+
+Откройте в браузере URL виртуального хоста. Должна загрузиться страница «Токены».
+Если 500 — смотрите `application/logs/` и лог Apache.
 
 ## Конфигурация CodeIgniter
 
-Основные параметры:
+| Файл | Назначение |
+|------|------------|
+| `index.php` | `ENVIRONMENT`: по умолчанию `development`; в продакшене задайте `CI_ENV=production` (Apache `SetEnv`, php-fpm `env`). |
+| `application/config/config.php` | `base_url` из `HTTP_HOST` (удобно в dev; в prod лучше зафиксировать явный URL); `index_page = ''`; CSRF включён (`csrf_token`). |
+| `application/config/database.php` | Параметры MariaDB. |
+| `application/config/autoload.php` | `database`, `session`, `form_validation`; хелперы `url`, `form`, `uuid`. |
+| `application/config/routes.php` | Маршруты API и страниц. |
+| `application/core/MY_Controller.php` | JSON-ответы, обновление CSRF в AJAX. |
 
-- `application/config/config.php`
-  - `base_url` определяется автоматически из `HTTP_HOST`;
-  - `index_page = ''` (clean URLs через `.htaccess`);
-  - `csrf_protection = TRUE`, имя поля — `csrf_token`.
-- `application/config/database.php` — `skzi`/`skzi`/`skzi_tokens`, кодировка `utf8mb4`.
-- `application/config/autoload.php` — автозагружены `database`, `session`, `form_validation`, хелперы `url`, `form`, `uuid`.
-- `application/config/routes.php` — REST-подобные маршруты, дефолтный контроллер `tokens`.
-- `application/core/MY_Controller.php` — базовый контроллер с `json_ok` / `json_error`.
+### Composer
+
+`composer.json` — шаблон CodeIgniter для разработки/тестов. Каталог `vendor/` в
+`.gitignore` и **не используется** при обычном запуске сайта.
 
 ## Структура проекта
 
 ```
 tokens/
 ├── application/
-│   ├── config/                  настройки CodeIgniter
+│   ├── config/
 │   ├── controllers/
 │   │   ├── Tokens.php
 │   │   ├── Token_models.php
 │   │   ├── Token_transfers.php
-│   │   └── Employees.php
+│   │   ├── Employees.php
+│   │   └── Welcome.php          # заглушка CI, не используется в меню
 │   ├── core/MY_Controller.php
-│   ├── helpers/uuid_helper.php  uuid_v4(), is_uuid()
+│   ├── helpers/uuid_helper.php
 │   ├── models/
-│   │   ├── Token_m.php
-│   │   ├── Token_model_m.php
-│   │   ├── Token_transfer_m.php
-│   │   └── Employee_m.php
 │   └── views/
-│       ├── templates/{header.php, footer.php}
-│       ├── tokens/{index.php, _modals.php}
-│       └── employees/index.php
+│       ├── templates/
+│       ├── tokens/
+│       ├── employees/
+│       └── transfer_history/
 ├── assets/
 │   ├── css/app.css
 │   ├── js/app.js
-│   └── vendor/{bootstrap, jquery, bootstrap-icons}
-├── db/schema.sql                DDL + сид
-├── system/                      ядро CodeIgniter (vendored)
+│   └── vendor/
+├── db/schema.sql
+├── system/                      # CodeIgniter 3.1.13
 ├── .htaccess
 ├── index.php
 └── README.md
@@ -155,46 +193,115 @@ tokens/
 
 ## Маршруты
 
-| Метод | URI                                       | Назначение                                |
-|-------|-------------------------------------------|-------------------------------------------|
-| GET   | `/` или `/tokens`                          | главная страница                          |
-| GET   | `/tokens/list?q=&status=`                  | JSON-список токенов с фильтрами           |
-| GET   | `/tokens/get/{id}`                         | один токен                                |
-| POST  | `/tokens/create`                           | создание токена                           |
-| POST  | `/tokens/update/{id}`                      | редактирование                            |
-| POST  | `/tokens/delete/{id}`                      | soft delete                               |
-| GET   | `/token_models/list?q=`                    | JSON-список моделей                       |
-| GET   | `/token_models/options`                    | селект-список                             |
-| POST  | `/token_models/create|update|delete`       | CRUD моделей                              |
-| POST  | `/token_transfers/create/{token_id}`       | передача токена                           |
-| GET   | `/token_transfers/history/{token_id}`      | история передач                           |
-| GET   | `/employees`                               | страница сотрудников                      |
-| GET   | `/employees/list`, `/employees/options`    | списки                                    |
-| POST  | `/employees/create|update|delete`          | CRUD сотрудников                          |
+### Страницы (HTML)
 
-Все POST-эндпоинты защищены CSRF-токеном CodeIgniter, AJAX автоматически
-получает свежий хэш в JSON-ответе и подменяет его в DOM (`meta[name=csrf-hash]`).
+| URI | Описание |
+|-----|----------|
+| `/`, `/tokens` | Главная: токены и модели |
+| `/employees` | Сотрудники |
+| `/transfer_history` | Общая история передач (поиск, фильтр по датам) |
+| `/welcome` | Стандартная заглушка CodeIgniter (не в навигации) |
+
+### API (JSON)
+
+| Метод | URI | Назначение |
+|-------|-----|------------|
+| GET | `/tokens/list` | Список токенов. Query: `q`, `status` (`all` \| `issued` \| `not_issued` \| `broken` \| `lost`). По умолчанию фильтр `not_issued`. |
+| GET | `/tokens/get/{uuid}` | Один токен |
+| POST | `/tokens/create` | Создание |
+| POST | `/tokens/update/{uuid}` | Редактирование |
+| POST | `/tokens/delete/{uuid}` | Soft delete |
+| GET | `/token_models/list` | Список моделей (`q`) |
+| GET | `/token_models/options` | Активные модели для select |
+| GET | `/token_models` | То же, что `list` (JSON, без HTML-страницы) |
+| GET | `/token_models/get/{uuid}` | Одна модель |
+| POST | `/token_models/create` \| `update` \| `delete` | CRUD моделей |
+| POST | `/token_transfers/create/{token_uuid}` | Передача; пустой `to_employee_id` — возврат на склад |
+| GET | `/token_transfers/history/{token_uuid}` | История передач одного токена |
+| GET | `/transfer_history/list` | Вся история. Query: `q`, `date_from`, `date_to` (`Y-m-d` или `Y-m-d H:i:s`, UTC). Поиск по слову «склад» находит записи с `NULL` в from/to. |
+| GET | `/employees/list` | Все неудалённые сотрудники (`q`), включая неактивных |
+| GET | `/employees/options` | Только активные (для выдачи токена) |
+| GET | `/employees/get/{uuid}` | Один сотрудник |
+| POST | `/employees/create` \| `update` \| `delete` | CRUD сотрудников |
+
+Все **POST**-запросы требуют поле CSRF (`csrf_token` по умолчанию). Клиент
+(`assets/js/app.js`) подставляет токен и обновляет его из поля `csrf` в ответе.
 
 ## Возможности UI
 
-- Двухколоночная главная: «Токены» + «Модели токенов».
-- Живой поиск по сотруднику / модели / серийному номеру / словам «сломан»/«утерян».
-- Фильтр статуса: Все / Выданные / Невыданные / Сломанные / Утерянные.
-- Модальные формы добавления и редактирования токенов и моделей.
-- Модальная форма передачи токена (с возвратом на склад при пустом получателе).
-- История передач для конкретного токена.
-- Soft delete для токенов, моделей и сотрудников (`deleted_at`).
-- Отдельная страница `/employees` с полным CRUD сотрудников.
+- Главная: две колонки «Токены» и «Модели токенов».
+- Поиск по сотруднику, модели, серийному номеру; фильтр статуса.
+- Флаги «Сломан» / «Утерян» (`tokens.is_broken`, `tokens.is_lost`).
+- Модальные формы токенов, моделей, передачи; история передач по токену.
+- Страница «История передач» с фильтром по периоду.
+- Soft delete (`deleted_at`) для токенов, моделей и сотрудников.
 
-## Замечания по безопасности
+### Схема БД
 
-Файл `/etc/sudoers.d/norden-nopasswd` создавался только для удобства локальной
-установки. В продакшене удалите его:
+`db/schema.sql` — DDL для MariaDB (конвертация из PostgreSQL).
+
+Дополнительные поля в `tokens`: `is_broken`, `is_lost` (см. комментарии в SQL).
+
+В таблице `employees` есть столбцы `department_id`, `position_id`, `address_id`
+из исходной схемы — **в текущем UI не используются**.
+
+| PostgreSQL (исходник) | MariaDB |
+|-----------------------|---------|
+| `uuid` | `UUID` |
+| `text` | `TEXT` |
+| `boolean` | `TINYINT(1)` |
+| `timestamp with time zone` | `DATETIME` (UTC) |
+
+## Безопасность
+
+Результат ручного просмотра кода приложения (`application/`, `assets/js/`,
+маршруты, конфиги). **Скрытых бэкдоров, eval/shell в прикладном коде и
+исходящих запросов на сторонние хосты не обнаружено.** Хуки CI отключены
+(`enable_hooks = FALSE`).
+
+### Зависимости
+
+| Компонент | Риск | Рекомендация |
+|-----------|------|----------------|
+| CodeIgniter 3.1.13 | Фреймворк EOL; известны исторические CVE | Следить за патчами; не выставлять `system/` в интернет; при возможности планировать миграцию. |
+| Bootstrap 4.6.2 | Ветка EOL | Локальная копия; обновлять при редизайне. jQuery 3.7.1 и Tom Select 2.4.3 — актуальные минорные релизы. |
+| Composer `vendor/` | Не подключается в runtime | Не устанавливать на боевом сервере без необходимости. |
+
+Поиск по шаблонам (`eval`, `exec`, `shell_exec`, `base64_decode`, `curl` к
+внешним URL) в `application/` — без совпадений. В `assets/js/app.js` все
+запросы идут только на `SKZI_BASE_URL` (тот же origin).
+
+### Уязвимости и ограничения (не бэкдоры, но критично для эксплуатации)
+
+1. **Нет аутентификации** — единственная защита write-операций — CSRF от
+   произвольного сайта; чтение и изменение данных доступны любому клиенту в сети.
+2. **Учётные данные БД по умолчанию** в репозитории (`skzi`/`skzi`) — сменить
+   до выхода в сеть.
+3. **`encryption_key` в `config.php`** — статический ключ в git; для prod
+   сгенерировать свой и не публиковать.
+4. **`ENVIRONMENT = development`** по умолчанию — включены отображение ошибок;
+   задать `production` и `db_debug = FALSE`.
+5. **`base_url` из `HTTP_HOST`** — при неправильном прокси возможны проблемы с
+   URL/CSRF; в prod задать фиксированный `base_url`.
+6. **Контроллер `Welcome`** — доступен по `/welcome`, в меню нет (остаток CI).
+
+### Чеклист для продакшена
+
+- [ ] `SetEnv CI_ENV production` (или аналог для php-fpm)
+- [ ] Сильный пароль БД, отдельный пользователь с минимальными правами
+- [ ] Сеть: VPN, firewall, Basic Auth / SSO на reverse proxy
+- [ ] HTTPS
+- [ ] Отключить листинг каталогов (`Options -Indexes`)
+- [ ] Не коммитить реальные секреты; ограничить доступ к `application/logs/`
+- [ ] Удалить локальный `sudoers` для установки, если создавался (см. ниже)
+
+Файл `/etc/sudoers.d/norden-nopasswd` (если создавался при локальной установке)
+удалить на продакшене:
 
 ```bash
-sudo rm /etc/sudoers.d/norden-nopasswd
+sudo rm -f /etc/sudoers.d/norden-nopasswd
 ```
 
 ## Лицензия
 
-Код CodeIgniter — MIT (см. `license.txt`). Прикладной код — MIT.
+Код CodeIgniter — MIT (`license.txt`). Прикладной код — MIT.
