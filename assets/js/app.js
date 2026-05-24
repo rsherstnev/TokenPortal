@@ -181,6 +181,163 @@
         }, opts || {}));
     };
 
+    App.initTokenModelSelect = function (el) {
+        if (!el) return null;
+        if (el.tomselect) { el.tomselect.destroy(); }
+
+        const PLACEHOLDER_EMPTY = '- Не указана -';
+        const PLACEHOLDER_SEARCH = 'Введите для поиска ...';
+        const inModal = !!(el.closest && el.closest('.modal'));
+
+        function applyPlaceholder(ts, text) {
+            ts.settings.placeholder = text;
+            if (ts.control_input) {
+                ts.control_input.setAttribute('placeholder', text);
+            }
+            if (typeof ts.inputState === 'function') {
+                ts.inputState();
+            }
+        }
+
+        function updateClearButton(ts) {
+            if (!ts._clearBtn) return;
+            const hasValue = ts.getValue() !== '';
+            const hasQuery = ts.control_input && ts.control_input.value.trim() !== '';
+            ts._clearBtn.style.display = (hasValue || hasQuery) ? '' : 'none';
+        }
+
+        function resetSearch(ts) {
+            ts.setTextboxValue('');
+            ts.refreshOptions(false);
+            applyPlaceholder(ts, PLACEHOLDER_SEARCH);
+            ts.open();
+            updateClearButton(ts);
+        }
+
+        function clearSelection(ts) {
+            ts._userCleared = true;
+            ts._prevValue = undefined;
+            ts.clear(true);
+            resetSearch(ts);
+            ts.focus();
+        }
+
+        function handleEscape(ts) {
+            const hasQuery = ts.control_input && ts.control_input.value.trim() !== '';
+            if (hasQuery) {
+                resetSearch(ts);
+                return;
+            }
+            if (ts.getValue() !== '') {
+                clearSelection(ts);
+                return;
+            }
+            resetSearch(ts);
+        }
+
+        const ts = new TomSelect(el, {
+            allowEmptyOption: false,
+            create: false,
+            dropdownParent: inModal ? 'body' : null,
+            placeholder: PLACEHOLDER_EMPTY,
+            hidePlaceholder: true,
+            openOnFocus: true,
+            closeAfterSelect: true,
+            render: {
+                option: function (data, escape) {
+                    if (!data.value) return '';
+                    return '<div>' + escape(data.text) + '</div>';
+                },
+                item: function (data, escape) {
+                    if (!data.value) return null;
+                    return '<div>' + escape(data.text) + '</div>';
+                },
+            },
+            onInitialize: function () {
+                const self = this;
+
+                const btn = document.createElement('div');
+                btn.className = 'clear-button';
+                btn.title = 'Очистить';
+                btn.innerHTML = '&#10799;';
+                btn.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (self.isLocked) return;
+                    const hasValue = self.getValue() !== '';
+                    const hasQuery = self.control_input && self.control_input.value.trim() !== '';
+                    if (hasValue) {
+                        clearSelection(self);
+                    } else if (hasQuery) {
+                        resetSearch(self);
+                        self.focus();
+                    }
+                });
+                self.control.appendChild(btn);
+                self._clearBtn = btn;
+
+                self.control_input.addEventListener('keydown', (e) => {
+                    if (e.key !== 'Escape') return;
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    handleEscape(self);
+                }, true);
+
+                self.on('type', () => updateClearButton(self));
+                self.on('item_add', () => updateClearButton(self));
+                self.on('clear', () => updateClearButton(self));
+
+                if (!self.getValue()) {
+                    applyPlaceholder(self, PLACEHOLDER_EMPTY);
+                }
+                updateClearButton(self);
+            },
+            onFocus: function () {
+                this._userCleared = false;
+                this._prevValue = this.getValue();
+                if (this.getValue() !== '') {
+                    this.clear(true);
+                }
+                applyPlaceholder(this, PLACEHOLDER_SEARCH);
+                this.refreshOptions(false);
+                this.open();
+                updateClearButton(this);
+            },
+            onBlur: function () {
+                if (this.getValue() === '' && this._prevValue !== undefined && !this._userCleared) {
+                    this.setValue(this._prevValue, true);
+                }
+                if (this.getValue() === '') {
+                    applyPlaceholder(this, PLACEHOLDER_EMPTY);
+                } else if (this.control_input) {
+                    this.control_input.setAttribute('placeholder', '');
+                }
+                this._prevValue = undefined;
+                updateClearButton(this);
+            },
+            onItemAdd: function () {
+                this._prevValue = undefined;
+                this._userCleared = false;
+                this.setTextboxValue('');
+                if (this.control_input) {
+                    this.control_input.setAttribute('placeholder', '');
+                }
+                this.close();
+                if (typeof this.inputState === 'function') {
+                    this.inputState();
+                }
+                this.blur();
+                updateClearButton(this);
+            },
+        });
+
+        return ts;
+    };
+
     // ---- Misc helpers --------------------------------------------------------
     function escapeHtml(s) {
         return String(s == null ? '' : s)
@@ -499,8 +656,11 @@
                 const options = (res.data || []).map((m) =>
                     '<option value="' + App.escape(m.id) + '"' + (m.id === selectedId ? ' selected' : '') + '>' + App.escape(m.name) + '</option>'
                 ).join('');
-                $select.html('<option value="">— Не указана —</option>' + options);
-                App.initSelect(el);
+                $select.html('<option value=""></option>' + options);
+                const ts = App.initTokenModelSelect(el);
+                if (selectedId && ts) {
+                    ts.setValue(String(selectedId), true);
+                }
             });
         },
 

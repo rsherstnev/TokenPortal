@@ -42,8 +42,8 @@
                     <input type="hidden" name="id" value="">
                     <div class="form-group">
                         <label class="form-label-required">Модель</label>
-                        <select class="custom-select" name="token_model_id" required>
-                            <option value="">— Не указана —</option>
+                        <select class="custom-select token-model-select" name="token_model_id" required>
+                            <option value=""></option>
                         </select>
                     </div>
                     <div class="form-group mb-3">
