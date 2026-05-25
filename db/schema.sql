@@ -1,7 +1,3 @@
--- =============================================================================
--- Учёт токенов СКЗИ. Схема БД для MariaDB.
--- =============================================================================
-
 SET NAMES utf8mb4;
 SET time_zone = '+00:00';
 
@@ -10,34 +6,6 @@ CREATE DATABASE IF NOT EXISTS skzi_tokens
     COLLATE utf8mb4_unicode_ci;
 
 USE skzi_tokens;
-
-DROP TABLE IF EXISTS token_transfers;
-DROP TABLE IF EXISTS tokens;
-DROP TABLE IF EXISTS token_models;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS employees;
-
-CREATE TABLE `users` (
-    `id`                INT NOT NULL AUTO_INCREMENT,
-    `person_name`       VARCHAR(150) NOT NULL COLLATE 'utf8mb3_general_ci',
-    `person_dolj`       INT NOT NULL,
-    `person_department` INT NOT NULL,
-    `city_id`           TINYINT UNSIGNED NOT NULL,
-    `cabinet`           VARCHAR(6) NOT NULL COLLATE 'utf8mb3_general_ci',
-    `sogl_ruk`          TINYINT(1) NOT NULL,
-    `needcrypto`        TINYINT(1) NOT NULL,
-    `pos`               TINYINT(1) NOT NULL,
-    `sd`                INT NOT NULL,
-    `cr_date`           DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
-    `updated`           DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
-    `n_type`            ENUM('','пром','энергонадзор','стройнадзор','ГТС') NOT NULL COLLATE 'utf8mb3_general_ci',
-    `id_num`            VARCHAR(6) NOT NULL COLLATE 'utf8mb3_general_ci',
-    `id_printed`        DATETIME NULL DEFAULT NULL,
-    `not_print`         TINYINT NULL DEFAULT '0',
-    PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE INDEX `id` (`id`) USING BTREE,
-    INDEX `dept_idx` (`person_department`) USING BTREE
-) COLLATE='utf8mb3_general_ci' ENGINE=InnoDB;
 
 CREATE TABLE token_models (
     id          UUID      NOT NULL,
