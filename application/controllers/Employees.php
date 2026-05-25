@@ -12,7 +12,7 @@ class Employees extends MY_Controller {
 	public function index()
 	{
 		$data = array(
-			'page_title' => 'Сотрудники',
+			'page_title' => 'Пользователи',
 			'active_nav' => 'employees',
 		);
 		$this->load->view('templates/header', $data);
@@ -23,8 +23,8 @@ class Employees extends MY_Controller {
 	public function list_json()
 	{
 		$search = trim((string) $this->input->get('q'));
-		$rows  = $this->employee_m->list_filtered($search, FALSE);
-		$total = $this->employee_m->count_all();
+		$rows   = $this->employee_m->list_filtered($search);
+		$total  = $this->employee_m->count_all();
 		$this->json_ok($rows, array('count' => count($rows), 'total' => $total));
 	}
 
@@ -35,7 +35,7 @@ class Employees extends MY_Controller {
 
 	public function get($id)
 	{
-		if ( ! is_uuid($id))
+		if ( ! $this->_valid_id($id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
@@ -43,7 +43,7 @@ class Employees extends MY_Controller {
 		$row = $this->employee_m->get($id);
 		if ( ! $row)
 		{
-			$this->json_error('Сотрудник не найден', 404);
+			$this->json_error('Пользователь не найден', 404);
 			return;
 		}
 		$this->json_ok($row);
@@ -60,20 +60,20 @@ class Employees extends MY_Controller {
 			return;
 		}
 		$id = $this->employee_m->create($payload);
-		$this->json_ok($this->employee_m->get($id), array('message' => 'Сотрудник создан'));
+		$this->json_ok($this->employee_m->get($id), array('message' => 'Пользователь создан'));
 	}
 
 	public function update($id)
 	{
 		$this->require_post();
-		if ( ! is_uuid($id))
+		if ( ! $this->_valid_id($id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
 		}
 		if ( ! $this->employee_m->get($id))
 		{
-			$this->json_error('Сотрудник не найден', 404);
+			$this->json_error('Пользователь не найден', 404);
 			return;
 		}
 		$payload = $this->collect_payload();
@@ -84,52 +84,85 @@ class Employees extends MY_Controller {
 			return;
 		}
 		$this->employee_m->update($id, $payload);
-		$this->json_ok($this->employee_m->get($id), array('message' => 'Сотрудник обновлён'));
+		$this->json_ok($this->employee_m->get($id), array('message' => 'Пользователь обновлён'));
 	}
 
 	public function delete($id)
 	{
 		$this->require_post();
-		if ( ! is_uuid($id))
+		if ( ! $this->_valid_id($id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
 		}
 		if ( ! $this->employee_m->get($id))
 		{
-			$this->json_error('Сотрудник не найден', 404);
+			$this->json_error('Пользователь не найден', 404);
 			return;
 		}
-		$this->employee_m->soft_delete($id);
-		$this->json_ok(array(), array('message' => 'Сотрудник удалён'));
+		$this->employee_m->delete($id);
+		$this->json_ok(array(), array('message' => 'Пользователь удалён'));
+	}
+
+	private function _valid_id($id)
+	{
+		return ctype_digit((string) $id) && (int) $id > 0;
 	}
 
 	private function collect_payload()
 	{
 		return array(
-			'firstname'  => (string) $this->input->post('firstname'),
-			'lastname'   => (string) $this->input->post('lastname'),
-			'patronymic' => (string) $this->input->post('patronymic'),
-			'email'      => (string) $this->input->post('email'),
-			'cabinet'    => (string) $this->input->post('cabinet'),
-			'is_active'  => (int) (bool) $this->input->post('is_active'),
+			'person_name'       => (string) $this->input->post('person_name'),
+			'person_dolj'       => (string) $this->input->post('person_dolj'),
+			'person_department' => (string) $this->input->post('person_department'),
+			'city_id'           => (string) $this->input->post('city_id'),
+			'cabinet'           => (string) $this->input->post('cabinet'),
+			'sogl_ruk'          => (int) (bool) $this->input->post('sogl_ruk'),
+			'needcrypto'        => (int) (bool) $this->input->post('needcrypto'),
+			'pos'               => (int) (bool) $this->input->post('pos'),
+			'sd'                => (string) $this->input->post('sd'),
+			'n_type'            => (string) $this->input->post('n_type'),
+			'id_num'            => (string) $this->input->post('id_num'),
+			'id_printed'        => (string) $this->input->post('id_printed'),
+			'not_print'         => (int) (bool) $this->input->post('not_print'),
 		);
 	}
 
 	private function validate($p)
 	{
 		$errors = array();
-		if (trim($p['firstname']) === '')
+		if (trim($p['person_name']) === '')
 		{
-			$errors['firstname'] = 'Укажите имя';
+			$errors['person_name'] = 'Укажите ФИО';
 		}
-		if (trim($p['lastname']) === '')
+		if ( ! is_numeric($p['person_dolj']))
 		{
-			$errors['lastname'] = 'Укажите фамилию';
+			$errors['person_dolj'] = 'Укажите должность (код)';
 		}
-		if (trim($p['email']) !== '' && ! filter_var(trim($p['email']), FILTER_VALIDATE_EMAIL))
+		if ( ! is_numeric($p['person_department']))
 		{
-			$errors['email'] = 'Некорректный email';
+			$errors['person_department'] = 'Укажите отдел (код)';
+		}
+		if ( ! is_numeric($p['city_id']))
+		{
+			$errors['city_id'] = 'Укажите код города';
+		}
+		if (trim($p['cabinet']) === '')
+		{
+			$errors['cabinet'] = 'Укажите кабинет';
+		}
+		if ( ! is_numeric($p['sd']))
+		{
+			$errors['sd'] = 'Укажите SD';
+		}
+		$valid_types = array('', 'пром', 'энергонадзор', 'стройнадзор', 'ГТС');
+		if ( ! in_array($p['n_type'], $valid_types, TRUE))
+		{
+			$errors['n_type'] = 'Недопустимый тип надзора';
+		}
+		if (trim($p['id_num']) === '')
+		{
+			$errors['id_num'] = 'Укажите номер удостоверения';
 		}
 		return $errors;
 	}

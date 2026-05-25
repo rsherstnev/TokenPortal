@@ -88,18 +88,18 @@ class Token_transfers extends MY_Controller {
 		$to_employee_id = $to_employee_id === '' ? NULL : $to_employee_id;
 		$comment = trim((string) $this->input->post('comment'));
 
-		// Возврат на склад (to = NULL) или передача конкретному сотруднику.
+		// Возврат на склад (to = NULL) или передача конкретному пользователю.
 		if ($to_employee_id !== NULL)
 		{
-			if ( ! is_uuid($to_employee_id))
+			if ( ! ctype_digit((string) $to_employee_id) || (int) $to_employee_id <= 0)
 			{
-				$this->json_error('Выберите сотрудника', 422, array('to_employee_id' => 'Выберите сотрудника'));
+				$this->json_error('Выберите пользователя', 422, array('to_employee_id' => 'Выберите пользователя'));
 				return;
 			}
 			$emp = $this->employee_m->get($to_employee_id);
-			if ( ! $emp || (int) $emp['is_active'] !== 1)
+			if ( ! $emp)
 			{
-				$this->json_error('Сотрудник не найден или неактивен', 422, array('to_employee_id' => 'Сотрудник не найден или неактивен'));
+				$this->json_error('Пользователь не найден', 422, array('to_employee_id' => 'Пользователь не найден'));
 				return;
 			}
 		}

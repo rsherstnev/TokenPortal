@@ -84,14 +84,14 @@ class Token_transfer_m extends CI_Model {
 			tr.to_employee_id,
 			tm.name AS model_name,
 			t.serial_number,
-			TRIM(CONCAT_WS(' ', fe.lastname, fe.firstname, fe.patronymic)) AS from_fullname,
-			TRIM(CONCAT_WS(' ', te.lastname, te.firstname, te.patronymic)) AS to_fullname
+			fe.person_name AS from_fullname,
+			te.person_name AS to_fullname
 		", FALSE);
 		$this->db->from('token_transfers tr');
 		$this->db->join('tokens t', 't.id = tr.token_id', 'inner');
 		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'inner');
-		$this->db->join('employees fe', 'fe.id = tr.from_employee_id', 'left');
-		$this->db->join('employees te', 'te.id = tr.to_employee_id', 'left');
+		$this->db->join('users fe', 'fe.id = tr.from_employee_id', 'left');
+		$this->db->join('users te', 'te.id = tr.to_employee_id', 'left');
 
 		$this->_apply_list_filters($search, $token_id, $date_from, $date_to);
 
@@ -110,8 +110,8 @@ class Token_transfer_m extends CI_Model {
 		$this->db->from('token_transfers tr');
 		$this->db->join('tokens t', 't.id = tr.token_id', 'inner');
 		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'inner');
-		$this->db->join('employees fe', 'fe.id = tr.from_employee_id', 'left');
-		$this->db->join('employees te', 'te.id = tr.to_employee_id', 'left');
+		$this->db->join('users fe', 'fe.id = tr.from_employee_id', 'left');
+		$this->db->join('users te', 'te.id = tr.to_employee_id', 'left');
 
 		$this->_apply_list_filters($search, $token_id, $date_from, $date_to);
 
@@ -135,8 +135,8 @@ class Token_transfer_m extends CI_Model {
 				"LOWER(tm.name) LIKE '%{$like}%'",
 				"LOWER(t.serial_number) LIKE '%{$like}%'",
 				"LOWER(tr.comment) LIKE '%{$like}%'",
-				"LOWER(CONCAT_WS(' ', fe.lastname, fe.firstname, fe.patronymic)) LIKE '%{$like}%'",
-				"LOWER(CONCAT_WS(' ', te.lastname, te.firstname, te.patronymic)) LIKE '%{$like}%'",
+				"LOWER(fe.person_name) LIKE '%{$like}%'",
+				"LOWER(te.person_name) LIKE '%{$like}%'",
 			);
 			// «Склад» в интерфейсе — это NULL в from/to_employee_id, в БД слова нет.
 			if ($lc !== '' && mb_strpos('склад', $lc) !== FALSE)

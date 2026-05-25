@@ -23,14 +23,14 @@ class Token_m extends CI_Model {
 			t.created_at,
 			t.updated_at,
 			tm.name AS model_name,
-			TRIM(CONCAT_WS(' ', e.lastname, e.firstname, e.patronymic)) AS employee_fullname,
+			e.person_name AS employee_fullname,
 			(SELECT MAX(tr.transferred_at)
 			 FROM token_transfers tr
 			 WHERE tr.token_id = t.id AND tr.to_employee_id IS NOT NULL) AS last_issued_at
 		", FALSE);
 		$this->db->from('tokens t');
 		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'left');
-		$this->db->join('employees e', 'e.id = t.employee_id', 'left');
+		$this->db->join('users e', 'e.id = t.employee_id', 'left');
 		$this->db->where('t.deleted_at IS NULL', NULL, FALSE);
 	}
 
@@ -71,7 +71,7 @@ class Token_m extends CI_Model {
 			$conditions = array(
 				"LOWER(t.serial_number) LIKE '%".$this->db->escape_like_str($lc)."%'",
 				"LOWER(tm.name) LIKE '%".$this->db->escape_like_str($lc)."%'",
-				"LOWER(TRIM(CONCAT_WS(' ', e.lastname, e.firstname, e.patronymic))) LIKE '%".$this->db->escape_like_str($lc)."%'",
+				"LOWER(e.person_name) LIKE '%".$this->db->escape_like_str($lc)."%'",
 			);
 
 			$this->db->where('('.implode(' OR ', $conditions).')', NULL, FALSE);

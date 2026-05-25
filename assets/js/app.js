@@ -751,8 +751,8 @@
         fillEmployees($select, excludeId) {
             App.getJSON('employees/options').then((res) => {
                 const options = (res.data || [])
-                    .filter((e) => e.id !== excludeId)
-                    .map((e) => '<option value="' + App.escape(e.id) + '">' + App.escape(e.fullname || (e.lastname + ' ' + e.firstname)) + '</option>')
+                    .filter((e) => String(e.id) !== String(excludeId))
+                    .map((e) => '<option value="' + App.escape(e.id) + '">' + App.escape(e.person_name || '') + '</option>')
                     .join('');
                 $select.html('<option value="">— Возврат на склад —</option>' + options);
                 App.initSelect($select[0]);
@@ -853,36 +853,34 @@
             const query = this.$search.val();
             App.getJSON('employees/list', { q: query })
                 .then((res) => this.render(res.data || [], res.total, query))
-                .catch(() => App.toast('Не удалось загрузить сотрудников', 'error'));
+                .catch(() => App.toast('Не удалось загрузить пользователей', 'error'));
         },
 
         render(rows, total, query) {
             rows = App.sortRows(rows, this.sortState, function (r, key) {
-                if (key === 'is_active') return Number(r.is_active);
+                if (key === 'person_dolj' || key === 'person_department') return Number(r[key]);
                 return r[key] || '';
             });
             const n = rows.length;
             this.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
             if (!rows.length) {
-                this.$list.html('<tr><td colspan="5" class="empty-cell">Нет сотрудников</td></tr>');
+                this.$list.html('<tr><td colspan="7" class="empty-cell">Нет пользователей</td></tr>');
                 return;
             }
-            const html = rows.map((r) => {
-                const active = Number(r.is_active) === 1
-                    ? '<span class="status-badge issued">Активен</span>'
-                    : '<span class="status-badge lost">Неактивен</span>';
-                return ''
-                    + '<tr data-id="' + App.escape(r.id) + '">'
-                    +   '<td>' + App.highlightMatch(r.fullname, query) + '</td>'
-                    +   '<td>' + App.highlightMatch(r.email || '', query) + '</td>'
-                    +   '<td>' + App.highlightMatch(r.cabinet || '', query) + '</td>'
-                    +   '<td>' + active + '</td>'
-                    +   '<td class="actions-cell">'
-                    +     '<button type="button" class="btn-icon edit action-edit"     data-id="' + App.escape(r.id) + '" title="Редактировать"><i class="bi bi-pencil"></i></button>'
-                    +     '<button type="button" class="btn-icon delete action-delete" data-id="' + App.escape(r.id) + '" title="Удалить"><i class="bi bi-trash"></i></button>'
-                    +   '</td>'
-                    + '</tr>';
-            }).join('');
+            const html = rows.map((r) => ''
+                + '<tr data-id="' + App.escape(r.id) + '">'
+                +   '<td>' + App.highlightMatch(r.person_name || '', query) + '</td>'
+                +   '<td>' + App.escape(r.person_dolj || '') + '</td>'
+                +   '<td>' + App.escape(r.person_department || '') + '</td>'
+                +   '<td>' + App.highlightMatch(r.cabinet || '', query) + '</td>'
+                +   '<td>' + App.escape(r.n_type || '') + '</td>'
+                +   '<td>' + App.highlightMatch(r.id_num || '', query) + '</td>'
+                +   '<td class="actions-cell">'
+                +     '<button type="button" class="btn-icon edit action-edit"     data-id="' + App.escape(r.id) + '" title="Редактировать"><i class="bi bi-pencil"></i></button>'
+                +     '<button type="button" class="btn-icon delete action-delete" data-id="' + App.escape(r.id) + '" title="Удалить"><i class="bi bi-trash"></i></button>'
+                +   '</td>'
+                + '</tr>'
+            ).join('');
             this.$list.html(html);
         },
 
@@ -890,8 +888,7 @@
             const $form = $('#employeeForm');
             $form[0].reset();
             $form.find('[name="id"]').val('');
-            $form.find('[name="is_active"]').prop('checked', true);
-            $('#employeeModalTitle').text('Добавление сотрудника');
+            $('#employeeModalTitle').text('Добавление пользователя');
             App.clearErrors($form);
             $('#employeeModal').modal('show');
         },
@@ -903,13 +900,20 @@
                 $form[0].reset();
                 App.clearErrors($form);
                 $form.find('[name="id"]').val(e.id);
-                $form.find('[name="firstname"]').val(e.firstname);
-                $form.find('[name="lastname"]').val(e.lastname);
-                $form.find('[name="patronymic"]').val(e.patronymic);
-                $form.find('[name="email"]').val(e.email);
+                $form.find('[name="person_name"]').val(e.person_name);
+                $form.find('[name="person_dolj"]').val(e.person_dolj);
+                $form.find('[name="person_department"]').val(e.person_department);
+                $form.find('[name="city_id"]').val(e.city_id);
                 $form.find('[name="cabinet"]').val(e.cabinet);
-                $form.find('[name="is_active"]').prop('checked', Number(e.is_active) === 1);
-                $('#employeeModalTitle').text('Редактирование сотрудника');
+                $form.find('[name="sd"]').val(e.sd);
+                $form.find('[name="n_type"]').val(e.n_type || '');
+                $form.find('[name="id_num"]').val(e.id_num);
+                $form.find('[name="id_printed"]').val(e.id_printed ? e.id_printed.replace(' ', 'T').substring(0, 16) : '');
+                $form.find('[name="sogl_ruk"]').prop('checked',   Number(e.sogl_ruk)   === 1);
+                $form.find('[name="needcrypto"]').prop('checked', Number(e.needcrypto) === 1);
+                $form.find('[name="pos"]').prop('checked',        Number(e.pos)        === 1);
+                $form.find('[name="not_print"]').prop('checked',  Number(e.not_print)  === 1);
+                $('#employeeModalTitle').text('Редактирование пользователя');
                 $('#employeeModal').modal('show');
             });
         },
@@ -917,13 +921,21 @@
         save() {
             const $form = $('#employeeForm');
             const id = $form.find('[name="id"]').val();
+            const rawIdPrinted = $form.find('[name="id_printed"]').val();
             const payload = {
-                firstname:  $form.find('[name="firstname"]').val(),
-                lastname:   $form.find('[name="lastname"]').val(),
-                patronymic: $form.find('[name="patronymic"]').val(),
-                email:      $form.find('[name="email"]').val(),
-                cabinet:    $form.find('[name="cabinet"]').val(),
-                is_active:  $form.find('[name="is_active"]').is(':checked') ? 1 : 0,
+                person_name:       $form.find('[name="person_name"]').val(),
+                person_dolj:       $form.find('[name="person_dolj"]').val(),
+                person_department: $form.find('[name="person_department"]').val(),
+                city_id:           $form.find('[name="city_id"]').val(),
+                cabinet:           $form.find('[name="cabinet"]').val(),
+                sd:                $form.find('[name="sd"]').val(),
+                n_type:            $form.find('[name="n_type"]').val(),
+                id_num:            $form.find('[name="id_num"]').val(),
+                id_printed:        rawIdPrinted ? rawIdPrinted.replace('T', ' ') + ':00' : '',
+                sogl_ruk:          $form.find('[name="sogl_ruk"]').is(':checked')   ? 1 : 0,
+                needcrypto:        $form.find('[name="needcrypto"]').is(':checked') ? 1 : 0,
+                pos:               $form.find('[name="pos"]').is(':checked')        ? 1 : 0,
+                not_print:         $form.find('[name="not_print"]').is(':checked')  ? 1 : 0,
             };
             const path = id ? ('employees/update/' + id) : 'employees/create';
             App.postJSON(path, payload)
@@ -939,7 +951,7 @@
         },
 
         delete(id) {
-            App.confirm('Удалить сотрудника? Действие нельзя отменить.').then((ok) => {
+            App.confirm('Удалить пользователя? Действие нельзя отменить.').then((ok) => {
                 if (!ok) return;
                 App.postJSON('employees/delete/' + id)
                     .then((res) => { App.toast(res.message || 'Удалено', 'success'); this.refresh(); })

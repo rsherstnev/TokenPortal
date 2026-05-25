@@ -1,14 +1,5 @@
 -- =============================================================================
 -- Учёт токенов СКЗИ. Схема БД для MariaDB.
--- Преобразовано из исходной схемы PostgreSQL с учётом особенностей MariaDB:
---   uuid                       -> UUID  (нативный тип MariaDB 10.7+)
---   text                       -> TEXT
---   boolean                    -> TINYINT(1)
---   timestamp with time zone   -> DATETIME (UTC)
---
--- Дополнения относительно исходной схемы:
---   tokens.is_broken (TINYINT)  -- требуется тогглом «Неисправен (сломан)» в UI
---   tokens.is_lost   (TINYINT)  -- требуется тогглом «Утерян» в UI
 -- =============================================================================
 
 SET NAMES utf8mb4;
@@ -23,27 +14,30 @@ USE skzi_tokens;
 DROP TABLE IF EXISTS token_transfers;
 DROP TABLE IF EXISTS tokens;
 DROP TABLE IF EXISTS token_models;
+DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS employees;
 
-CREATE TABLE employees (
-    id              UUID         NOT NULL,
-    firstname       TEXT         NOT NULL,
-    lastname        TEXT         NOT NULL,
-    patronymic      TEXT         NOT NULL DEFAULT (''),
-    department_id   UUID         NULL,
-    position_id     UUID         NULL,
-    address_id      UUID         NULL,
-    cabinet         TEXT         NULL,
-    email           TEXT         NULL,
-    is_active       TINYINT(1)   NULL DEFAULT 1,
-    dismissal_date  DATETIME     NULL,
-    created_at      DATETIME     NULL,
-    updated_at      DATETIME     NULL,
-    deleted_at      DATETIME     NULL,
-    PRIMARY KEY (id),
-    KEY idx_employees_active (is_active),
-    KEY idx_employees_deleted (deleted_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `users` (
+    `id`                INT NOT NULL AUTO_INCREMENT,
+    `person_name`       VARCHAR(150) NOT NULL COLLATE 'utf8mb3_general_ci',
+    `person_dolj`       INT NOT NULL,
+    `person_department` INT NOT NULL,
+    `city_id`           TINYINT UNSIGNED NOT NULL,
+    `cabinet`           VARCHAR(6) NOT NULL COLLATE 'utf8mb3_general_ci',
+    `sogl_ruk`          TINYINT(1) NOT NULL,
+    `needcrypto`        TINYINT(1) NOT NULL,
+    `pos`               TINYINT(1) NOT NULL,
+    `sd`                INT NOT NULL,
+    `cr_date`           DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+    `updated`           DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
+    `n_type`            ENUM('','пром','энергонадзор','стройнадзор','ГТС') NOT NULL COLLATE 'utf8mb3_general_ci',
+    `id_num`            VARCHAR(6) NOT NULL COLLATE 'utf8mb3_general_ci',
+    `id_printed`        DATETIME NULL DEFAULT NULL,
+    `not_print`         TINYINT NULL DEFAULT '0',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `id` (`id`) USING BTREE,
+    INDEX `dept_idx` (`person_department`) USING BTREE
+) COLLATE='utf8mb3_general_ci' ENGINE=InnoDB;
 
 CREATE TABLE token_models (
     id          UUID      NOT NULL,
@@ -60,24 +54,24 @@ CREATE TABLE tokens (
     id              UUID        NOT NULL,
     token_model_id  UUID        NOT NULL,
     serial_number   TEXT        NOT NULL,
-    employee_id     UUID        NULL,
+    employee_id     INT         NULL,
     is_broken       TINYINT(1)  NOT NULL DEFAULT 0,
     is_lost         TINYINT(1)  NOT NULL DEFAULT 0,
     created_at      DATETIME    NULL,
     updated_at      DATETIME    NULL,
     deleted_at      DATETIME    NULL,
     PRIMARY KEY (id),
-    KEY idx_tokens_model     (token_model_id),
-    KEY idx_tokens_employee  (employee_id),
-    KEY idx_tokens_deleted   (deleted_at),
+    KEY idx_tokens_model        (token_model_id),
+    KEY idx_tokens_employee     (employee_id),
+    KEY idx_tokens_deleted      (deleted_at),
     KEY idx_tokens_model_serial (token_model_id, serial_number(128))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE token_transfers (
     id                UUID      NOT NULL,
     token_id          UUID      NULL,
-    from_employee_id  UUID      NULL,
-    to_employee_id    UUID      NULL,
+    from_employee_id  INT       NULL,
+    to_employee_id    INT       NULL,
     comment           TEXT      NULL,
     transferred_at    DATETIME  NULL,
     created_at        DATETIME  NULL,
