@@ -369,6 +369,22 @@
             + ' ' + p(d.getUTCHours()) + ':' + p(d.getUTCMinutes()) + ':' + p(d.getUTCSeconds());
     };
 
+    App.copyText = function (text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text);
+        }
+        // HTTP fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return ok ? Promise.resolve() : Promise.reject(new Error('execCommand failed'));
+    };
+
     App.debounce = function (fn, wait) {
         let timer;
         return function () {
@@ -501,6 +517,13 @@
             this.$list.on('click', '.action-delete',   (e) => this.delete($(e.currentTarget).data('id')));
             this.$list.on('click', '.action-transfer', (e) => Transfers.open($(e.currentTarget).data('id')));
             this.$list.on('click', '.action-history',  (e) => History.open($(e.currentTarget).data('id')));
+            this.$list.on('click', '.copy-serial', (e) => {
+                const serial = $(e.currentTarget).data('serial');
+                if (!serial) return;
+                App.copyText(serial)
+                    .then(() => App.toast('Серийный номер скопирован', 'success'))
+                    .catch(() => App.toast('Не удалось скопировать', 'error'));
+            });
 
             $('#tokenForm').on('submit', (e) => { e.preventDefault(); this.save(); });
         },
@@ -542,7 +565,7 @@
                     + '<tr data-id="' + App.escape(r.id) + '">'
                     +   '<td>' + employee + '</td>'
                     +   '<td>' + App.highlightMatch(r.model_name || '', query) + '</td>'
-                    +   '<td>' + App.highlightMatch(r.serial_number || '', query) + '</td>'
+                    +   '<td><span class="copy-serial" data-serial="' + App.escape(r.serial_number || '') + '" title="Нажмите, чтобы скопировать серийный номер">' + App.highlightMatch(r.serial_number || '', query) + '</span></td>'
                     +   '<td class="status-cell">' + statusHtml + issuedAtHtml + '</td>'
                     +   '<td class="actions-cell">'
                     +     '<button type="button" class="btn-icon history action-history"  data-id="' + App.escape(r.id) + '" title="История передач"><i class="bi bi-clock-history"></i></button>'

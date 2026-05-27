@@ -408,6 +408,26 @@ mark.search-highlight {
 .toast-msg.success { background: #1f8a4d; }
 .toast-msg.error   { background: var(--skzi-delete); }
 
+.copy-serial {
+    cursor: pointer;
+    text-decoration: underline dotted transparent;
+    transition: text-decoration-color 0.15s;
+}
+.copy-serial:hover {
+    text-decoration-color: currentColor;
+}
+.copy-serial::after {
+    content: '\f290';
+    font-family: 'bootstrap-icons';
+    font-size: 0.75em;
+    margin-left: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+.copy-serial:hover::after {
+    opacity: 0.5;
+}
+
 .custom-control-input:checked ~ .custom-control-label::before {
     background-color: var(--skzi-primary);
     border-color: var(--skzi-primary);
