@@ -360,6 +360,14 @@
         return p(d.getDate()) + '.' + p(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
     };
 
+    App.formatDateOnly = function (str) {
+        if (!str) return '';
+        const d = new Date(str.replace(' ', 'T') + 'Z');
+        if (isNaN(d.getTime())) return str;
+        const p = (n) => String(n).padStart(2, '0');
+        return p(d.getDate()) + '.' + p(d.getMonth() + 1) + '.' + d.getFullYear();
+    };
+
     App.localDateToUtc = function (dateStr, endOfDay) {
         if (!dateStr) return '';
         const d = new Date(dateStr + (endOfDay ? 'T23:59:59' : 'T00:00:00'));
@@ -556,7 +564,7 @@
                 }).join('');
                 const isIssued = statuses.some(function (s) { return s.code === 'issued'; });
                 const issuedAtHtml = (isIssued && r.last_issued_at)
-                    ? '<span class="status-badge issued" title="Выдан последний раз"><i class="bi bi-calendar3"></i>' + App.escape(App.formatDate(r.last_issued_at)) + '</span>'
+                    ? '<span class="status-badge issued" title="Выдан последний раз"><i class="bi bi-calendar3"></i>' + App.escape(App.formatDateOnly(r.last_issued_at)) + '</span>'
                     : '';
                 const employee = r.employee_fullname && r.employee_fullname.trim().length
                     ? App.highlightMatch(r.employee_fullname, query)
