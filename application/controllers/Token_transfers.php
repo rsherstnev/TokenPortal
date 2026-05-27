@@ -88,6 +88,19 @@ class Token_transfers extends MY_Controller {
 		$to_employee_id = $to_employee_id === '' ? NULL : $to_employee_id;
 		$comment = trim((string) $this->input->post('comment'));
 
+		$raw_date = trim((string) $this->input->post('transferred_at'));
+		$transferred_at = NULL;
+		if ($raw_date !== '')
+		{
+			$d = DateTime::createFromFormat('Y-m-d', $raw_date);
+			if ( ! $d || $d->format('Y-m-d') !== $raw_date)
+			{
+				$this->json_error('Некорректная дата передачи', 422, array('transferred_at' => 'Укажите корректную дату'));
+				return;
+			}
+			$transferred_at = $d->format('Y-m-d') . ' 00:00:00';
+		}
+
 		// Возврат на склад (to = NULL) или передача конкретному пользователю.
 		if ($to_employee_id !== NULL)
 		{
@@ -110,7 +123,7 @@ class Token_transfers extends MY_Controller {
 			return;
 		}
 
-		$transfer_id = $this->token_transfer_m->transfer($token_id, $to_employee_id, $comment);
+		$transfer_id = $this->token_transfer_m->transfer($token_id, $to_employee_id, $comment, $transferred_at);
 		if ( ! $transfer_id)
 		{
 			$this->json_error('Не удалось выполнить передачу', 500);

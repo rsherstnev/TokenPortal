@@ -770,6 +770,8 @@
                 $form[0].reset();
                 App.clearErrors($form);
                 $form.find('[name="token_id"]').val(t.id);
+                const today = new Date().toISOString().slice(0, 10);
+                $form.find('[name="transferred_at"]').val(today);
                 $('#transfer-token-info').html(
                     '<span class="token-pill"><i class="bi bi-key"></i><span class="token-badge">' + App.escape(t.model_name || '') + '</span><span class="token-badge">' + App.escape(t.serial_number || '') + '</span></span>'
                 );
@@ -794,8 +796,9 @@
             const $form = $('#transferForm');
             const tokenId = $form.find('[name="token_id"]').val();
             const payload = {
-                to_employee_id: $form.find('select[name="to_employee_id"]').val(),
-                comment:        $form.find('[name="comment"]').val(),
+                to_employee_id:  $form.find('select[name="to_employee_id"]').val(),
+                transferred_at:  $form.find('[name="transferred_at"]').val(),
+                comment:         $form.find('[name="comment"]').val(),
             };
             App.postJSON('token_transfers/create/' + tokenId, payload)
                 .then((res) => {

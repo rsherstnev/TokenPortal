@@ -113,6 +113,10 @@
                         </select>
                         <small class="form-text text-muted">Пустое значение возвращает токен на склад.</small>
                     </div>
+                    <div class="form-group">
+                        <label>Дата передачи</label>
+                        <input type="date" class="form-control" name="transferred_at">
+                    </div>
                     <div class="form-group mb-0">
                         <label>Комментарий</label>
                         <textarea class="form-control" name="comment" rows="2" placeholder="Например: выдан по заявке №…"></textarea>

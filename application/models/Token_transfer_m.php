@@ -12,7 +12,7 @@ class Token_transfer_m extends CI_Model {
 	 * Транзакционная передача токена сотруднику.
 	 * @return string|false UUID созданной передачи или false при ошибке.
 	 */
-	public function transfer($token_id, $to_employee_id, $comment = '')
+	public function transfer($token_id, $to_employee_id, $comment = '', $transferred_at = NULL)
 	{
 		$this->db->trans_start();
 
@@ -40,6 +40,7 @@ class Token_transfer_m extends CI_Model {
 
 		$transfer_id = uuid_v4();
 		$now = gmdate('Y-m-d H:i:s');
+		$effective_at = ($transferred_at !== NULL) ? $transferred_at : $now;
 
 		$this->db->insert('token_transfers', array(
 			'id'               => $transfer_id,
@@ -47,7 +48,7 @@ class Token_transfer_m extends CI_Model {
 			'from_employee_id' => $from_employee_id,
 			'to_employee_id'   => $to_employee_id,
 			'comment'          => $comment !== '' ? $comment : NULL,
-			'transferred_at'   => $now,
+			'transferred_at'   => $effective_at,
 			'created_at'       => $now,
 		));
 
