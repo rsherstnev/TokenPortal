@@ -820,7 +820,7 @@
                 const data = res.data || {};
                 const t = data.token || {};
                 $('#history-token-info').html(
-                    '<span class="token-pill"><i class="bi bi-key"></i><span class="token-badge">' + App.escape(t.model_name || '') + '</span><span class="token-badge">' + App.escape(t.serial_number || '') + '</span></span>'
+                    '<span class="token-badge">' + App.escape(t.model_name || '') + '</span><span class="token-badge">' + App.escape(t.serial_number || '') + '</span>'
                 );
                 const transfers = data.transfers || [];
                 if (!transfers.length) {

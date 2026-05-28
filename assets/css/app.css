@@ -386,6 +386,7 @@ mark.search-highlight {
     font-weight: 500;
     color: #21252b;
 }
+.token-badge + .token-badge { margin-left: 6px; }
 .token-badge {
     display: inline-block;
     padding: 1px 6px;
