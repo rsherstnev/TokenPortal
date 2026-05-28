@@ -773,7 +773,7 @@
                 const today = new Date().toISOString().slice(0, 10);
                 $form.find('[name="transferred_at"]').val(today);
                 $('#transfer-token-info').html(
-                    '<span class="token-pill"><i class="bi bi-key"></i><span class="token-badge">' + App.escape(t.model_name || '') + '</span><span class="token-badge">' + App.escape(t.serial_number || '') + '</span></span>'
+                    '<span class="token-badge">' + App.escape(t.model_name || '') + '</span><span class="token-badge">' + App.escape(t.serial_number || '') + '</span>'
                 );
                 $('#transfer-from').text(t.employee_fullname && t.employee_fullname.trim() ? t.employee_fullname : 'Не выдан');
                 this.fillEmployees($form.find('select[name="to_employee_id"]'), t.employee_id);
