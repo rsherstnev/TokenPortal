@@ -836,7 +836,7 @@
                             + '<li>'
                             +   '<div><strong>' + from + '</strong><span class="arrow"><i class="bi bi-arrow-right"></i></span><strong>' + to + '</strong></div>'
                             +   comment
-                            +   '<div class="meta">' + App.escape(App.formatDate(tr.transferred_at)) + '</div>'
+                            +   '<div class="meta">' + App.escape(App.formatDateOnly(tr.transferred_at)) + '</div>'
                             + '</li>';
                     }).join('') + '</ul>';
                     $('#history-body').html(html);
@@ -1078,7 +1078,7 @@
                     +   '<td>' + App.highlightMatch(r.serial_number || '', query) + '</td>'
                     +   '<td>' + from + '</td>'
                     +   '<td>' + to + '</td>'
-                    +   '<td>' + App.escape(App.formatDate(r.transferred_at)) + '</td>'
+                    +   '<td>' + App.escape(App.formatDateOnly(r.transferred_at)) + '</td>'
                     +   '<td>' + comment + '</td>'
                     + '</tr>';
             }).join('');

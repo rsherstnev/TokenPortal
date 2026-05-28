@@ -51,7 +51,7 @@
                             <th data-sort-key="serial_number">Серийный номер <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th data-sort-key="from_fullname">От кого <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th data-sort-key="to_fullname">Кому <i class="bi bi-arrow-down-up sort-icon"></i></th>
-                            <th data-sort-key="transferred_at">Время передачи <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th data-sort-key="transferred_at">Дата передачи <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th data-sort-key="comment">Комментарий <i class="bi bi-arrow-down-up sort-icon"></i></th>
                         </tr>
                     </thead>
