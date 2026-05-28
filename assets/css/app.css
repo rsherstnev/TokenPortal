@@ -152,6 +152,10 @@ html, body {
     text-align: right;
     white-space: nowrap;
 }
+.skzi-table .actions-cell-header {
+    width: 140px;
+    text-align: right;
+}
 .skzi-table .status-cell {
     width: 1%;
     white-space: nowrap;
