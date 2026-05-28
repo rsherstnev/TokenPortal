@@ -103,8 +103,10 @@ html, body {
 }
 .btn-icon:last-child { margin-right: 0; }
 .btn-icon:hover { background: #f0f1f4; color: #21252b; }
-.btn-icon.history { color: var(--skzi-muted); }
-.btn-icon.transfer { color: var(--skzi-muted); }
+.btn-icon.history  { background: #ddf2f5; color: #1aa1b0; }
+.btn-icon.history:hover  { background: #c4eaef; }
+.btn-icon.transfer { background: #ede8f8; color: #7c52c8; }
+.btn-icon.transfer:hover { background: #ddd4f3; }
 .btn-icon.edit { background: #fdf3e1; color: #cf8a26; }
 .btn-icon.edit:hover { background: #fbe6c1; }
 .btn-icon.delete { background: #fbe2e3; color: var(--skzi-delete); }
