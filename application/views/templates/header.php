@@ -10,6 +10,7 @@ $page_title = isset($page_title) ? $page_title : 'Учёт токенов СКЗ
     <meta name="csrf-name" content="<?= htmlspecialchars($this->security->get_csrf_token_name(), ENT_QUOTES, 'UTF-8') ?>">
     <meta name="csrf-hash" content="<?= htmlspecialchars($this->security->get_csrf_hash(), ENT_QUOTES, 'UTF-8') ?>">
     <title><?= htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8') ?> · СКЗИ</title>
+    <link rel="icon" type="image/png" href="<?= base_url('assets/favicon.png') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendor/bootstrap/css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendor/bootstrap-icons/bootstrap-icons.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendor/tom-select/tom-select.bootstrap4.min.css') ?>">

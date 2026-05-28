@@ -111,7 +111,6 @@
                         <select class="custom-select" name="to_employee_id">
                             <option value="">— Возврат на склад —</option>
                         </select>
-                        <small class="form-text text-muted">Пустое значение возвращает токен на склад.</small>
                     </div>
                     <div class="form-group">
                         <label>Дата передачи</label>
