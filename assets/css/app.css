@@ -18,10 +18,14 @@ html, body {
     background: #ffffff;
     border-bottom: 1px solid var(--skzi-border);
     box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+    position: relative;
 }
 .navbar-skzi .navbar-brand {
     font-weight: 600;
     color: #21252b;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 .navbar-skzi .nav-link.active {
     color: var(--skzi-primary) !important;

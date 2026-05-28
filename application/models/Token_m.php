@@ -140,7 +140,7 @@ class Token_m extends CI_Model {
 		}
 		if ((int) $row['is_broken'] === 1)
 		{
-			$statuses[] = array('code' => 'broken', 'label' => 'Сломан');
+			$statuses[] = array('code' => 'broken', 'label' => 'Неисправен');
 		}
 
 		if (empty($statuses))

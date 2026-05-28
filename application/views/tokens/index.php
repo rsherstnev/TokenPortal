@@ -23,7 +23,7 @@
                         <option value="all" selected>Все</option>
                         <option value="issued">Выданные</option>
                         <option value="not_issued">Невыданные</option>
-                        <option value="broken">Сломанные</option>
+                        <option value="broken">Неисправные</option>
                         <option value="lost">Утерянные</option>
                     </select>
                 </div>

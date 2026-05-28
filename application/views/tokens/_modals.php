@@ -56,7 +56,7 @@
                             <div class="token-flag-left">
                                 <span class="token-flag-icon"><i class="bi bi-wrench-adjustable-circle-fill"></i></span>
                                 <div class="token-flag-text">
-                                    <span class="token-flag-title">Неисправен (сломан)</span>
+                                    <span class="token-flag-title">Неисправен</span>
                                     <span class="token-flag-hint">Помечает токен как неисправный</span>
                                 </div>
                             </div>

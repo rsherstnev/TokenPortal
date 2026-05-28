@@ -20,7 +20,7 @@ $page_title = isset($page_title) ? $page_title : 'Учёт токенов СКЗ
 <nav class="navbar navbar-expand-lg navbar-skzi">
     <div class="container-fluid px-4">
         <a class="navbar-brand" href="<?= site_url('tokens') ?>">
-            <i class="bi bi-shield-lock"></i> Учёт токенов СКЗИ
+            <i class="bi bi-shield-lock"></i> Учёт токенов
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMain">
             <span class="navbar-toggler-icon"></span>
