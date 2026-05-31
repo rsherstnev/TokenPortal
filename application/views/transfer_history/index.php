@@ -10,9 +10,9 @@
             </div>
             <div class="transfer-history-filters mb-2">
                 <div class="transfer-history-filters-search">
-                    <div class="input-group">
+                    <div class="input-group search-input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text bg-white border-right-0"><i class="bi bi-search text-muted"></i></span>
+                            <span class="input-group-text border-right-0"><i class="bi bi-search"></i></span>
                         </div>
                         <input type="text" class="form-control search-input border-left-0" id="transfer-history-search"
                                placeholder="Поиск по модели, серийному номеру, сотрудникам, комментарию…">
@@ -20,18 +20,18 @@
                 </div>
                 <div class="transfer-history-filters-dates">
                     <div class="transfer-history-filters-date">
-                        <div class="input-group">
+                        <div class="input-group search-input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text bg-white border-right-0 text-muted">С</span>
+                                <span class="input-group-text border-right-0">С</span>
                             </div>
                             <input type="date" class="form-control search-input border-left-0" id="transfer-history-date-from"
                                    title="Начало периода" aria-label="Начало периода">
                         </div>
                     </div>
                     <div class="transfer-history-filters-date">
-                        <div class="input-group">
+                        <div class="input-group search-input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text bg-white border-right-0 text-muted">По</span>
+                                <span class="input-group-text border-right-0">По</span>
                             </div>
                             <input type="date" class="form-control search-input border-left-0" id="transfer-history-date-to"
                                    title="Конец периода" aria-label="Конец периода">

@@ -4,6 +4,15 @@ $page_title = isset($page_title) ? $page_title : 'Учёт токенов СКЗ
 ?><!DOCTYPE html>
 <html lang="ru">
 <head>
+    <script>
+    (function () {
+        var stored = localStorage.getItem('skzi-theme');
+        var theme = stored === 'dark' || stored === 'light'
+            ? stored
+            : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -38,6 +47,10 @@ $page_title = isset($page_title) ? $page_title : 'Учёт токенов СКЗ
                     <a class="nav-link <?= $active_nav === 'statistics' ? 'active' : '' ?>" href="<?= site_url('statistics') ?>">Статистика</a>
                 </li>
             </ul>
+            <button type="button" class="theme-toggle ml-auto" id="themeToggle" aria-label="Переключить тему" title="Переключить тему">
+                <i class="bi bi-moon-fill" aria-hidden="true"></i>
+                <i class="bi bi-sun-fill" aria-hidden="true"></i>
+            </button>
         </div>
     </div>
 </nav>

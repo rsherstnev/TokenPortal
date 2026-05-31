@@ -3,6 +3,25 @@
 
     const App = window.App = window.App || {};
     const BASE_URL = (window.SKZI_BASE_URL || '/').replace(/\/+$/, '') + '/';
+    const THEME_KEY = 'skzi-theme';
+
+    // ---- Theme ---------------------------------------------------------------
+    App.theme = {
+        get() {
+            return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        },
+        set(theme) {
+            theme = theme === 'dark' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem(THEME_KEY, theme);
+        },
+        toggle() {
+            this.set(this.get() === 'dark' ? 'light' : 'dark');
+        },
+        init() {
+            $('#themeToggle').on('click', () => this.toggle());
+        },
+    };
 
     // ---- CSRF ----------------------------------------------------------------
     const Csrf = {
@@ -477,6 +496,8 @@
             }
         });
     };
+
+    $(function () { App.theme.init(); });
 
 })(jQuery);
 

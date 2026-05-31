@@ -4,8 +4,7 @@
         <div class="skzi-section">
             <div class="skzi-section-header">
                 <div class="skzi-section-title">
-                    <span class="title"><i class="bi bi-bar-chart"></i>Без токена по отделам</span>
-                    <span class="count">Всего: <span id="statistics-without-total">0</span></span>
+                    <span class="title"><i class="bi bi-bar-chart"></i>Отделы с сотрудниками без токенов</span>
                 </div>
             </div>
             <div id="statistics-chart" class="statistics-chart">
@@ -23,9 +22,9 @@
                 </div>
             </div>
             <div class="mb-2">
-                <div class="input-group">
+                <div class="input-group search-input-group">
                     <div class="input-group-prepend">
-                        <span class="input-group-text bg-white border-right-0"><i class="bi bi-search text-muted"></i></span>
+                        <span class="input-group-text border-right-0"><i class="bi bi-search"></i></span>
                     </div>
                     <input type="text" class="form-control search-input border-left-0" id="statistics-search"
                            placeholder="Поиск по ФИО, должности, отделу…">
