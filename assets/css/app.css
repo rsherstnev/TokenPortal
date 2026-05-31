@@ -91,6 +91,8 @@ html, body {
     border-bottom: 1px solid var(--skzi-border);
     box-shadow: var(--skzi-navbar-shadow);
     position: relative;
+    padding-left: 0;
+    padding-right: 0;
 }
 .navbar-skzi .navbar-brand {
     font-weight: 600;
