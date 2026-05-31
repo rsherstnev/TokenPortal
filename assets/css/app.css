@@ -359,23 +359,6 @@ html, body {
 
 .search-input { background-color: var(--skzi-input-bg); color: var(--skzi-text); border-color: var(--skzi-input-border); }
 
-.search-input-group .input-group-text {
-    background-color: var(--skzi-input-bg);
-    border-color: var(--skzi-input-border);
-    color: var(--skzi-muted);
-}
-.search-input-group .search-input:focus {
-    border-color: var(--skzi-primary);
-    box-shadow: none;
-}
-.search-input-group:focus-within .input-group-text {
-    border-color: var(--skzi-primary);
-}
-.search-input-group:focus-within .search-input {
-    border-color: var(--skzi-primary);
-    box-shadow: 0 0 0 0.15rem var(--skzi-primary-focus-ring);
-}
-
 .transfer-history-filters {
     display: flex;
     flex-wrap: nowrap;
@@ -387,7 +370,6 @@ html, body {
     flex: 1 1 0;
     min-width: 0;
 }
-.transfer-history-filters-search .input-group,
 .transfer-history-filters-search .form-control {
     min-width: 0;
 }
@@ -416,13 +398,15 @@ html, body {
 }
 .transfer-history-filters-date {
     flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
 }
-.transfer-history-filters-date .input-group {
-    width: auto;
-}
-.transfer-history-filters-date .input-group-text {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+.transfer-history-date-label {
+    flex: 0 0 auto;
+    color: var(--skzi-muted);
+    font-size: 0.875rem;
+    white-space: nowrap;
 }
 .transfer-history-filters-date input[type="date"].form-control {
     width: 8.5rem;

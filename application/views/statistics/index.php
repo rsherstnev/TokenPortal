@@ -22,13 +22,8 @@
                 </div>
             </div>
             <div class="mb-2">
-                <div class="input-group search-input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text border-right-0"><i class="bi bi-search"></i></span>
-                    </div>
-                    <input type="text" class="form-control search-input border-left-0" id="statistics-search"
-                           placeholder="Поиск по ФИО, должности, отделу…">
-                </div>
+                <input type="text" class="form-control search-input" id="statistics-search"
+                       placeholder="Поиск по ФИО, должности, отделу…">
             </div>
 
             <div class="table-responsive">
