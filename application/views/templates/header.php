@@ -18,7 +18,7 @@ $page_title = isset($page_title) ? $page_title : 'Учёт токенов СКЗ
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-name" content="<?= htmlspecialchars($this->security->get_csrf_token_name(), ENT_QUOTES, 'UTF-8') ?>">
     <meta name="csrf-hash" content="<?= htmlspecialchars($this->security->get_csrf_hash(), ENT_QUOTES, 'UTF-8') ?>">
-    <title><?= htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8') ?> · СКЗИ</title>
+    <title>Учёт токенов</title>
     <link rel="icon" type="image/png" href="<?= base_url('assets/favicon.png') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendor/bootstrap/css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendor/bootstrap-icons/bootstrap-icons.min.css') ?>">
@@ -36,15 +36,21 @@ $page_title = isset($page_title) ? $page_title : 'Учёт токенов СКЗ
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navMain">
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav skzi-nav-pills mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link <?= $active_nav === 'tokens' ? 'active' : '' ?>" href="<?= site_url('tokens') ?>">Токены</a>
+                    <a class="nav-link <?= $active_nav === 'tokens' ? 'active' : '' ?>" href="<?= site_url('tokens') ?>">
+                        <i class="bi bi-key" aria-hidden="true"></i>Токены
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $active_nav === 'transfer_history' ? 'active' : '' ?>" href="<?= site_url('transfer_history') ?>">История передач</a>
+                    <a class="nav-link <?= $active_nav === 'transfer_history' ? 'active' : '' ?>" href="<?= site_url('transfer_history') ?>">
+                        <i class="bi bi-clock-history" aria-hidden="true"></i>История передач
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $active_nav === 'statistics' ? 'active' : '' ?>" href="<?= site_url('statistics') ?>">Статистика</a>
+                    <a class="nav-link <?= $active_nav === 'statistics' ? 'active' : '' ?>" href="<?= site_url('statistics') ?>">
+                        <i class="bi bi-bar-chart" aria-hidden="true"></i>Статистика
+                    </a>
                 </li>
             </ul>
             <button type="button" class="theme-toggle ml-auto" id="themeToggle" aria-label="Переключить тему" title="Переключить тему">
