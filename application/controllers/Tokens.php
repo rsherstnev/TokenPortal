@@ -24,6 +24,11 @@ class Tokens extends MY_Controller {
 		$this->load->view('templates/footer', $data);
 	}
 
+	public function employee_options()
+	{
+		$this->json_ok($this->employee_m->options());
+	}
+
 	public function list_json()
 	{
 		$search = trim((string) $this->input->get('q'));

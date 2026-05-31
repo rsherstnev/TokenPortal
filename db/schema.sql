@@ -7,6 +7,13 @@ CREATE DATABASE IF NOT EXISTS skzi_tokens
 
 USE skzi_tokens;
 
+CREATE TABLE departments (
+    id          INT UNSIGNED  NOT NULL,
+    name        VARCHAR(255)  NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_departments_name (name(128))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE token_models (
     id          UUID      NOT NULL,
     name        TEXT      NOT NULL,

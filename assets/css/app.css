@@ -546,6 +546,51 @@ mark.search-highlight {
     opacity: 1;
 }
 
+.statistics-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.statistics-bar-row {
+    display: grid;
+    grid-template-columns: minmax(0, 11rem) 1fr minmax(28px, auto);
+    align-items: center;
+    gap: 10px;
+}
+
+.statistics-bar-label {
+    min-width: 0;
+    font-size: 0.82rem;
+    color: #21252b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default;
+}
+
+.statistics-bar-track {
+    height: 22px;
+    background: #eef1f4;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.statistics-bar-fill {
+    height: 100%;
+    min-width: 2px;
+    background: linear-gradient(90deg, var(--skzi-primary), #22b8c7);
+    border-radius: 4px;
+    transition: width 0.25s ease;
+}
+
+.statistics-bar-value {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--skzi-primary);
+    text-align: right;
+}
+
 @media (max-width: 991.98px) {
     .skzi-section + .skzi-section { margin-top: 16px; }
 }

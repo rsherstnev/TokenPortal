@@ -32,10 +32,10 @@ $page_title = isset($page_title) ? $page_title : 'Учёт токенов СКЗ
                     <a class="nav-link <?= $active_nav === 'tokens' ? 'active' : '' ?>" href="<?= site_url('tokens') ?>">Токены</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $active_nav === 'employees' ? 'active' : '' ?>" href="<?= site_url('employees') ?>">Сотрудники</a>
+                    <a class="nav-link <?= $active_nav === 'transfer_history' ? 'active' : '' ?>" href="<?= site_url('transfer_history') ?>">История передач</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $active_nav === 'transfer_history' ? 'active' : '' ?>" href="<?= site_url('transfer_history') ?>">История передач</a>
+                    <a class="nav-link <?= $active_nav === 'statistics' ? 'active' : '' ?>" href="<?= site_url('statistics') ?>">Статистика</a>
                 </li>
             </ul>
         </div>

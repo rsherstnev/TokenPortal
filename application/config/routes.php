@@ -71,15 +71,12 @@ $route['token_models/options']                = 'token_models/options';
 $route['transfer_history']                    = 'token_transfers/index';
 $route['transfer_history/list']               = 'token_transfers/list_json';
 
+$route['statistics']                          = 'statistics/index';
+$route['statistics/summary']                  = 'statistics/summary_json';
+
 $route['token_transfers/create/(:any)']       = 'token_transfers/create/$1';
 $route['token_transfers/get/(:any)']           = 'token_transfers/get/$1';
 $route['token_transfers/update/(:any)']       = 'token_transfers/update/$1';
 $route['token_transfers/history/(:any)']      = 'token_transfers/history/$1';
 
-$route['employees']                           = 'employees/index';
-$route['employees/list']                      = 'employees/list_json';
-$route['employees/create']                    = 'employees/create';
-$route['employees/update/(:any)']             = 'employees/update/$1';
-$route['employees/delete/(:any)']             = 'employees/delete/$1';
-$route['employees/get/(:any)']                = 'employees/get/$1';
-$route['employees/options']                   = 'employees/options';
+$route['tokens/employee_options']             = 'tokens/employee_options';
