@@ -217,6 +217,8 @@ tokens/
 | GET | `/token_models/get/{uuid}` | Одна модель |
 | POST | `/token_models/create` \| `update` \| `delete` | CRUD моделей |
 | POST | `/token_transfers/create/{token_uuid}` | Передача; пустой `to_employee_id` — возврат на склад |
+| GET | `/token_transfers/get/{uuid}` | Одна запись передачи |
+| POST | `/token_transfers/update/{uuid}` | Редактирование комментария передачи |
 | GET | `/token_transfers/history/{token_uuid}` | История передач одного токена |
 | GET | `/transfer_history/list` | Вся история. Query: `q`, `date_from`, `date_to` (`Y-m-d` или `Y-m-d H:i:s`, UTC). Поиск по слову «склад» находит записи с `NULL` в from/to. |
 | GET | `/employees/list` | Все неудалённые сотрудники (`q`), включая неактивных |
@@ -233,6 +235,7 @@ tokens/
 - Поиск по сотруднику, модели, серийному номеру; фильтр статуса.
 - Флаги «Сломан» / «Утерян» (`tokens.is_broken`, `tokens.is_lost`).
 - Модальные формы токенов, моделей, передачи; история передач по токену.
+- Редактирование комментария записи передачи (история по токену и общая история).
 - Страница «История передач» с фильтром по периоду.
 - Soft delete (`deleted_at`) для токенов, моделей и сотрудников.
 

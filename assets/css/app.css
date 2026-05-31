@@ -365,6 +365,13 @@ mark.search-highlight {
     flex-direction: column;
     gap: 4px;
 }
+.history-list .history-item-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+.history-list .history-item-head .history-item-route { flex: 1; min-width: 0; }
 .history-list li:last-child { border-bottom: none; }
 .history-list .meta { color: var(--skzi-muted); font-size: 0.8rem; }
 .history-list .arrow { color: var(--skzi-muted); margin: 0 4px; }

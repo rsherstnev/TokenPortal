@@ -146,3 +146,5 @@
         </div>
     </div>
 </div>
+
+<?php $this->load->view('shared/_transfer_comment_modal'); ?>

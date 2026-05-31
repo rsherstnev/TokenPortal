@@ -72,6 +72,8 @@ $route['transfer_history']                    = 'token_transfers/index';
 $route['transfer_history/list']               = 'token_transfers/list_json';
 
 $route['token_transfers/create/(:any)']       = 'token_transfers/create/$1';
+$route['token_transfers/get/(:any)']           = 'token_transfers/get/$1';
+$route['token_transfers/update/(:any)']       = 'token_transfers/update/$1';
 $route['token_transfers/history/(:any)']      = 'token_transfers/history/$1';
 
 $route['employees']                           = 'employees/index';

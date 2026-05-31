@@ -53,13 +53,16 @@
                             <th data-sort-key="to_fullname">Кому <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th data-sort-key="transferred_at">Дата передачи <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th data-sort-key="comment">Комментарий <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th class="actions-cell-header">Действия</th>
                         </tr>
                     </thead>
                     <tbody id="transfer-history-list">
-                        <tr><td colspan="6" class="empty-cell">Загрузка…</td></tr>
+                        <tr><td colspan="7" class="empty-cell">Загрузка…</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
+<?php $this->load->view('shared/_transfer_comment_modal'); ?>

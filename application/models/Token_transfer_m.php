@@ -64,6 +64,59 @@ class Token_transfer_m extends CI_Model {
 		return $this->db->trans_status() ? $transfer_id : FALSE;
 	}
 
+	public function get($id)
+	{
+		if ( ! is_uuid($id))
+		{
+			return FALSE;
+		}
+
+		$this->db->select("
+			tr.id,
+			tr.token_id,
+			tr.comment,
+			tr.transferred_at,
+			tr.from_employee_id,
+			tr.to_employee_id,
+			tm.name AS model_name,
+			t.serial_number,
+			fe.person_name AS from_fullname,
+			te.person_name AS to_fullname
+		", FALSE);
+		$this->db->from('token_transfers tr');
+		$this->db->join('tokens t', 't.id = tr.token_id', 'inner');
+		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'inner');
+		$this->db->join('users fe', 'fe.id = tr.from_employee_id', 'left');
+		$this->db->join('users te', 'te.id = tr.to_employee_id', 'left');
+		$this->db->where('tr.id', $id);
+		$this->db->where('t.deleted_at IS NULL', NULL, FALSE);
+
+		$row = $this->db->get()->row_array();
+
+		return $row ?: FALSE;
+	}
+
+	public function update_comment($id, $comment)
+	{
+		if ( ! is_uuid($id))
+		{
+			return FALSE;
+		}
+
+		if ( ! $this->get($id))
+		{
+			return FALSE;
+		}
+
+		$this->db
+			->where('id', $id)
+			->update('token_transfers', array(
+				'comment' => $comment !== '' ? $comment : NULL,
+			));
+
+		return $this->db->affected_rows() >= 0;
+	}
+
 	public function history($token_id)
 	{
 		return $this->list_filtered(array('token_id' => $token_id));

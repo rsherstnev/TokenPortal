@@ -813,9 +813,15 @@
         },
     };
 
-    // -------------------------------------------------------------------------
     const History = {
+        _tokenId: null,
+
         open(tokenId) {
+            this._tokenId = tokenId;
+            this.load(tokenId);
+        },
+
+        load(tokenId) {
             App.getJSON('token_transfers/history/' + tokenId).then((res) => {
                 const data = res.data || {};
                 const t = data.token || {};
@@ -831,10 +837,15 @@
                     const html = '<ul class="history-list">' + transfers.map((tr) => {
                         const from = tr.from_fullname && tr.from_fullname.trim() ? App.escape(tr.from_fullname) : '<span class="text-muted">Склад</span>';
                         const to   = tr.to_fullname && tr.to_fullname.trim()   ? App.escape(tr.to_fullname)   : '<span class="text-muted">Склад</span>';
-                        const comment = tr.comment ? '<div>' + App.escape(tr.comment) + '</div>' : '';
+                        const comment = tr.comment
+                            ? '<div class="history-item-comment">' + App.escape(tr.comment) + '</div>'
+                            : '<div class="history-item-comment text-muted">—</div>';
                         return ''
-                            + '<li>'
-                            +   '<div><strong>' + from + '</strong><span class="arrow"><i class="bi bi-arrow-right"></i></span><strong>' + to + '</strong></div>'
+                            + '<li data-id="' + App.escape(tr.id) + '">'
+                            +   '<div class="history-item-head">'
+                            +     '<div class="history-item-route"><strong>' + from + '</strong><span class="arrow"><i class="bi bi-arrow-right"></i></span><strong>' + to + '</strong></div>'
+                            +     '<button type="button" class="btn-icon edit action-edit-transfer-comment" data-id="' + App.escape(tr.id) + '" title="Редактировать комментарий"><i class="bi bi-pencil"></i></button>'
+                            +   '</div>'
                             +   comment
                             +   '<div class="meta">' + App.escape(App.formatDateOnly(tr.transferred_at)) + '</div>'
                             + '</li>';
@@ -844,14 +855,89 @@
                 $('#historyModal').modal('show');
             });
         },
+
+        bindEvents() {
+            $('#history-body').on('click', '.action-edit-transfer-comment', (e) => {
+                const id = $(e.currentTarget).data('id');
+                if (!window.TransferComment) return;
+                window.TransferComment.openEdit(id, {
+                    onSaved: () => { if (this._tokenId) this.load(this._tokenId); },
+                });
+            });
+        },
     };
 
     $(function () {
         Tokens.init();
         TokenModels.init();
         Transfers.init();
-        History.open && (window.History = History);
+        History.bindEvents();
+        window.History = History;
     });
+})(jQuery);
+
+// =============================================================================
+// Transfer comment edit (tokens + transfer history pages)
+// =============================================================================
+(function ($) {
+    'use strict';
+    if (!$('#transferCommentForm').length) return;
+    const App = window.App;
+
+    const TransferComment = {
+        _onSaved: null,
+
+        init() {
+            $('#transferCommentForm').on('submit', (e) => { e.preventDefault(); this.save(); });
+        },
+
+        formatRoute(tr) {
+            const from = tr.from_fullname && tr.from_fullname.trim() ? tr.from_fullname : 'Склад';
+            const to   = tr.to_fullname && tr.to_fullname.trim()   ? tr.to_fullname   : 'Склад';
+            return from + ' → ' + to + (tr.transferred_at ? ' · ' + App.formatDateOnly(tr.transferred_at) : '');
+        },
+
+        openEdit(id, options) {
+            options = options || {};
+            this._onSaved = options.onSaved || null;
+            App.getJSON('token_transfers/get/' + id).then((res) => {
+                const tr = res.data || {};
+                const $form = $('#transferCommentForm');
+                $form[0].reset();
+                App.clearErrors($form);
+                $form.find('[name="id"]').val(tr.id);
+                $form.find('[name="comment"]').val(tr.comment || '');
+                $('#transfer-comment-token').text(
+                    (tr.model_name || '—') + ' · ' + (tr.serial_number || '—')
+                );
+                $('#transfer-comment-route').text(this.formatRoute(tr));
+                $('#transferCommentModal').modal('show');
+            }).catch((res) => {
+                App.toast((res && res.message) || 'Не удалось загрузить запись', 'error');
+            });
+        },
+
+        save() {
+            const $form = $('#transferCommentForm');
+            const id = $form.find('[name="id"]').val();
+            const payload = { comment: $form.find('[name="comment"]').val() };
+            App.postJSON('token_transfers/update/' + id, payload)
+                .then((res) => {
+                    $('#transferCommentModal').modal('hide');
+                    App.toast(res.message || 'Сохранено', 'success');
+                    if (typeof this._onSaved === 'function') {
+                        this._onSaved(res.data);
+                    }
+                })
+                .catch((res) => {
+                    if (res.errors) App.applyErrors($form, res.errors);
+                    App.toast(res.message || 'Не удалось сохранить', 'error');
+                });
+        },
+    };
+
+    window.TransferComment = TransferComment;
+    $(function () { TransferComment.init(); });
 })(jQuery);
 
 // =============================================================================
@@ -1022,6 +1108,12 @@
             this.$dateFrom.on('change', () => this.refresh());
             this.$dateTo.on('change', () => this.refresh());
             $('#transfer-history-reset-dates').on('click', () => this.resetDates());
+            this.$list.on('click', '.action-edit-transfer-comment', (e) => {
+                const id = $(e.currentTarget).data('id');
+                if (window.TransferComment) {
+                    window.TransferComment.openEdit(id, { onSaved: () => this.refresh() });
+                }
+            });
             this.refresh();
         },
 
@@ -1059,7 +1151,7 @@
             const n = rows.length;
             this.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
             if (!rows.length) {
-                this.$list.html('<tr><td colspan="6" class="empty-cell">Нет записей</td></tr>');
+                this.$list.html('<tr><td colspan="7" class="empty-cell">Нет записей</td></tr>');
                 return;
             }
             const html = rows.map((r) => {
@@ -1080,6 +1172,9 @@
                     +   '<td>' + to + '</td>'
                     +   '<td>' + App.escape(App.formatDateOnly(r.transferred_at)) + '</td>'
                     +   '<td>' + comment + '</td>'
+                    +   '<td class="actions-cell">'
+                    +     '<button type="button" class="btn-icon edit action-edit-transfer-comment" data-id="' + App.escape(r.id) + '" title="Редактировать комментарий"><i class="bi bi-pencil"></i></button>'
+                    +   '</td>'
                     + '</tr>';
             }).join('');
             this.$list.html(html);

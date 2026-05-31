@@ -133,6 +133,52 @@ class Token_transfers extends MY_Controller {
 		$this->json_ok($this->token_m->get($token_id), array('message' => 'Передача выполнена'));
 	}
 
+	public function get($id)
+	{
+		if ( ! is_uuid($id))
+		{
+			$this->json_error('Некорректный идентификатор', 400);
+			return;
+		}
+
+		$row = $this->token_transfer_m->get($id);
+		if ( ! $row)
+		{
+			$this->json_error('Запись передачи не найдена', 404);
+			return;
+		}
+
+		$this->json_ok($row);
+	}
+
+	public function update($id)
+	{
+		$this->require_post();
+
+		if ( ! is_uuid($id))
+		{
+			$this->json_error('Некорректный идентификатор', 400);
+			return;
+		}
+
+		$existing = $this->token_transfer_m->get($id);
+		if ( ! $existing)
+		{
+			$this->json_error('Запись передачи не найдена', 404);
+			return;
+		}
+
+		$comment = trim((string) $this->input->post('comment'));
+		if ( ! $this->token_transfer_m->update_comment($id, $comment))
+		{
+			$this->json_error('Не удалось сохранить комментарий', 500);
+			return;
+		}
+
+		$row = $this->token_transfer_m->get($id);
+		$this->json_ok($row, array('message' => 'Комментарий обновлён'));
+	}
+
 	public function history($token_id)
 	{
 		if ( ! is_uuid($token_id))
