@@ -843,10 +843,7 @@
     };
 
     const History = {
-        _tokenId: null,
-
         open(tokenId) {
-            this._tokenId = tokenId;
             this.load(tokenId);
         },
 
@@ -873,10 +870,6 @@
                             + '<li data-id="' + App.escape(tr.id) + '">'
                             +   '<div class="history-item-head">'
                             +     '<div class="history-item-route"><strong>' + from + '</strong><span class="arrow"><i class="bi bi-arrow-right"></i></span><strong>' + to + '</strong></div>'
-                            +     '<div class="history-item-actions">'
-                            +       '<button type="button" class="btn-icon edit action-edit-transfer-date" data-id="' + App.escape(tr.id) + '" title="Редактировать дату передачи"><i class="bi bi-calendar3"></i></button>'
-                            +       '<button type="button" class="btn-icon edit action-edit-transfer-comment" data-id="' + App.escape(tr.id) + '" title="Редактировать комментарий"><i class="bi bi-pencil"></i></button>'
-                            +     '</div>'
                             +   '</div>'
                             +   comment
                             +   '<div class="meta">' + App.escape(App.formatDateOnly(tr.transferred_at)) + '</div>'
@@ -887,36 +880,18 @@
                 $('#historyModal').modal('show');
             });
         },
-
-        bindEvents() {
-            $('#history-body').on('click', '.action-edit-transfer-comment', (e) => {
-                const id = $(e.currentTarget).data('id');
-                if (!window.TransferComment) return;
-                window.TransferComment.openEdit(id, {
-                    onSaved: () => { if (this._tokenId) this.load(this._tokenId); },
-                });
-            });
-            $('#history-body').on('click', '.action-edit-transfer-date', (e) => {
-                const id = $(e.currentTarget).data('id');
-                if (!window.TransferDate) return;
-                window.TransferDate.openEdit(id, {
-                    onSaved: () => { if (this._tokenId) this.load(this._tokenId); },
-                });
-            });
-        },
     };
 
     $(function () {
         Tokens.init();
         TokenModels.init();
         Transfers.init();
-        History.bindEvents();
         window.History = History;
     });
 })(jQuery);
 
 // =============================================================================
-// Transfer comment edit (tokens + transfer history pages)
+// Transfer comment edit (transfer history page)
 // =============================================================================
 (function ($) {
     'use strict';
@@ -983,7 +958,7 @@
 })(jQuery);
 
 // =============================================================================
-// Transfer date edit (tokens + transfer history pages)
+// Transfer date edit (transfer history page)
 // =============================================================================
 (function ($) {
     'use strict';
