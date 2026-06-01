@@ -117,6 +117,27 @@ class Token_transfer_m extends CI_Model {
 		return $this->db->affected_rows() >= 0;
 	}
 
+	public function update_transferred_at($id, $transferred_at)
+	{
+		if ( ! is_uuid($id))
+		{
+			return FALSE;
+		}
+
+		if ( ! $this->get($id))
+		{
+			return FALSE;
+		}
+
+		$this->db
+			->where('id', $id)
+			->update('token_transfers', array(
+				'transferred_at' => $transferred_at,
+			));
+
+		return $this->db->affected_rows() >= 0;
+	}
+
 	public function history($token_id)
 	{
 		return $this->list_filtered(array('token_id' => $token_id));

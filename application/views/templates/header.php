@@ -1,6 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 $active_nav = isset($active_nav) ? $active_nav : '';
-$page_title = isset($page_title) ? $page_title : 'Учёт токенов СКЗИ';
 ?><!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -61,4 +60,3 @@ $page_title = isset($page_title) ? $page_title : 'Учёт токенов СКЗ
     </div>
 </nav>
 <main class="container-fluid px-4 mt-4 mb-5">
-    <h1 class="page-title"><?= htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8') ?></h1>

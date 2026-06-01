@@ -53,3 +53,4 @@
 </div>
 
 <?php $this->load->view('shared/_transfer_comment_modal'); ?>
+<?php $this->load->view('shared/_transfer_date_modal'); ?>

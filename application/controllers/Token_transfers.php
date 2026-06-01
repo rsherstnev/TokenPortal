@@ -14,7 +14,6 @@ class Token_transfers extends MY_Controller {
 	public function index()
 	{
 		$data = array(
-			'page_title' => 'История передач',
 			'active_nav' => 'transfer_history',
 		);
 		$this->load->view('templates/header', $data);
@@ -168,15 +167,51 @@ class Token_transfers extends MY_Controller {
 			return;
 		}
 
-		$comment = trim((string) $this->input->post('comment'));
-		if ( ! $this->token_transfer_m->update_comment($id, $comment))
+		$scope = trim((string) $this->input->post('update_scope'));
+
+		if ($scope === 'comment')
 		{
-			$this->json_error('Не удалось сохранить комментарий', 500);
+			$comment = trim((string) $this->input->post('comment'));
+			if ( ! $this->token_transfer_m->update_comment($id, $comment))
+			{
+				$this->json_error('Не удалось сохранить комментарий', 500);
+				return;
+			}
+
+			$row = $this->token_transfer_m->get($id);
+			$this->json_ok($row, array('message' => 'Комментарий обновлён'));
 			return;
 		}
 
-		$row = $this->token_transfer_m->get($id);
-		$this->json_ok($row, array('message' => 'Комментарий обновлён'));
+		if ($scope === 'transferred_at')
+		{
+			$raw_date = trim((string) $this->input->post('transferred_at'));
+			if ($raw_date === '')
+			{
+				$this->json_error('Укажите дату передачи', 422, array('transferred_at' => 'Укажите дату'));
+				return;
+			}
+
+			$d = DateTime::createFromFormat('Y-m-d', $raw_date);
+			if ( ! $d || $d->format('Y-m-d') !== $raw_date)
+			{
+				$this->json_error('Некорректная дата передачи', 422, array('transferred_at' => 'Укажите корректную дату'));
+				return;
+			}
+
+			$transferred_at = $d->format('Y-m-d') . ' 00:00:00';
+			if ( ! $this->token_transfer_m->update_transferred_at($id, $transferred_at))
+			{
+				$this->json_error('Не удалось сохранить дату', 500);
+				return;
+			}
+
+			$row = $this->token_transfer_m->get($id);
+			$this->json_ok($row, array('message' => 'Дата передачи обновлена'));
+			return;
+		}
+
+		$this->json_error('Нет данных для обновления', 422);
 	}
 
 	public function history($token_id)

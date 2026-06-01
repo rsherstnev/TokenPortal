@@ -12,7 +12,6 @@ class Statistics extends MY_Controller {
 	public function index()
 	{
 		$data = array(
-			'page_title' => 'Статистика',
 			'active_nav' => 'statistics',
 		);
 		$this->load->view('templates/header', $data);
@@ -20,13 +19,29 @@ class Statistics extends MY_Controller {
 		$this->load->view('templates/footer', $data);
 	}
 
-	public function summary_json()
+	public function without_token_list_json()
 	{
 		$search = trim((string) $this->input->get('q'));
-		$data   = $this->statistics_m->summary($search);
-		$this->json_ok($data, array(
-			'count' => count($data['without_token']),
-			'total' => $data['totals']['without_token'],
-		));
+		$rows   = $this->statistics_m->list_without_token($search);
+		$this->json_ok(
+			array('items' => $rows),
+			array(
+				'count' => count($rows),
+				'total' => $this->statistics_m->count_without_token(),
+			)
+		);
+	}
+
+	public function multiple_tokens_list_json()
+	{
+		$search = trim((string) $this->input->get('q'));
+		$rows   = $this->statistics_m->list_multiple_tokens($search);
+		$this->json_ok(
+			array('items' => $rows),
+			array(
+				'count' => count($rows),
+				'total' => $this->statistics_m->count_multiple_tokens(),
+			)
+		);
 	}
 }

@@ -14,7 +14,6 @@ class Tokens extends MY_Controller {
 	public function index()
 	{
 		$data = array(
-			'page_title'    => 'Токены',
 			'active_nav'    => 'tokens',
 			'models'        => $this->token_model_m->options(),
 			'employees'     => $this->employee_m->options(),

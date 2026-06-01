@@ -25,6 +25,9 @@
     --skzi-highlight-text: #21252b;
     --skzi-scrollbar-thumb: #c2c8d0;
     --skzi-scrollbar-track: transparent;
+    --skzi-navbar-height: 3.5rem;
+    --skzi-main-vertical-spacing: 4.5rem;
+    --skzi-section-chrome: 5.5rem;
     color-scheme: light;
 }
 
@@ -186,13 +189,6 @@ html, body {
 .theme-toggle .bi-sun-fill { display: none; }
 .theme-toggle .bi-moon-fill { display: inline-block; }
 
-.page-title {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: var(--skzi-text-heading);
-    margin: 0 0 12px 0;
-}
-
 .skzi-section {
     background: var(--skzi-surface);
     border: 1px solid var(--skzi-border);
@@ -295,6 +291,17 @@ html, body {
 .skzi-section > .table-responsive {
     max-height: calc(100vh - 320px);
     overflow: auto;
+    scrollbar-gutter: stable;
+}
+
+/* Statistics: scroll inside tables; page must not grow with row count */
+#statistics-page > .col-12 {
+    margin-bottom: 0;
+}
+#statistics-page.statistics-page--dual .skzi-section > .table-responsive {
+    max-height: calc(
+        (100vh - var(--skzi-navbar-height) - var(--skzi-main-vertical-spacing) - 2 * var(--skzi-section-chrome) - 6rem) / 2
+    );
 }
 .skzi-table thead th .sort-icon { opacity: 0.4; margin-left: 2px; }
 .skzi-table thead th[data-sort-key] {
@@ -561,6 +568,12 @@ mark.search-highlight {
     gap: 8px;
 }
 .history-list .history-item-head .history-item-route { flex: 1; min-width: 0; }
+.history-list .history-item-actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 4px;
+}
+.history-list .history-item-actions .btn-icon { margin-right: 0; }
 .history-list li:last-child { border-bottom: none; }
 .history-list .meta { color: var(--skzi-muted); font-size: 0.8rem; }
 .history-list .arrow { color: var(--skzi-muted); margin: 0 4px; }
@@ -830,51 +843,6 @@ mark.search-highlight {
 .ts-wrapper.token-model-select .ts-control input::placeholder {
     color: var(--skzi-muted);
     opacity: 1;
-}
-
-.statistics-chart {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.statistics-bar-row {
-    display: grid;
-    grid-template-columns: minmax(0, 6fr) minmax(0, 4fr) auto;
-    align-items: center;
-    gap: 10px;
-}
-
-.statistics-bar-label {
-    min-width: 0;
-    font-size: 0.82rem;
-    color: var(--skzi-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: default;
-}
-
-.statistics-bar-track {
-    height: 22px;
-    background: var(--skzi-surface-subtle);
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.statistics-bar-fill {
-    height: 100%;
-    min-width: 2px;
-    background: linear-gradient(90deg, var(--skzi-primary), #7289da);
-    border-radius: 4px;
-    transition: width 0.25s ease;
-}
-
-.statistics-bar-value {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--skzi-primary);
-    text-align: right;
 }
 
 @media (max-width: 991.98px) {

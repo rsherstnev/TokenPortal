@@ -387,6 +387,14 @@
         return p(d.getDate()) + '.' + p(d.getMonth() + 1) + '.' + d.getFullYear();
     };
 
+    App.utcDatetimeToLocalDateInput = function (str) {
+        if (!str) return '';
+        const d = new Date(str.replace(' ', 'T') + 'Z');
+        if (isNaN(d.getTime())) return '';
+        const p = (n) => String(n).padStart(2, '0');
+        return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+    };
+
     App.localDateToUtc = function (dateStr, endOfDay) {
         if (!dateStr) return '';
         const d = new Date(dateStr + (endOfDay ? 'T23:59:59' : 'T00:00:00'));
@@ -865,7 +873,10 @@
                             + '<li data-id="' + App.escape(tr.id) + '">'
                             +   '<div class="history-item-head">'
                             +     '<div class="history-item-route"><strong>' + from + '</strong><span class="arrow"><i class="bi bi-arrow-right"></i></span><strong>' + to + '</strong></div>'
-                            +     '<button type="button" class="btn-icon edit action-edit-transfer-comment" data-id="' + App.escape(tr.id) + '" title="Редактировать комментарий"><i class="bi bi-pencil"></i></button>'
+                            +     '<div class="history-item-actions">'
+                            +       '<button type="button" class="btn-icon edit action-edit-transfer-date" data-id="' + App.escape(tr.id) + '" title="Редактировать дату передачи"><i class="bi bi-calendar3"></i></button>'
+                            +       '<button type="button" class="btn-icon edit action-edit-transfer-comment" data-id="' + App.escape(tr.id) + '" title="Редактировать комментарий"><i class="bi bi-pencil"></i></button>'
+                            +     '</div>'
                             +   '</div>'
                             +   comment
                             +   '<div class="meta">' + App.escape(App.formatDateOnly(tr.transferred_at)) + '</div>'
@@ -882,6 +893,13 @@
                 const id = $(e.currentTarget).data('id');
                 if (!window.TransferComment) return;
                 window.TransferComment.openEdit(id, {
+                    onSaved: () => { if (this._tokenId) this.load(this._tokenId); },
+                });
+            });
+            $('#history-body').on('click', '.action-edit-transfer-date', (e) => {
+                const id = $(e.currentTarget).data('id');
+                if (!window.TransferDate) return;
+                window.TransferDate.openEdit(id, {
                     onSaved: () => { if (this._tokenId) this.load(this._tokenId); },
                 });
             });
@@ -941,7 +959,10 @@
         save() {
             const $form = $('#transferCommentForm');
             const id = $form.find('[name="id"]').val();
-            const payload = { comment: $form.find('[name="comment"]').val() };
+            const payload = {
+                update_scope: 'comment',
+                comment: $form.find('[name="comment"]').val(),
+            };
             App.postJSON('token_transfers/update/' + id, payload)
                 .then((res) => {
                     $('#transferCommentModal').modal('hide');
@@ -959,6 +980,78 @@
 
     window.TransferComment = TransferComment;
     $(function () { TransferComment.init(); });
+})(jQuery);
+
+// =============================================================================
+// Transfer date edit (tokens + transfer history pages)
+// =============================================================================
+(function ($) {
+    'use strict';
+    if (!$('#transferDateForm').length) return;
+    const App = window.App;
+
+    const TransferDate = {
+        _onSaved: null,
+
+        init() {
+            $('#transferDateForm').on('submit', (e) => { e.preventDefault(); this.save(); });
+        },
+
+        formatRoute(tr) {
+            const from = tr.from_fullname && tr.from_fullname.trim() ? tr.from_fullname : 'Склад';
+            const to   = tr.to_fullname && tr.to_fullname.trim()   ? tr.to_fullname   : 'Склад';
+            return from + ' → ' + to;
+        },
+
+        openEdit(id, options) {
+            options = options || {};
+            this._onSaved = options.onSaved || null;
+            App.getJSON('token_transfers/get/' + id).then((res) => {
+                const tr = res.data || {};
+                const $form = $('#transferDateForm');
+                $form[0].reset();
+                App.clearErrors($form);
+                $form.find('[name="id"]').val(tr.id);
+                $('#transfer-date-at').val(App.utcDatetimeToLocalDateInput(tr.transferred_at));
+                $('#transfer-date-token').text(
+                    (tr.model_name || '—') + ' · ' + (tr.serial_number || '—')
+                );
+                $('#transfer-date-route').text(this.formatRoute(tr));
+                $('#transferDateModal').modal('show');
+            }).catch((res) => {
+                App.toast((res && res.message) || 'Не удалось загрузить запись', 'error');
+            });
+        },
+
+        save() {
+            const $form = $('#transferDateForm');
+            const id = $form.find('[name="id"]').val();
+            const transferredAt = $('#transfer-date-at').val();
+            if (!transferredAt) {
+                App.toast('Укажите дату передачи', 'error');
+                return;
+            }
+            const payload = {
+                update_scope: 'transferred_at',
+                transferred_at: transferredAt,
+            };
+            App.postJSON('token_transfers/update/' + id, payload)
+                .then((res) => {
+                    $('#transferDateModal').modal('hide');
+                    App.toast(res.message || 'Сохранено', 'success');
+                    if (typeof this._onSaved === 'function') {
+                        this._onSaved(res.data);
+                    }
+                })
+                .catch((res) => {
+                    if (res.errors) App.applyErrors($form, res.errors);
+                    App.toast(res.message || 'Не удалось сохранить', 'error');
+                });
+        },
+    };
+
+    window.TransferDate = TransferDate;
+    $(function () { TransferDate.init(); });
 })(jQuery);
 // =============================================================================
 // Transfer history page logic
@@ -990,6 +1083,19 @@
                 if (window.TransferComment) {
                     window.TransferComment.openEdit(id, { onSaved: () => this.refresh() });
                 }
+            });
+            this.$list.on('click', '.action-edit-transfer-date', (e) => {
+                const id = $(e.currentTarget).data('id');
+                if (window.TransferDate) {
+                    window.TransferDate.openEdit(id, { onSaved: () => this.refresh() });
+                }
+            });
+            this.$list.on('click', '.copy-serial', (e) => {
+                const serial = $(e.currentTarget).data('serial');
+                if (!serial) return;
+                App.copyText(serial)
+                    .then(() => App.toast('Серийный номер скопирован', 'success'))
+                    .catch(() => App.toast('Не удалось скопировать', 'error'));
             });
             this.refresh();
         },
@@ -1044,12 +1150,13 @@
                 return ''
                     + '<tr data-id="' + App.escape(r.id) + '">'
                     +   '<td>' + App.highlightMatch(r.model_name || '', query) + '</td>'
-                    +   '<td>' + App.highlightMatch(r.serial_number || '', query) + '</td>'
+                    +   '<td><span class="copy-serial" data-serial="' + App.escape(r.serial_number || '') + '" title="Нажмите, чтобы скопировать серийный номер">' + App.highlightMatch(r.serial_number || '', query) + '</span></td>'
                     +   '<td>' + from + '</td>'
                     +   '<td>' + to + '</td>'
                     +   '<td>' + App.escape(App.formatDateOnly(r.transferred_at)) + '</td>'
                     +   '<td>' + comment + '</td>'
                     +   '<td class="actions-cell">'
+                    +     '<button type="button" class="btn-icon edit action-edit-transfer-date" data-id="' + App.escape(r.id) + '" title="Редактировать дату передачи"><i class="bi bi-calendar3"></i></button>'
                     +     '<button type="button" class="btn-icon edit action-edit-transfer-comment" data-id="' + App.escape(r.id) + '" title="Редактировать комментарий"><i class="bi bi-pencil"></i></button>'
                     +   '</td>'
                     + '</tr>';
@@ -1070,90 +1177,133 @@
     const App = window.App;
 
     const Statistics = {
-        $list: $('#statistics-list'),
-        $search: $('#statistics-search'),
-        $count: $('#statistics-list-count'),
-        $total: $('#statistics-without-total'),
-        $chart: $('#statistics-chart'),
-        sortState: { col: 'person_name', dir: 'asc' },
-
-        init() {
-            this.$thead = this.$list.closest('table').find('thead');
-            App.makeSortable(this.$thead, this.sortState, () => this.renderList(this.lastRows || [], this.lastTotal, this.lastQuery));
-            App.updateSortIcons(this.$thead, this.sortState);
-            this.$search.on('input', App.debounce(() => this.refresh(), 250));
-            this.$search.on('keydown', (e) => { if (e.key === 'Escape') { this.$search.val(''); this.refresh(); } });
-            this.refresh();
+        without: {
+            $list: $('#statistics-without-list'),
+            $search: $('#statistics-without-search'),
+            $count: $('#statistics-without-count'),
+            sortState: { col: 'person_name', dir: 'asc' },
+            lastRows: null,
+            lastTotal: null,
+            lastQuery: null,
+        },
+        multiple: {
+            $list: $('#statistics-multiple-list'),
+            $search: $('#statistics-multiple-search'),
+            $count: $('#statistics-multiple-count'),
+            sortState: { col: 'token_count', dir: 'desc' },
+            lastRows: null,
+            lastTotal: null,
+            lastQuery: null,
         },
 
-        refresh() {
-            const query = this.$search.val();
-            App.getJSON('statistics/summary', { q: query })
+        init() {
+            this.initTable('without', 'statistics/without_token', (rows, total, query) => this.renderWithoutList(rows, total, query));
+            this.initTable('multiple', 'statistics/multiple_tokens', (rows, total, query) => this.renderMultipleList(rows, total, query));
+        },
+
+        initTable(key, url, renderFn) {
+            const block = this[key];
+            block.$thead = block.$list.closest('table').find('thead');
+            App.makeSortable(block.$thead, block.sortState, () => renderFn(block.lastRows || [], block.lastTotal, block.lastQuery));
+            App.updateSortIcons(block.$thead, block.sortState);
+            block.$search.on('input', App.debounce(() => this.refreshTable(key, url, renderFn), 250));
+            block.$search.on('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    block.$search.val('');
+                    this.refreshTable(key, url, renderFn);
+                }
+            });
+            this.refreshTable(key, url, renderFn);
+        },
+
+        refreshTable(key, url, renderFn) {
+            const block = this[key];
+            const query = block.$search.val();
+            App.getJSON(url, { q: query })
                 .then((res) => {
                     const data = res.data || {};
-                    this.renderChart(data.by_department || [], data.totals || {});
-                    this.renderList(data.without_token || [], res.total, query);
+                    renderFn.call(this, data.items || [], res.total, query);
                 })
                 .catch((xhr) => {
                     const res = xhr && xhr.responseJSON ? xhr.responseJSON : null;
-                    App.toast((res && res.message) || 'Не удалось загрузить статистику', 'error');
+                    App.toast((res && res.message) || 'Не удалось загрузить список', 'error');
                 });
         },
 
-        renderChart(rows, totals) {
-            const total = totals.without_token != null ? totals.without_token : 0;
-            this.$total.text(total);
+        renderWithoutList(rows, total, query) {
+            const block = this.without;
+            block.lastRows = rows;
+            block.lastTotal = total;
+            block.lastQuery = query;
 
-            if (!rows.length) {
-                this.$chart.html('<div class="empty-cell">Нет данных</div>');
-                return;
-            }
-
-            const max = Math.max.apply(null, rows.map((r) => Number(r.count) || 0)) || 1;
-            const html = rows.map((r) => {
-                const count = Number(r.count) || 0;
-                const pct = Math.round((count / max) * 100);
-                const label = (r.department_name && String(r.department_name).trim())
-                    ? String(r.department_name).trim()
-                    : (r.department_id != null ? String(r.department_id) : '—');
-                return ''
-                    + '<div class="statistics-bar-row">'
-                    +   '<div class="statistics-bar-label" title="' + App.escape(label) + '">' + App.escape(label) + '</div>'
-                    +   '<div class="statistics-bar-track" aria-hidden="true">'
-                    +     '<div class="statistics-bar-fill" style="width:' + pct + '%"></div>'
-                    +   '</div>'
-                    +   '<div class="statistics-bar-value">' + App.escape(String(count)) + '</div>'
-                    + '</div>';
-            }).join('');
-            this.$chart.html(html);
-        },
-
-        renderList(rows, total, query) {
-            this.lastRows = rows;
-            this.lastTotal = total;
-            this.lastQuery = query;
-
-            rows = App.sortRows(rows, this.sortState, function (r, key) {
-                if (key === 'person_dolj' || key === 'person_department') return Number(r[key]);
+            rows = App.sortRows(rows, block.sortState, function (r, key) {
+                if (key === 'person_dolj') return (r.dolj_name || '').toLowerCase();
+                if (key === 'person_department') return (r.department_name || '').toLowerCase();
                 return r[key] || '';
             });
 
             const n = rows.length;
-            this.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
+            block.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
 
             if (!rows.length) {
-                this.$list.html('<tr><td colspan="3" class="empty-cell">Нет записей</td></tr>');
+                block.$list.html('<tr><td colspan="3" class="empty-cell">Нет записей</td></tr>');
                 return;
             }
 
-            const html = rows.map((r) => ''
-                + '<tr data-id="' + App.escape(r.id) + '">'
-                +   '<td>' + App.highlightMatch(r.person_name || '', query) + '</td>'
-                +   '<td>' + App.highlightMatch(String(r.person_dolj != null ? r.person_dolj : ''), query) + '</td>'
-                +   '<td>' + App.highlightMatch(String(r.person_department != null ? r.person_department : ''), query) + '</td>'
-                + '</tr>'
-            ).join('');
-            this.$list.html(html);
+            const html = rows.map((r) => {
+                const doljLabel = (r.dolj_name && String(r.dolj_name).trim())
+                    ? String(r.dolj_name).trim()
+                    : (r.person_dolj != null ? String(r.person_dolj) : '');
+                const deptLabel = (r.department_name && String(r.department_name).trim())
+                    ? String(r.department_name).trim()
+                    : (r.person_department != null ? String(r.person_department) : '');
+                return ''
+                    + '<tr data-id="' + App.escape(r.id) + '">'
+                    +   '<td>' + App.highlightMatch(r.person_name || '', query) + '</td>'
+                    +   '<td>' + App.highlightMatch(deptLabel, query) + '</td>'
+                    +   '<td>' + App.highlightMatch(doljLabel, query) + '</td>'
+                    + '</tr>';
+            }).join('');
+            block.$list.html(html);
+        },
+
+        renderMultipleList(rows, total, query) {
+            const block = this.multiple;
+            block.lastRows = rows;
+            block.lastTotal = total;
+            block.lastQuery = query;
+
+            rows = App.sortRows(rows, block.sortState, function (r, key) {
+                if (key === 'person_dolj') return (r.dolj_name || '').toLowerCase();
+                if (key === 'person_department') return (r.department_name || '').toLowerCase();
+                if (key === 'token_count') return Number(r.token_count) || 0;
+                return r[key] || '';
+            });
+
+            const n = rows.length;
+            block.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
+
+            if (!rows.length) {
+                block.$list.html('<tr><td colspan="4" class="empty-cell">Нет записей</td></tr>');
+                return;
+            }
+
+            const html = rows.map((r) => {
+                const doljLabel = (r.dolj_name && String(r.dolj_name).trim())
+                    ? String(r.dolj_name).trim()
+                    : (r.person_dolj != null ? String(r.person_dolj) : '');
+                const deptLabel = (r.department_name && String(r.department_name).trim())
+                    ? String(r.department_name).trim()
+                    : (r.person_department != null ? String(r.person_department) : '');
+                return ''
+                    + '<tr data-id="' + App.escape(r.id) + '">'
+                    +   '<td>' + App.highlightMatch(r.person_name || '', query) + '</td>'
+                    +   '<td>' + App.highlightMatch(deptLabel, query) + '</td>'
+                    +   '<td>' + App.highlightMatch(doljLabel, query) + '</td>'
+                    +   '<td>' + App.escape(String(r.token_count != null ? r.token_count : '')) + '</td>'
+                    + '</tr>';
+            }).join('');
+            block.$list.html(html);
         },
     };
 
