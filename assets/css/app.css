@@ -260,6 +260,8 @@ html, body {
 .btn-icon.edit:hover { background: #fbe6c1; }
 .btn-icon.delete { background: #fbe2e3; color: var(--skzi-delete); }
 .btn-icon.delete:hover { background: #f7caca; }
+.btn-icon.document { background: #e8eef5; color: #4a6d94; }
+.btn-icon.document:hover { background: #d4dfea; color: #3a5a7a; }
 
 [data-theme="dark"] .btn-icon.history  { background: rgba(88, 101, 242, 0.15); color: #949cf0; }
 [data-theme="dark"] .btn-icon.history:hover  { background: rgba(88, 101, 242, 0.28); color: #b5baff; }
@@ -269,6 +271,8 @@ html, body {
 [data-theme="dark"] .btn-icon.edit:hover { background: rgba(250, 166, 26, 0.28); color: #ffbd4a; }
 [data-theme="dark"] .btn-icon.delete { background: rgba(237, 66, 69, 0.15); color: #ed4245; }
 [data-theme="dark"] .btn-icon.delete:hover { background: rgba(237, 66, 69, 0.28); color: #f47b7d; }
+[data-theme="dark"] .btn-icon.document { background: rgba(74, 109, 148, 0.18); color: #8eb4d9; }
+[data-theme="dark"] .btn-icon.document:hover { background: rgba(74, 109, 148, 0.32); color: #b3d0eb; }
 
 .skzi-table {
     width: 100%;

@@ -96,6 +96,47 @@ class Token_transfer_m extends CI_Model {
 		return $row ?: FALSE;
 	}
 
+	/**
+	 * Данные передачи для акта приёма-передачи (должность, отдел сотрудников).
+	 */
+	public function get_act_data($id)
+	{
+		if ( ! is_uuid($id))
+		{
+			return FALSE;
+		}
+
+		$this->db->select("
+			tr.id,
+			tr.transferred_at,
+			tr.from_employee_id,
+			tr.to_employee_id,
+			tm.name AS model_name,
+			t.serial_number,
+			fe.person_name AS from_fullname,
+			fdj.name AS from_dolj_name,
+			fd.name AS from_department_name,
+			te.person_name AS to_fullname,
+			tdj.name AS to_dolj_name,
+			td.name AS to_department_name
+		", FALSE);
+		$this->db->from('token_transfers tr');
+		$this->db->join('tokens t', 't.id = tr.token_id', 'inner');
+		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'inner');
+		$this->db->join('users fe', 'fe.id = tr.from_employee_id', 'left');
+		$this->db->join('dolj fdj', 'fdj.id = fe.person_dolj', 'left');
+		$this->db->join('departments fd', 'fd.id = fe.person_department', 'left');
+		$this->db->join('users te', 'te.id = tr.to_employee_id', 'left');
+		$this->db->join('dolj tdj', 'tdj.id = te.person_dolj', 'left');
+		$this->db->join('departments td', 'td.id = te.person_department', 'left');
+		$this->db->where('tr.id', $id);
+		$this->db->where('t.deleted_at IS NULL', NULL, FALSE);
+
+		$row = $this->db->get()->row_array();
+
+		return $row ?: FALSE;
+	}
+
 	public function update_comment($id, $comment)
 	{
 		if ( ! is_uuid($id))

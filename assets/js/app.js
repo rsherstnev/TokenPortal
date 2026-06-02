@@ -1065,6 +1065,12 @@
                     window.TransferDate.openEdit(id, { onSaved: () => this.refresh() });
                 }
             });
+            this.$list.on('click', '.action-download-transfer-act', (e) => {
+                const id = $(e.currentTarget).data('id');
+                if (id) {
+                    window.location.href = App.url('transfer_history/act/' + encodeURIComponent(id));
+                }
+            });
             this.$list.on('click', '.copy-serial', (e) => {
                 const serial = $(e.currentTarget).data('serial');
                 if (!serial) return;
@@ -1133,6 +1139,7 @@
                     +   '<td class="actions-cell">'
                     +     '<button type="button" class="btn-icon edit action-edit-transfer-date" data-id="' + App.escape(r.id) + '" title="Редактировать дату передачи"><i class="bi bi-calendar3"></i></button>'
                     +     '<button type="button" class="btn-icon edit action-edit-transfer-comment" data-id="' + App.escape(r.id) + '" title="Редактировать комментарий"><i class="bi bi-pencil"></i></button>'
+                    +     '<button type="button" class="btn-icon document action-download-transfer-act" data-id="' + App.escape(r.id) + '" title="Сформировать акт приёма-передачи"><i class="bi bi-file-earmark-text"></i></button>'
                     +   '</td>'
                     + '</tr>';
             }).join('');

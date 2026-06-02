@@ -214,6 +214,65 @@ class Token_transfers extends MY_Controller {
 		$this->json_error('Нет данных для обновления', 422);
 	}
 
+	public function transfer_act($id)
+	{
+		if ( ! is_uuid($id))
+		{
+			show_404();
+			return;
+		}
+
+		$row = $this->token_transfer_m->get_act_data($id);
+		if ( ! $row)
+		{
+			show_404();
+			return;
+		}
+
+		$this->load->helper('transfer_act');
+		$this->load->library('transfer_act_docx');
+
+		$token_label = trim($row['model_name'] . ', ' . $row['serial_number'], ', ');
+
+		try
+		{
+			$binary = $this->transfer_act_docx->render(array(
+				'city'     => 'г. Красноярск',
+				'date'     => transfer_act_format_date($row['transferred_at']),
+				'from_who' => transfer_act_format_party(
+					$row['from_dolj_name'],
+					$row['from_department_name'],
+					$row['from_fullname'],
+					$row['from_employee_id']
+				),
+				'token'    => $token_label,
+				'to_who'   => transfer_act_format_party(
+					$row['to_dolj_name'],
+					$row['to_department_name'],
+					$row['to_fullname'],
+					$row['to_employee_id']
+				),
+			));
+		}
+		catch (RuntimeException $e)
+		{
+			show_error($e->getMessage(), 500);
+			return;
+		}
+
+		$filename = transfer_act_download_filename($row['to_fullname'], $row['to_employee_id']);
+		$ascii_name = transfer_act_ascii_filename($filename);
+
+		$this->output->set_status_header(200);
+		header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+		header('Content-Disposition: attachment; filename="' . $ascii_name . '"; filename*=UTF-8\'\'' . rawurlencode($filename));
+		header('Content-Length: ' . strlen($binary));
+		header('Cache-Control: private, no-store, no-cache, must-revalidate');
+		header('Pragma: no-cache');
+		echo $binary;
+		exit;
+	}
+
 	public function history($token_id)
 	{
 		if ( ! is_uuid($token_id))
