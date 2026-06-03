@@ -439,6 +439,17 @@
         return escapedText.replace(regex, '<mark class="search-highlight">$1</mark>');
     };
 
+    App.formatEmployeeName = function (name, isFired, query) {
+        if (!name || !String(name).trim()) return '';
+        const inner = (query != null && query !== '')
+            ? App.highlightMatch(name, query)
+            : App.escape(name);
+        if (Number(isFired) === 1) {
+            return '<span class="employee-fired">' + inner + '</span>';
+        }
+        return inner;
+    };
+
     // ---- Confirm dialog (uses Bootstrap modal) -------------------------------
     App.confirm = function (text, opts) {
         opts = opts || {};
@@ -596,7 +607,7 @@
                     ? '<span class="status-badge issued" title="Выдан последний раз"><i class="bi bi-calendar3"></i>' + App.escape(App.formatDateOnly(r.last_issued_at)) + '</span>'
                     : '';
                 const employee = r.employee_fullname && r.employee_fullname.trim().length
-                    ? App.highlightMatch(r.employee_fullname, query)
+                    ? App.formatEmployeeName(r.employee_fullname, r.employee_is_fired, query)
                     : '<span class="text-muted">—</span>';
                 return ''
                     + '<tr data-id="' + App.escape(r.id) + '">'
@@ -1120,10 +1131,10 @@
             }
             const html = rows.map((r) => {
                 const from = r.from_fullname && r.from_fullname.trim()
-                    ? App.highlightMatch(r.from_fullname, query)
+                    ? App.formatEmployeeName(r.from_fullname, r.from_is_fired, query)
                     : '<span class="text-muted">Склад</span>';
                 const to = r.to_fullname && r.to_fullname.trim()
-                    ? App.highlightMatch(r.to_fullname, query)
+                    ? App.formatEmployeeName(r.to_fullname, r.to_is_fired, query)
                     : '<span class="text-muted">Склад</span>';
                 const comment = r.comment && r.comment.trim()
                     ? App.highlightMatch(r.comment, query)
@@ -1177,10 +1188,20 @@
             lastTotal: null,
             lastQuery: null,
         },
+        stuck: {
+            $list: $('#statistics-stuck-list'),
+            $search: $('#statistics-stuck-search'),
+            $count: $('#statistics-stuck-count'),
+            sortState: { col: 'person_name', dir: 'asc' },
+            lastRows: null,
+            lastTotal: null,
+            lastQuery: null,
+        },
 
         init() {
             this.initTable('without', 'statistics/without_token', (rows, total, query) => this.renderWithoutList(rows, total, query));
             this.initTable('multiple', 'statistics/multiple_tokens', (rows, total, query) => this.renderMultipleList(rows, total, query));
+            this.initTable('stuck', 'statistics/stuck_tokens', (rows, total, query) => this.renderStuckList(rows, total, query));
         },
 
         initTable(key, url, renderFn) {
@@ -1283,6 +1304,45 @@
                     +   '<td>' + App.highlightMatch(deptLabel, query) + '</td>'
                     +   '<td>' + App.highlightMatch(doljLabel, query) + '</td>'
                     +   '<td>' + App.escape(String(r.token_count != null ? r.token_count : '')) + '</td>'
+                    + '</tr>';
+            }).join('');
+            block.$list.html(html);
+        },
+
+        renderStuckList(rows, total, query) {
+            const block = this.stuck;
+            block.lastRows = rows;
+            block.lastTotal = total;
+            block.lastQuery = query;
+
+            rows = App.sortRows(rows, block.sortState, function (r, key) {
+                if (key === 'person_dolj') return (r.dolj_name || '').toLowerCase();
+                if (key === 'person_department') return (r.department_name || '').toLowerCase();
+                return r[key] || '';
+            });
+
+            const n = rows.length;
+            block.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
+
+            if (!rows.length) {
+                block.$list.html('<tr><td colspan="5" class="empty-cell">Нет записей</td></tr>');
+                return;
+            }
+
+            const html = rows.map((r) => {
+                const doljLabel = (r.dolj_name && String(r.dolj_name).trim())
+                    ? String(r.dolj_name).trim()
+                    : (r.person_dolj != null ? String(r.person_dolj) : '');
+                const deptLabel = (r.department_name && String(r.department_name).trim())
+                    ? String(r.department_name).trim()
+                    : (r.person_department != null ? String(r.person_department) : '');
+                return ''
+                    + '<tr data-id="' + App.escape(r.token_id) + '">'
+                    +   '<td>' + App.formatEmployeeName(r.person_name || '', 1, query) + '</td>'
+                    +   '<td>' + App.highlightMatch(deptLabel, query) + '</td>'
+                    +   '<td>' + App.highlightMatch(doljLabel, query) + '</td>'
+                    +   '<td>' + App.highlightMatch(r.model_name || '', query) + '</td>'
+                    +   '<td><span class="copy-serial" data-serial="' + App.escape(r.serial_number || '') + '" title="Нажмите, чтобы скопировать серийный номер">' + App.highlightMatch(r.serial_number || '', query) + '</span></td>'
                     + '</tr>';
             }).join('');
             block.$list.html(html);

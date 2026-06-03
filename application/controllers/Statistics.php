@@ -44,4 +44,17 @@ class Statistics extends MY_Controller {
 			)
 		);
 	}
+
+	public function stuck_tokens_list_json()
+	{
+		$search = trim((string) $this->input->get('q'));
+		$rows   = $this->statistics_m->list_stuck_tokens($search);
+		$this->json_ok(
+			array('items' => $rows),
+			array(
+				'count' => count($rows),
+				'total' => $this->statistics_m->count_stuck_tokens(),
+			)
+		);
+	}
 }

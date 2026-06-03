@@ -302,9 +302,15 @@ html, body {
 #statistics-page > .col-12 {
     margin-bottom: 0;
 }
-#statistics-page.statistics-page--dual .skzi-section > .table-responsive {
+#statistics-page.statistics-page--dual .skzi-section > .table-responsive,
+#statistics-page.statistics-page--triple .skzi-section > .table-responsive {
     max-height: calc(
         (100vh - var(--skzi-navbar-height) - var(--skzi-main-vertical-spacing) - 2 * var(--skzi-section-chrome) - 6rem) / 2
+    );
+}
+#statistics-page.statistics-page--triple .skzi-section > .table-responsive {
+    max-height: calc(
+        (100vh - var(--skzi-navbar-height) - var(--skzi-main-vertical-spacing) - 3 * var(--skzi-section-chrome) - 8rem) / 3
     );
 }
 .skzi-table thead th .sort-icon { opacity: 0.4; margin-left: 2px; }
@@ -434,6 +440,13 @@ mark.search-highlight {
     padding: 0 2px;
     border-radius: 2px;
     font-weight: 500;
+}
+.employee-fired {
+    color: #8b0000;
+    font-weight: 600;
+}
+[data-theme="dark"] .employee-fired {
+    color: #e57373;
 }
 
 .skzi-modal .modal-content {

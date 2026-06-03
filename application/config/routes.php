@@ -75,6 +75,7 @@ $route['transfer_history/act/(:any)']         = 'token_transfers/transfer_act/$1
 $route['statistics']                          = 'statistics/index';
 $route['statistics/without_token']            = 'statistics/without_token_list_json';
 $route['statistics/multiple_tokens']          = 'statistics/multiple_tokens_list_json';
+$route['statistics/stuck_tokens']             = 'statistics/stuck_tokens_list_json';
 
 $route['token_transfers/create/(:any)']       = 'token_transfers/create/$1';
 $route['token_transfers/get/(:any)']           = 'token_transfers/get/$1';

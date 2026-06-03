@@ -76,7 +76,9 @@ class Token_transfer_m extends CI_Model {
 			tm.name AS model_name,
 			t.serial_number,
 			fe.person_name AS from_fullname,
-			te.person_name AS to_fullname
+			fe.is_fired AS from_is_fired,
+			te.person_name AS to_fullname,
+			te.is_fired AS to_is_fired
 		", FALSE);
 		$this->db->from('token_transfers tr');
 		$this->db->join('tokens t', 't.id = tr.token_id', 'inner');
@@ -181,7 +183,9 @@ class Token_transfer_m extends CI_Model {
 			tm.name AS model_name,
 			t.serial_number,
 			fe.person_name AS from_fullname,
-			te.person_name AS to_fullname
+			fe.is_fired AS from_is_fired,
+			te.person_name AS to_fullname,
+			te.is_fired AS to_is_fired
 		", FALSE);
 		$this->db->from('token_transfers tr');
 		$this->db->join('tokens t', 't.id = tr.token_id', 'inner');

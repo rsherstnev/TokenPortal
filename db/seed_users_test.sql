@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS users (
     id_num              VARCHAR(6)      NOT NULL DEFAULT '',
     id_printed          DATETIME        NULL,
     not_print           TINYINT(1)      NOT NULL DEFAULT 0,
+    is_fired            TINYINT(1)      NOT NULL DEFAULT 0,
     cr_date             DATETIME        NULL DEFAULT CURRENT_TIMESTAMP,
     updated             DATETIME        NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
@@ -50,7 +51,8 @@ INSERT INTO users (
     n_type,
     id_num,
     id_printed,
-    not_print
+    not_print,
+    is_fired
 )
 WITH RECURSIVE seq AS (
     SELECT 1 AS n
@@ -101,7 +103,8 @@ SELECT
         WHEN n MOD 4 = 0 THEN DATE_SUB(NOW(), INTERVAL (n MOD 365) DAY)
         ELSE NULL
     END AS id_printed,
-    (n MOD 11 = 0) AS not_print
+    (n MOD 11 = 0) AS not_print,
+    (n MOD 17 = 0) AS is_fired
 FROM generated;
 
 -- Проверка распределения по отделам (должно быть 16 строк, сумма = 100).

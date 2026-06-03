@@ -24,6 +24,7 @@ class Token_m extends CI_Model {
 			t.updated_at,
 			tm.name AS model_name,
 			e.person_name AS employee_fullname,
+			e.is_fired AS employee_is_fired,
 			(SELECT MAX(tr.transferred_at)
 			 FROM token_transfers tr
 			 WHERE tr.token_id = t.id AND tr.to_employee_id IS NOT NULL) AS last_issued_at

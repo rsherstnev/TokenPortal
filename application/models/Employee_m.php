@@ -19,7 +19,7 @@ class Employee_m extends CI_Model {
 	public function get($id)
 	{
 		return $this->db
-			->select('id, person_name, person_dolj, person_department, city_id, cabinet, sogl_ruk, needcrypto, pos, sd, n_type, id_num, id_printed, not_print, cr_date, updated')
+			->select('id, person_name, person_dolj, person_department, city_id, cabinet, sogl_ruk, needcrypto, pos, sd, n_type, id_num, id_printed, not_print, is_fired, cr_date, updated')
 			->where('id', (int) $id)
 			->get('users')
 			->row_array();

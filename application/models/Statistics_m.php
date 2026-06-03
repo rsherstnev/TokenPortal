@@ -112,4 +112,54 @@ class Statistics_m extends CI_Model {
 
 		return (int) ($row['cnt'] ?? 0);
 	}
+
+	public function list_stuck_tokens($search = '')
+	{
+		$this->db->select(
+			't.id AS token_id, t.serial_number, tm.name AS model_name, e.id AS employee_id, e.person_name, e.person_dolj, e.person_department, dj.name AS dolj_name, d.name AS department_name',
+			FALSE
+		);
+		$this->db->from('tokens t');
+		$this->db->join('users e', 'e.id = t.employee_id AND e.is_fired = 1', 'inner', FALSE);
+		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'inner');
+		$this->db->join('dolj dj', 'dj.id = e.person_dolj', 'left');
+		$this->db->join('departments d', 'd.id = e.person_department', 'left');
+		$this->db->where('t.deleted_at IS NULL', NULL, FALSE);
+		$this->db->where('t.is_broken', 0);
+		$this->db->where('t.is_lost', 0);
+		$this->db->where('t.employee_id IS NOT NULL', NULL, FALSE);
+
+		if ($search !== '')
+		{
+			$lc   = mb_strtolower($search, 'UTF-8');
+			$like = $this->db->escape_like_str($lc);
+			$this->db->where("(
+				LOWER(e.person_name) LIKE '%{$like}%' OR
+				LOWER(tm.name) LIKE '%{$like}%' OR
+				LOWER(t.serial_number) LIKE '%{$like}%' OR
+				LOWER(dj.name) LIKE '%{$like}%' OR
+				LOWER(d.name) LIKE '%{$like}%'
+			)", NULL, FALSE);
+		}
+
+		$this->db->order_by('e.person_name', 'ASC');
+		$this->db->order_by('tm.name', 'ASC');
+		$this->db->order_by('t.serial_number', 'ASC');
+
+		return $this->db->get()->result_array();
+	}
+
+	public function count_stuck_tokens()
+	{
+		$this->db->select('COUNT(*) AS cnt', FALSE);
+		$this->db->from('tokens t');
+		$this->db->join('users e', 'e.id = t.employee_id AND e.is_fired = 1', 'inner', FALSE);
+		$this->db->where('t.deleted_at IS NULL', NULL, FALSE);
+		$this->db->where('t.is_broken', 0);
+		$this->db->where('t.is_lost', 0);
+		$this->db->where('t.employee_id IS NOT NULL', NULL, FALSE);
+		$row = $this->db->get()->row_array();
+
+		return (int) ($row['cnt'] ?? 0);
+	}
 }
