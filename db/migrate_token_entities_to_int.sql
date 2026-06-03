@@ -1,18 +1,14 @@
-SET NAMES utf8mb4;
-SET time_zone = '+00:00';
-
-CREATE DATABASE IF NOT EXISTS skzi_tokens
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci;
+-- Миграция token_models, tokens, token_transfers: UUID -> INT UNSIGNED AUTO_INCREMENT.
+-- ВНИМАНИЕ: удаляет все данные в этих таблицах. Для продакшена с UUID нужна
+-- отдельная процедура сопоставления старых и новых ID.
 
 USE skzi_tokens;
 
-CREATE TABLE departments (
-    id          INT UNSIGNED  NOT NULL,
-    name        VARCHAR(255)  NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY uq_departments_name (name(128))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS token_transfers;
+DROP TABLE IF EXISTS tokens;
+DROP TABLE IF EXISTS token_models;
 
 CREATE TABLE token_models (
     id          INT UNSIGNED  NOT NULL AUTO_INCREMENT,
@@ -54,3 +50,5 @@ CREATE TABLE token_transfers (
     KEY idx_transfers_token (token_id),
     KEY idx_transfers_date  (transferred_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+SET FOREIGN_KEY_CHECKS = 1;

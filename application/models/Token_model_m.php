@@ -43,7 +43,7 @@ class Token_model_m extends CI_Model {
 	public function get($id)
 	{
 		return $this->db
-			->where('id', $id)
+			->where('id', (int) $id)
 			->where('deleted_at IS NULL', NULL, FALSE)
 			->get('token_models')
 			->row_array();
@@ -51,20 +51,18 @@ class Token_model_m extends CI_Model {
 
 	public function create($name)
 	{
-		$id = uuid_v4();
 		$this->db->insert('token_models', array(
-			'id'         => $id,
 			'name'       => $name,
 			'created_at' => gmdate('Y-m-d H:i:s'),
 			'updated_at' => gmdate('Y-m-d H:i:s'),
 		));
-		return $id;
+		return (int) $this->db->insert_id();
 	}
 
 	public function update($id, $name)
 	{
 		return $this->db
-			->where('id', $id)
+			->where('id', (int) $id)
 			->update('token_models', array(
 				'name'       => $name,
 				'updated_at' => gmdate('Y-m-d H:i:s'),
@@ -74,7 +72,7 @@ class Token_model_m extends CI_Model {
 	public function soft_delete($id)
 	{
 		return $this->db
-			->where('id', $id)
+			->where('id', (int) $id)
 			->update('token_models', array(
 				'deleted_at' => gmdate('Y-m-d H:i:s'),
 				'updated_at' => gmdate('Y-m-d H:i:s'),
@@ -84,7 +82,7 @@ class Token_model_m extends CI_Model {
 	/**
 	 * Проверяет, существует ли активная модель с таким названием.
 	 * @param string      $name       название модели
-	 * @param string|null $exclude_id UUID модели, которую нужно исключить (для случая обновления)
+	 * @param int|null $exclude_id ID модели, которую нужно исключить (для случая обновления)
 	 * @return bool
 	 */
 	public function exists_by_name($name, $exclude_id = NULL)
@@ -95,7 +93,7 @@ class Token_model_m extends CI_Model {
 
 		if ($exclude_id !== NULL)
 		{
-			$this->db->where('id !=', $exclude_id);
+			$this->db->where('id !=', (int) $exclude_id);
 		}
 
 		return $this->db->count_all_results() > 0;
@@ -107,7 +105,7 @@ class Token_model_m extends CI_Model {
 	public function tokens_count($id)
 	{
 		return (int) $this->db
-			->where('token_model_id', $id)
+			->where('token_model_id', (int) $id)
 			->where('deleted_at IS NULL', NULL, FALSE)
 			->from('tokens')
 			->count_all_results();

@@ -14,14 +14,14 @@ reverse proxy с аутентификацией.
 |-------------|------------------|------------|
 | PHP         | 8.1+ (проверено на 8.5) | Расширения: `mysqli`, `mbstring`, `json`, `intl` (желательно). |
 | CodeIgniter | 3.1.13           | Ядро в каталоге `system/`, Composer для runtime не нужен. |
-| MariaDB     | 10.7+ / 11.x     | Нужен тип `UUID` (MariaDB 10.7+). |
+| MariaDB     | 10.5+ / 11.x     | InnoDB, `utf8mb4`. |
 | Apache      | 2.4+             | `mod_rewrite` обязателен. Nginx — см. ниже. |
 | Frontend    | Bootstrap 4.6.2, jQuery 3.7.1, Bootstrap Icons 1.11.3, Tom Select 2.4.3 | Всё локально в `assets/vendor/`, CDN не используется. |
 
 ## Требования
 
 - Linux с Apache (или Nginx + php-fpm).
-- MariaDB/MySQL с поддержкой `UUID`.
+- MariaDB/MySQL 10.5+ (InnoDB).
 - Права на запись для веб-сервера в `application/logs/` и `application/cache/`.
 
 ## Установка
@@ -151,7 +151,7 @@ server {
 | `index.php` | `ENVIRONMENT`: по умолчанию `development`; в продакшене задайте `CI_ENV=production` (Apache `SetEnv`, php-fpm `env`). |
 | `application/config/config.php` | `base_url` из `HTTP_HOST` (удобно в dev; в prod лучше зафиксировать явный URL); `index_page = ''`; CSRF включён (`csrf_token`). |
 | `application/config/database.php` | Параметры MariaDB. |
-| `application/config/autoload.php` | `database`, `session`, `form_validation`; хелперы `url`, `form`, `uuid`. |
+| `application/config/autoload.php` | `database`, `session`, `form_validation`; хелперы `url`, `form`, `id`. |
 | `application/config/routes.php` | Маршруты API и страниц. |
 | `application/core/MY_Controller.php` | JSON-ответы, обновление CSRF в AJAX. |
 
@@ -173,7 +173,7 @@ tokens/
 │   │   ├── Employees.php
 │   │   └── Welcome.php          # заглушка CI, не используется в меню
 │   ├── core/MY_Controller.php
-│   ├── helpers/uuid_helper.php
+│   ├── helpers/id_helper.php
 │   ├── models/
 │   └── views/
 │       ├── templates/
@@ -207,23 +207,23 @@ tokens/
 | Метод | URI | Назначение |
 |-------|-----|------------|
 | GET | `/tokens/list` | Список токенов. Query: `q`, `status` (`all` \| `issued` \| `not_issued` \| `broken` \| `lost`). По умолчанию фильтр `not_issued`. |
-| GET | `/tokens/get/{uuid}` | Один токен |
+| GET | `/tokens/get/{id}` | Один токен |
 | POST | `/tokens/create` | Создание |
-| POST | `/tokens/update/{uuid}` | Редактирование |
-| POST | `/tokens/delete/{uuid}` | Soft delete |
+| POST | `/tokens/update/{id}` | Редактирование |
+| POST | `/tokens/delete/{id}` | Soft delete |
 | GET | `/token_models/list` | Список моделей (`q`) |
 | GET | `/token_models/options` | Активные модели для select |
 | GET | `/token_models` | То же, что `list` (JSON, без HTML-страницы) |
-| GET | `/token_models/get/{uuid}` | Одна модель |
+| GET | `/token_models/get/{id}` | Одна модель |
 | POST | `/token_models/create` \| `update` \| `delete` | CRUD моделей |
-| POST | `/token_transfers/create/{token_uuid}` | Передача; пустой `to_employee_id` — возврат на склад |
-| GET | `/token_transfers/get/{uuid}` | Одна запись передачи |
-| POST | `/token_transfers/update/{uuid}` | Редактирование комментария передачи |
-| GET | `/token_transfers/history/{token_uuid}` | История передач одного токена |
+| POST | `/token_transfers/create/{token_id}` | Передача; пустой `to_employee_id` — возврат на склад |
+| GET | `/token_transfers/get/{id}` | Одна запись передачи |
+| POST | `/token_transfers/update/{id}` | Редактирование комментария передачи |
+| GET | `/token_transfers/history/{token_id}` | История передач одного токена |
 | GET | `/transfer_history/list` | Вся история. Query: `q`, `date_from`, `date_to` (`Y-m-d` или `Y-m-d H:i:s`, UTC). Поиск по слову «склад» находит записи с `NULL` в from/to. |
 | GET | `/employees/list` | Все неудалённые сотрудники (`q`), включая неактивных |
 | GET | `/employees/options` | Только активные (для выдачи токена) |
-| GET | `/employees/get/{uuid}` | Один сотрудник |
+| GET | `/employees/get/{id}` | Один сотрудник |
 | POST | `/employees/create` \| `update` \| `delete` | CRUD сотрудников |
 
 Все **POST**-запросы требуют поле CSRF (`csrf_token` по умолчанию). Клиент
@@ -250,7 +250,7 @@ tokens/
 
 | PostgreSQL (исходник) | MariaDB |
 |-----------------------|---------|
-| `uuid` | `UUID` |
+| `serial` / `integer` | `INT UNSIGNED` (AUTO_INCREMENT для PK) |
 | `text` | `TEXT` |
 | `boolean` | `TINYINT(1)` |
 | `timestamp with time zone` | `DATETIME` (UTC) |

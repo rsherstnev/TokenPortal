@@ -43,7 +43,7 @@ class Tokens extends MY_Controller {
 
 	public function get($id)
 	{
-		if ( ! is_uuid($id))
+		if ( ! is_positive_int_id($id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
@@ -87,7 +87,7 @@ class Tokens extends MY_Controller {
 	{
 		$this->require_post();
 
-		if ( ! is_uuid($id))
+		if ( ! is_positive_int_id($id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
@@ -126,7 +126,7 @@ class Tokens extends MY_Controller {
 	{
 		$this->require_post();
 
-		if ( ! is_uuid($id))
+		if ( ! is_positive_int_id($id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
@@ -147,7 +147,7 @@ class Tokens extends MY_Controller {
 	{
 		$errors = array();
 		$model_valid = FALSE;
-		if ( ! is_uuid($model_id))
+		if ( ! is_positive_int_id($model_id))
 		{
 			$errors['token_model_id'] = 'Выберите модель токена';
 		}

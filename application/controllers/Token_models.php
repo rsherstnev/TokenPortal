@@ -24,7 +24,7 @@ class Token_models extends MY_Controller {
 
 	public function get($id)
 	{
-		if ( ! is_uuid($id))
+		if ( ! is_positive_int_id($id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
@@ -55,7 +55,7 @@ class Token_models extends MY_Controller {
 	public function update($id)
 	{
 		$this->require_post();
-		if ( ! is_uuid($id))
+		if ( ! is_positive_int_id($id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
@@ -79,7 +79,7 @@ class Token_models extends MY_Controller {
 	public function delete($id)
 	{
 		$this->require_post();
-		if ( ! is_uuid($id))
+		if ( ! is_positive_int_id($id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;

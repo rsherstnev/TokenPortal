@@ -121,7 +121,7 @@ class Token_m extends CI_Model {
 	public function get($id)
 	{
 		$this->base_select();
-		$this->db->where('t.id', $id);
+		$this->db->where('t.id', (int) $id);
 		$row = $this->db->get()->row_array();
 		if ($row)
 		{
@@ -160,10 +160,8 @@ class Token_m extends CI_Model {
 
 	public function create($data)
 	{
-		$id = uuid_v4();
 		$this->db->insert('tokens', array(
-			'id'             => $id,
-			'token_model_id' => $data['token_model_id'],
+			'token_model_id' => (int) $data['token_model_id'],
 			'serial_number'  => $data['serial_number'],
 			'is_broken'      => ! empty($data['is_broken']) ? 1 : 0,
 			'is_lost'        => ! empty($data['is_lost']) ? 1 : 0,
@@ -171,15 +169,15 @@ class Token_m extends CI_Model {
 			'created_at'     => gmdate('Y-m-d H:i:s'),
 			'updated_at'     => gmdate('Y-m-d H:i:s'),
 		));
-		return $id;
+		return (int) $this->db->insert_id();
 	}
 
 	public function update($id, $data)
 	{
 		return $this->db
-			->where('id', $id)
+			->where('id', (int) $id)
 			->update('tokens', array(
-				'token_model_id' => $data['token_model_id'],
+				'token_model_id' => (int) $data['token_model_id'],
 				'serial_number'  => $data['serial_number'],
 				'is_broken'      => ! empty($data['is_broken']) ? 1 : 0,
 				'is_lost'        => ! empty($data['is_lost']) ? 1 : 0,
@@ -190,7 +188,7 @@ class Token_m extends CI_Model {
 	public function soft_delete($id)
 	{
 		return $this->db
-			->where('id', $id)
+			->where('id', (int) $id)
 			->update('tokens', array(
 				'deleted_at' => gmdate('Y-m-d H:i:s'),
 				'updated_at' => gmdate('Y-m-d H:i:s'),
@@ -199,21 +197,21 @@ class Token_m extends CI_Model {
 
 	/**
 	 * Проверяет, существует ли активный токен с такой же моделью и серийным номером.
-	 * @param string      $model_id   UUID модели токена
+	 * @param int         $model_id   ID модели токена
 	 * @param string      $serial     серийный номер
-	 * @param string|null $exclude_id UUID токена, который нужно исключить (для случая обновления)
+	 * @param int|null    $exclude_id ID токена, который нужно исключить (для случая обновления)
 	 * @return bool
 	 */
 	public function exists_by_model_and_serial($model_id, $serial, $exclude_id = NULL)
 	{
 		$this->db->from('tokens')
 			->where('deleted_at IS NULL', NULL, FALSE)
-			->where('token_model_id', $model_id)
+			->where('token_model_id', (int) $model_id)
 			->where('serial_number', $serial);
 
 		if ($exclude_id !== NULL)
 		{
-			$this->db->where('id !=', $exclude_id);
+			$this->db->where('id !=', (int) $exclude_id);
 		}
 
 		return $this->db->count_all_results() > 0;

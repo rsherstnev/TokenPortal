@@ -10,10 +10,11 @@ class Token_transfer_m extends CI_Model {
 
 	/**
 	 * Транзакционная передача токена сотруднику.
-	 * @return string|false UUID созданной передачи или false при ошибке.
+	 * @return int|false ID созданной передачи или false при ошибке.
 	 */
 	public function transfer($token_id, $to_employee_id, $comment = '', $transferred_at = NULL)
 	{
+		$token_id = (int) $token_id;
 		$this->db->trans_start();
 
 		$token = $this->db
@@ -38,12 +39,10 @@ class Token_transfer_m extends CI_Model {
 			return FALSE;
 		}
 
-		$transfer_id = uuid_v4();
 		$now = gmdate('Y-m-d H:i:s');
 		$effective_at = ($transferred_at !== NULL) ? $transferred_at : $now;
 
 		$this->db->insert('token_transfers', array(
-			'id'               => $transfer_id,
 			'token_id'         => $token_id,
 			'from_employee_id' => $from_employee_id,
 			'to_employee_id'   => $to_employee_id,
@@ -51,6 +50,7 @@ class Token_transfer_m extends CI_Model {
 			'transferred_at'   => $effective_at,
 			'created_at'       => $now,
 		));
+		$transfer_id = (int) $this->db->insert_id();
 
 		$this->db
 			->where('id', $token_id)
@@ -66,11 +66,6 @@ class Token_transfer_m extends CI_Model {
 
 	public function get($id)
 	{
-		if ( ! is_uuid($id))
-		{
-			return FALSE;
-		}
-
 		$this->db->select("
 			tr.id,
 			tr.token_id,
@@ -88,7 +83,7 @@ class Token_transfer_m extends CI_Model {
 		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'inner');
 		$this->db->join('users fe', 'fe.id = tr.from_employee_id', 'left');
 		$this->db->join('users te', 'te.id = tr.to_employee_id', 'left');
-		$this->db->where('tr.id', $id);
+		$this->db->where('tr.id', (int) $id);
 		$this->db->where('t.deleted_at IS NULL', NULL, FALSE);
 
 		$row = $this->db->get()->row_array();
@@ -101,11 +96,6 @@ class Token_transfer_m extends CI_Model {
 	 */
 	public function get_act_data($id)
 	{
-		if ( ! is_uuid($id))
-		{
-			return FALSE;
-		}
-
 		$this->db->select("
 			tr.id,
 			tr.transferred_at,
@@ -129,7 +119,7 @@ class Token_transfer_m extends CI_Model {
 		$this->db->join('users te', 'te.id = tr.to_employee_id', 'left');
 		$this->db->join('dolj tdj', 'tdj.id = te.person_dolj', 'left');
 		$this->db->join('departments td', 'td.id = te.person_department', 'left');
-		$this->db->where('tr.id', $id);
+		$this->db->where('tr.id', (int) $id);
 		$this->db->where('t.deleted_at IS NULL', NULL, FALSE);
 
 		$row = $this->db->get()->row_array();
@@ -139,18 +129,13 @@ class Token_transfer_m extends CI_Model {
 
 	public function update_comment($id, $comment)
 	{
-		if ( ! is_uuid($id))
-		{
-			return FALSE;
-		}
-
 		if ( ! $this->get($id))
 		{
 			return FALSE;
 		}
 
 		$this->db
-			->where('id', $id)
+			->where('id', (int) $id)
 			->update('token_transfers', array(
 				'comment' => $comment !== '' ? $comment : NULL,
 			));
@@ -160,18 +145,13 @@ class Token_transfer_m extends CI_Model {
 
 	public function update_transferred_at($id, $transferred_at)
 	{
-		if ( ! is_uuid($id))
-		{
-			return FALSE;
-		}
-
 		if ( ! $this->get($id))
 		{
 			return FALSE;
 		}
 
 		$this->db
-			->where('id', $id)
+			->where('id', (int) $id)
 			->update('token_transfers', array(
 				'transferred_at' => $transferred_at,
 			));
@@ -181,7 +161,7 @@ class Token_transfer_m extends CI_Model {
 
 	public function history($token_id)
 	{
-		return $this->list_filtered(array('token_id' => $token_id));
+		return $this->list_filtered(array('token_id' => (int) $token_id));
 	}
 
 	public function list_filtered($filters = array())
@@ -240,7 +220,7 @@ class Token_transfer_m extends CI_Model {
 
 		if ($token_id !== NULL)
 		{
-			$this->db->where('tr.token_id', $token_id);
+			$this->db->where('tr.token_id', (int) $token_id);
 		}
 
 		if ($search !== '')

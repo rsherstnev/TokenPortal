@@ -70,7 +70,7 @@ class Token_transfers extends MY_Controller {
 	{
 		$this->require_post();
 
-		if ( ! is_uuid($token_id))
+		if ( ! is_positive_int_id($token_id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
@@ -134,7 +134,7 @@ class Token_transfers extends MY_Controller {
 
 	public function get($id)
 	{
-		if ( ! is_uuid($id))
+		if ( ! is_positive_int_id($id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
@@ -154,7 +154,7 @@ class Token_transfers extends MY_Controller {
 	{
 		$this->require_post();
 
-		if ( ! is_uuid($id))
+		if ( ! is_positive_int_id($id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
@@ -216,7 +216,7 @@ class Token_transfers extends MY_Controller {
 
 	public function transfer_act($id)
 	{
-		if ( ! is_uuid($id))
+		if ( ! is_positive_int_id($id))
 		{
 			show_404();
 			return;
@@ -275,7 +275,7 @@ class Token_transfers extends MY_Controller {
 
 	public function history($token_id)
 	{
-		if ( ! is_uuid($token_id))
+		if ( ! is_positive_int_id($token_id))
 		{
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
