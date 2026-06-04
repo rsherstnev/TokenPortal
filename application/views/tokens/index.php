@@ -66,7 +66,7 @@
             </div>
 
             <div class="table-responsive">
-                <table class="skzi-table">
+                <table class="skzi-table skzi-table--token-models">
                     <thead>
                         <tr>
                             <th data-sort-key="name">Модель <i class="bi bi-arrow-down-up sort-icon"></i></th>
