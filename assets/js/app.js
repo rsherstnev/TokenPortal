@@ -498,6 +498,35 @@
         });
     };
 
+    // Focus primary table search on page load (skip if user already focused something).
+    App.autofocusSearch = function ($input) {
+        if (!$input || !$input.length) return;
+        setTimeout(function () {
+            if ($('.skzi-modal.show').length) return;
+            const ae = document.activeElement;
+            if (ae && ae !== document.body && ae !== document.documentElement) return;
+            $input[0].focus();
+        }, 0);
+    };
+
+    // Tab / Shift+Tab cycles only between the given search inputs (wraps).
+    App.initSearchTabCycle = function ($inputs) {
+        const inputs = ($inputs || []).map(function ($el) { return $el && $el[0]; }).filter(Boolean);
+        if (inputs.length < 2) return;
+
+        $(document).on('keydown.skziSearchTabCycle', function (e) {
+            if (e.key !== 'Tab' || e.altKey || e.ctrlKey || e.metaKey) return;
+            const idx = inputs.indexOf(document.activeElement);
+            if (idx === -1) return;
+
+            e.preventDefault();
+            const nextIdx = e.shiftKey
+                ? (idx <= 0 ? inputs.length - 1 : idx - 1)
+                : (idx >= inputs.length - 1 ? 0 : idx + 1);
+            inputs[nextIdx].focus();
+        });
+    };
+
     $(function () {
         if (window.SkziTheme) {
             SkziTheme.applyDocumentThemeClass(SkziTheme.resolveInitialTheme());
@@ -528,6 +557,7 @@
             App.initSelect(this.$status[0], { controlInput: false });
             this.refresh();
             TokenModels.refresh();
+            App.autofocusSearch(this.$search);
         },
 
         bindEvents() {
@@ -1076,6 +1106,7 @@
                     .catch(() => App.toast('Не удалось скопировать', 'error'));
             });
             this.refresh();
+            App.autofocusSearch(this.$search);
         },
 
         resetDates() {
@@ -1188,6 +1219,12 @@
             this.initTable('without', 'statistics/without_token', (rows, total, query) => this.renderWithoutList(rows, total, query));
             this.initTable('multiple', 'statistics/multiple_tokens', (rows, total, query) => this.renderMultipleList(rows, total, query));
             this.initTable('stuck', 'statistics/stuck_tokens', (rows, total, query) => this.renderStuckList(rows, total, query));
+            App.initSearchTabCycle([
+                this.without.$search,
+                this.multiple.$search,
+                this.stuck.$search,
+            ]);
+            App.autofocusSearch(this.without.$search);
         },
 
         initTable(key, url, renderFn) {
