@@ -83,8 +83,8 @@ class Token_transfer_m extends CI_Model {
 		$this->db->from('token_transfers tr');
 		$this->db->join('tokens t', 't.id = tr.token_id', 'inner');
 		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'inner');
-		$this->db->join('users fe', 'fe.id = tr.from_employee_id', 'left');
-		$this->db->join('users te', 'te.id = tr.to_employee_id', 'left');
+		$this->db->join('token_users fe', 'fe.id = tr.from_employee_id', 'left');
+		$this->db->join('token_users te', 'te.id = tr.to_employee_id', 'left');
 		$this->db->where('tr.id', (int) $id);
 		$this->db->where('t.deleted_at IS NULL', NULL, FALSE);
 
@@ -115,10 +115,10 @@ class Token_transfer_m extends CI_Model {
 		$this->db->from('token_transfers tr');
 		$this->db->join('tokens t', 't.id = tr.token_id', 'inner');
 		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'inner');
-		$this->db->join('users fe', 'fe.id = tr.from_employee_id', 'left');
+		$this->db->join('token_users fe', 'fe.id = tr.from_employee_id', 'left');
 		$this->db->join('dolj fdj', 'fdj.id = fe.person_dolj', 'left');
 		$this->db->join('departments fd', 'fd.id = fe.person_department', 'left');
-		$this->db->join('users te', 'te.id = tr.to_employee_id', 'left');
+		$this->db->join('token_users te', 'te.id = tr.to_employee_id', 'left');
 		$this->db->join('dolj tdj', 'tdj.id = te.person_dolj', 'left');
 		$this->db->join('departments td', 'td.id = te.person_department', 'left');
 		$this->db->where('tr.id', (int) $id);
@@ -190,8 +190,8 @@ class Token_transfer_m extends CI_Model {
 		$this->db->from('token_transfers tr');
 		$this->db->join('tokens t', 't.id = tr.token_id', 'inner');
 		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'inner');
-		$this->db->join('users fe', 'fe.id = tr.from_employee_id', 'left');
-		$this->db->join('users te', 'te.id = tr.to_employee_id', 'left');
+		$this->db->join('token_users fe', 'fe.id = tr.from_employee_id', 'left');
+		$this->db->join('token_users te', 'te.id = tr.to_employee_id', 'left');
 
 		$this->_apply_list_filters($search, $token_id, $date_from, $date_to);
 
@@ -210,8 +210,8 @@ class Token_transfer_m extends CI_Model {
 		$this->db->from('token_transfers tr');
 		$this->db->join('tokens t', 't.id = tr.token_id', 'inner');
 		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'inner');
-		$this->db->join('users fe', 'fe.id = tr.from_employee_id', 'left');
-		$this->db->join('users te', 'te.id = tr.to_employee_id', 'left');
+		$this->db->join('token_users fe', 'fe.id = tr.from_employee_id', 'left');
+		$this->db->join('token_users te', 'te.id = tr.to_employee_id', 'left');
 
 		$this->_apply_list_filters($search, $token_id, $date_from, $date_to);
 

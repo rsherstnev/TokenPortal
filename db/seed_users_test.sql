@@ -1,4 +1,4 @@
--- Тестовое наполнение таблицы users (сотрудники).
+-- Тестовое наполнение таблицы token_users (сотрудники).
 -- Только для dev/test. Не запускать на production без проверки.
 --
 -- Создаёт 100 сотрудников, равномерно распределённых по 16 отделам
@@ -12,7 +12,7 @@ SET time_zone = '+00:00';
 
 USE skzi_tokens;
 
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS token_users (
     id                  INT UNSIGNED    NOT NULL AUTO_INCREMENT,
     person_name         VARCHAR(255)    NOT NULL,
     person_dolj         INT             NOT NULL DEFAULT 0,
@@ -31,14 +31,14 @@ CREATE TABLE IF NOT EXISTS users (
     cr_date             DATETIME        NULL DEFAULT CURRENT_TIMESTAMP,
     updated             DATETIME        NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    KEY idx_users_department (person_department),
-    KEY idx_users_name (person_name(64))
+    KEY idx_token_users_department (person_department),
+    KEY idx_token_users_name (person_name(64))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Удаляем только ранее созданные тестовые записи (по префиксу id_num).
-DELETE FROM users WHERE id_num LIKE 'T%';
+DELETE FROM token_users WHERE id_num LIKE 'T%';
 
-INSERT INTO users (
+INSERT INTO token_users (
     person_name,
     person_dolj,
     person_department,
@@ -109,7 +109,7 @@ FROM generated;
 
 -- Проверка распределения по отделам (должно быть 16 строк, сумма = 100).
 -- SELECT person_department, COUNT(*) AS cnt
--- FROM users
+-- FROM token_users
 -- WHERE id_num LIKE 'T%'
 -- GROUP BY person_department
 -- ORDER BY person_department;

@@ -17,7 +17,7 @@ class Statistics_m extends CI_Model {
 
 	private function apply_without_token_join()
 	{
-		$this->db->from('users u');
+		$this->db->from('token_users u');
 		$this->db->join(
 			'tokens t',
 			't.employee_id = u.id AND t.deleted_at IS NULL AND t.is_broken = 0 AND t.is_lost = 0',
@@ -65,7 +65,7 @@ class Statistics_m extends CI_Model {
 			'u.id, u.person_name, u.person_dolj, u.person_department, dj.name AS dolj_name, d.name AS department_name, COUNT(t.id) AS token_count',
 			FALSE
 		);
-		$this->db->from('users u');
+		$this->db->from('token_users u');
 		$this->db->join(
 			'tokens t',
 			't.employee_id = u.id AND t.deleted_at IS NULL AND t.is_broken = 0 AND t.is_lost = 0',
@@ -106,7 +106,7 @@ class Statistics_m extends CI_Model {
 		$sub = $this->employees_with_multiple_tokens_subquery();
 
 		$this->db->select('COUNT(*) AS cnt', FALSE);
-		$this->db->from('users u');
+		$this->db->from('token_users u');
 		$this->db->where('u.id IN '.$sub, NULL, FALSE);
 		$row = $this->db->get()->row_array();
 
@@ -120,7 +120,7 @@ class Statistics_m extends CI_Model {
 			FALSE
 		);
 		$this->db->from('tokens t');
-		$this->db->join('users e', 'e.id = t.employee_id AND e.is_fired = 1', 'inner', FALSE);
+		$this->db->join('token_users e', 'e.id = t.employee_id AND e.is_fired = 1', 'inner', FALSE);
 		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'inner');
 		$this->db->join('dolj dj', 'dj.id = e.person_dolj', 'left');
 		$this->db->join('departments d', 'd.id = e.person_department', 'left');
@@ -153,7 +153,7 @@ class Statistics_m extends CI_Model {
 	{
 		$this->db->select('COUNT(*) AS cnt', FALSE);
 		$this->db->from('tokens t');
-		$this->db->join('users e', 'e.id = t.employee_id AND e.is_fired = 1', 'inner', FALSE);
+		$this->db->join('token_users e', 'e.id = t.employee_id AND e.is_fired = 1', 'inner', FALSE);
 		$this->db->where('t.deleted_at IS NULL', NULL, FALSE);
 		$this->db->where('t.is_broken', 0);
 		$this->db->where('t.is_lost', 0);

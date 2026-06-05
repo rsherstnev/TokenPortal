@@ -31,7 +31,7 @@ class Token_m extends CI_Model {
 		", FALSE);
 		$this->db->from('tokens t');
 		$this->db->join('token_models tm', 'tm.id = t.token_model_id', 'left');
-		$this->db->join('users e', 'e.id = t.employee_id', 'left');
+		$this->db->join('token_users e', 'e.id = t.employee_id', 'left');
 		$this->db->where('t.deleted_at IS NULL', NULL, FALSE);
 	}
 

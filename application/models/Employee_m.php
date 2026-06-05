@@ -11,7 +11,7 @@ class Employee_m extends CI_Model {
 	public function options()
 	{
 		$this->db->select('id, person_name');
-		$this->db->from('users');
+		$this->db->from('token_users');
 		$this->db->order_by('person_name', 'ASC');
 		return $this->db->get()->result_array();
 	}
@@ -21,7 +21,7 @@ class Employee_m extends CI_Model {
 		return $this->db
 			->select('id, person_name, person_dolj, person_department, city_id, cabinet, sogl_ruk, needcrypto, pos, sd, n_type, id_num, id_printed, not_print, is_fired, cr_date, updated')
 			->where('id', (int) $id)
-			->get('users')
+			->get('token_users')
 			->row_array();
 	}
 }
