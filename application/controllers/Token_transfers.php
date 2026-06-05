@@ -100,6 +100,7 @@ class Token_transfers extends MY_Controller {
 			$transferred_at = $d->format('Y-m-d') . ' 00:00:00';
 		}
 
+		$to_name = NULL;
 		// Возврат на склад (to = NULL) или передача конкретному пользователю.
 		if ($to_employee_id !== NULL)
 		{
@@ -114,6 +115,7 @@ class Token_transfers extends MY_Controller {
 				$this->json_error('Пользователь не найден', 422, array('to_employee_id' => 'Пользователь не найден'));
 				return;
 			}
+			$to_name = $emp['person_name'];
 		}
 
 		if ($token['employee_id'] === $to_employee_id)
@@ -122,12 +124,33 @@ class Token_transfers extends MY_Controller {
 			return;
 		}
 
+		$from_name = NULL;
+		if ( ! empty($token['employee_id']))
+		{
+			$from_emp = $this->employee_m->get($token['employee_id']);
+			$from_name = $from_emp ? $from_emp['person_name'] : NULL;
+		}
+
 		$transfer_id = $this->token_transfer_m->transfer($token_id, $to_employee_id, $comment, $transferred_at);
 		if ( ! $transfer_id)
 		{
 			$this->json_error('Не удалось выполнить передачу', 500);
 			return;
 		}
+
+		$this->audit_log(
+			audit_log_transfer_create_message(
+				$transfer_id,
+				$token,
+				$token['employee_id'],
+				$from_name,
+				$to_employee_id,
+				$to_name,
+				$transferred_at,
+				$comment
+			),
+			array('action' => 'token_transfer.create', 'entity_id' => $transfer_id, 'token_id' => (int) $token_id)
+		);
 
 		$this->json_ok($this->token_m->get($token_id), array('message' => 'Передача выполнена'));
 	}
@@ -172,6 +195,7 @@ class Token_transfers extends MY_Controller {
 		if ($scope === 'comment')
 		{
 			$comment = trim((string) $this->input->post('comment'));
+			$old_comment = isset($existing['comment']) ? (string) $existing['comment'] : '';
 			if ( ! $this->token_transfer_m->update_comment($id, $comment))
 			{
 				$this->json_error('Не удалось сохранить комментарий', 500);
@@ -179,6 +203,11 @@ class Token_transfers extends MY_Controller {
 			}
 
 			$row = $this->token_transfer_m->get($id);
+			$token = $this->token_m->get($existing['token_id']);
+			$this->audit_log(
+				audit_log_transfer_comment_message($id, $old_comment, $comment, $token ?: array()),
+				array('action' => 'token_transfer.update_comment', 'entity_id' => (int) $id)
+			);
 			$this->json_ok($row, array('message' => 'Комментарий обновлён'));
 			return;
 		}
@@ -200,6 +229,7 @@ class Token_transfers extends MY_Controller {
 			}
 
 			$transferred_at = $d->format('Y-m-d') . ' 00:00:00';
+			$old_date = isset($existing['transferred_at']) ? (string) $existing['transferred_at'] : '';
 			if ( ! $this->token_transfer_m->update_transferred_at($id, $transferred_at))
 			{
 				$this->json_error('Не удалось сохранить дату', 500);
@@ -207,6 +237,11 @@ class Token_transfers extends MY_Controller {
 			}
 
 			$row = $this->token_transfer_m->get($id);
+			$token = $this->token_m->get($existing['token_id']);
+			$this->audit_log(
+				audit_log_transfer_date_message($id, $old_date, $transferred_at, $token ?: array()),
+				array('action' => 'token_transfer.update_date', 'entity_id' => (int) $id)
+			);
 			$this->json_ok($row, array('message' => 'Дата передачи обновлена'));
 			return;
 		}
@@ -228,6 +263,14 @@ class Token_transfers extends MY_Controller {
 			show_404();
 			return;
 		}
+
+		$this->audit_log(
+			audit_log_transfer_act_message($id, array(
+				'model_name'    => $row['model_name'] ?? '',
+				'serial_number' => $row['serial_number'] ?? '',
+			)),
+			array('action' => 'token_transfer.download_act', 'entity_id' => (int) $id)
+		);
 
 		$this->load->helper('transfer_act');
 		$this->load->library('transfer_act_docx');

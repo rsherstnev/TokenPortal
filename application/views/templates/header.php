@@ -5,21 +5,27 @@ $active_nav = isset($active_nav) ? $active_nav : '';
 <head>
     <script>
     (function () {
-        var THEMES = 'skzi-light skzi-dark white light green amber wb purple cream blush mist spearmint lilac dune porcelain coral paper sky dark github rose-pine kanagawa catppuccin tokyonight everforest gruvbox dracula onedark monokai solarized-dark'.split(' ');
-        var LIGHT = { 'skzi-light':1, white:1, light:1, green:1, amber:1, wb:1, purple:1, cream:1, blush:1, mist:1, spearmint:1, lilac:1, dune:1, porcelain:1, coral:1, paper:1, sky:1 };
+        var LIGHT = 'skzi-light';
+        var DARK = 'skzi-dark';
+        var LEGACY_LIGHT = { white:1, light:1, green:1, amber:1, wb:1, purple:1, cream:1, blush:1, mist:1, spearmint:1, lilac:1, dune:1, porcelain:1, coral:1, paper:1, sky:1, 'skzi-light':1, 'solarized-light':1 };
         var ROOT_CLS = 'skzi-light skzi-dark dark light green amber wb purple nord rose-pine github kanagawa white solarized-light cream blush mist spearmint lilac dune porcelain coral paper sky catppuccin tokyonight everforest gruvbox dracula onedark solarized-dark monokai'.split(' ');
-        var raw = localStorage.getItem('theme');
-        var legacy = localStorage.getItem('skzi-theme');
-        if (!raw && legacy) {
-            raw = legacy === 'light' ? 'skzi-light' : (legacy === 'dark' ? 'skzi-dark' : legacy);
+        var raw = localStorage.getItem('skzi-theme') || localStorage.getItem('theme');
+        var theme = LIGHT;
+        if (raw === 'light' || raw === LIGHT) {
+            theme = LIGHT;
+        } else if (raw === 'dark' || raw === DARK) {
+            theme = DARK;
+        } else if (raw && LEGACY_LIGHT[raw]) {
+            theme = LIGHT;
+        } else if (raw) {
+            theme = DARK;
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            theme = DARK;
         }
-        if (raw === 'nord') { localStorage.setItem('theme', 'rose-pine'); raw = 'rose-pine'; }
-        if (raw === 'solarized-light') { localStorage.setItem('theme', 'white'); raw = 'white'; }
-        var theme = (raw && THEMES.indexOf(raw) >= 0) ? raw : 'skzi-light';
         var root = document.documentElement;
         for (var i = 0; i < ROOT_CLS.length; i++) { root.classList.remove(ROOT_CLS[i]); }
-        root.setAttribute('data-skzi-tone', LIGHT[theme] ? 'light' : 'dark');
-        if (theme !== 'dark') { root.classList.add(theme); }
+        root.classList.add(theme);
+        root.setAttribute('data-skzi-tone', theme === LIGHT ? 'light' : 'dark');
     })();
     </script>
     <meta charset="utf-8">
@@ -32,7 +38,6 @@ $active_nav = isset($active_nav) ? $active_nav : '';
     <link rel="stylesheet" href="<?= base_url('assets/vendor/bootstrap/css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendor/bootstrap-icons/bootstrap-icons.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendor/tom-select/tom-select.bootstrap4.min.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/themes.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
     <script>window.SKZI_BASE_URL = '<?= base_url() ?>';</script>
 </head>
@@ -63,16 +68,10 @@ $active_nav = isset($active_nav) ? $active_nav : '';
                     </a>
                 </li>
             </ul>
-            <div class="theme-picker ml-auto" id="themePicker">
-                <button type="button" class="theme-picker-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Тема оформления">
-                    <span class="theme-picker-icon" aria-hidden="true"><i class="bi bi-cloud-sun"></i></span>
-                    <span class="theme-picker-label">Светлая (классика)</span>
-                    <i class="bi bi-chevron-down theme-picker-chevron" aria-hidden="true"></i>
-                </button>
-            </div>
-            <div class="theme-picker-panel" id="themePickerPanel">
-                <ul role="listbox" aria-label="Тема оформления" tabindex="-1"></ul>
-            </div>
+            <button type="button" class="theme-toggle ml-auto" id="themeToggle" aria-label="Переключить тему" title="Переключить тему">
+                <i class="bi bi-moon-fill" aria-hidden="true"></i>
+                <i class="bi bi-sun-fill" aria-hidden="true"></i>
+            </button>
         </div>
     </div>
 </nav>

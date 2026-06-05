@@ -9,6 +9,18 @@ class MY_Controller extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->library('audit_log', NULL, 'audit_logger');
+	}
+
+	/**
+	 * Запись действия в журнал аудита (JSON-файл на сервере).
+	 *
+	 * @param string $message  Описание на русском языке
+	 * @param array  $context  Дополнительный контекст (action, entity_id, …)
+	 */
+	protected function audit_log($message, array $context = array())
+	{
+		$this->audit_logger->write($message, $context);
 	}
 
 	protected function json_ok($payload = array(), $extra = array())

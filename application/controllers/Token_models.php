@@ -49,6 +49,10 @@ class Token_models extends MY_Controller {
 			return;
 		}
 		$id = $this->token_model_m->create($name);
+		$this->audit_log(
+			audit_log_model_create_message($id, $name),
+			array('action' => 'token_model.create', 'entity_id' => $id)
+		);
 		$this->json_ok($this->token_model_m->get($id), array('message' => 'Модель создана'));
 	}
 
@@ -60,7 +64,8 @@ class Token_models extends MY_Controller {
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
 		}
-		if ( ! $this->token_model_m->get($id))
+		$existing = $this->token_model_m->get($id);
+		if ( ! $existing)
 		{
 			$this->json_error('Модель не найдена', 404);
 			return;
@@ -73,6 +78,10 @@ class Token_models extends MY_Controller {
 			return;
 		}
 		$this->token_model_m->update($id, $name);
+		$this->audit_log(
+			audit_log_model_update_message($id, $existing['name'], $name),
+			array('action' => 'token_model.update', 'entity_id' => (int) $id)
+		);
 		$this->json_ok($this->token_model_m->get($id), array('message' => 'Модель обновлена'));
 	}
 
@@ -84,7 +93,8 @@ class Token_models extends MY_Controller {
 			$this->json_error('Некорректный идентификатор', 400);
 			return;
 		}
-		if ( ! $this->token_model_m->get($id))
+		$existing = $this->token_model_m->get($id);
+		if ( ! $existing)
 		{
 			$this->json_error('Модель не найдена', 404);
 			return;
@@ -95,6 +105,10 @@ class Token_models extends MY_Controller {
 			return;
 		}
 		$this->token_model_m->soft_delete($id);
+		$this->audit_log(
+			audit_log_model_delete_message($id, $existing['name']),
+			array('action' => 'token_model.delete', 'entity_id' => (int) $id)
+		);
 		$this->json_ok(array(), array('message' => 'Модель удалена'));
 	}
 

@@ -22,7 +22,7 @@ reverse proxy с аутентификацией.
 
 - Linux с Apache (или Nginx + php-fpm).
 - MariaDB/MySQL 10.5+ (InnoDB).
-- Права на запись для веб-сервера в `application/logs/` и `application/cache/`.
+- Права на запись для веб-сервера в `application/logs/` (в т.ч. журнал аудита) и `application/cache/`.
 
 ## Установка
 
@@ -151,9 +151,35 @@ server {
 | `index.php` | `ENVIRONMENT`: по умолчанию `development`; в продакшене задайте `CI_ENV=production` (Apache `SetEnv`, php-fpm `env`). |
 | `application/config/config.php` | `base_url` из `HTTP_HOST` (удобно в dev; в prod лучше зафиксировать явный URL); `index_page = ''`; CSRF включён (`csrf_token`). |
 | `application/config/database.php` | Параметры MariaDB. |
-| `application/config/autoload.php` | `database`, `session`, `form_validation`; хелперы `url`, `form`, `id`. |
+| `application/config/autoload.php` | `database`, `session`, `form_validation`; хелперы `url`, `form`, `id`, `audit_log`. |
+| `application/config/audit_log.php` | Журнал действий: путь к JSON-файлу (`audit_log_file`), включение (`audit_log_enabled`). |
 | `application/config/routes.php` | Маршруты API и страниц. |
-| `application/core/MY_Controller.php` | JSON-ответы, обновление CSRF в AJAX. |
+| `application/core/MY_Controller.php` | JSON-ответы, обновление CSRF в AJAX, запись в журнал аудита. |
+
+### Журнал действий (аудит)
+
+Успешные изменения данных (токены, модели, передачи, скачивание акта) пишутся в
+файл на сервере в формате **JSON Lines** (одна строка — одно событие). Путь задаётся
+в `application/config/audit_log.php` (`audit_log_file`, по умолчанию
+`/var/log/skzi-tokens/audit_actions.jsonl`). Каталог должен существовать и быть
+доступен для **записи пользователю PHP/Apache** (часто `www-data`). Запись в
+`application/logs/` из-под Apache в домашнем каталоге (`/home/…`) нередко
+запрещена политикой ОС, даже при `chmod 777`.
+
+```bash
+sudo mkdir -p /var/log/skzi-tokens
+sudo chown www-data:www-data /var/log/skzi-tokens
+sudo chmod 750 /var/log/skzi-tokens
+```
+
+Пример строки:
+
+```json
+{"timestamp":"2026-06-05T14:30:00+07:00","ip":"10.0.1.42","message":"Токен (ID 12, модель «Рутокен», серийный номер «ABC123») был удалён","context":{"action":"token.delete","entity_id":12}}
+```
+
+IP берётся из запроса (`$this->input->ip_address()`); за reverse proxy настройте
+`proxy_ips` в `application/config/config.php`.
 
 ### Composer
 

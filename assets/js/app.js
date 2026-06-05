@@ -3,7 +3,22 @@
 
     const App = window.App = window.App || {};
     const BASE_URL = (window.SKZI_BASE_URL || '/').replace(/\/+$/, '') + '/';
-    // ---- Theme (см. theme.js / SkziTheme) ------------------------------------
+    // ---- Theme (см. theme.js / SkziTheme, переключатель #themeToggle) --------
+    App.theme = {
+        get() {
+            return window.SkziTheme ? SkziTheme.get() : 'skzi-light';
+        },
+        set(theme) {
+            if (window.SkziTheme) {
+                SkziTheme.set(theme);
+            }
+        },
+        toggle() {
+            if (window.SkziTheme) {
+                SkziTheme.toggle();
+            }
+        },
+    };
 
     // ---- CSRF ----------------------------------------------------------------
     const Csrf = {

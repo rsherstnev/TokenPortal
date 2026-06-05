@@ -80,7 +80,14 @@ class Tokens extends MY_Controller {
 			'is_lost'        => $is_lost,
 		));
 
-		$this->json_ok($this->token_m->get($id), array('message' => 'Токен создан'));
+		$created = $this->token_m->get($id);
+		$model = $this->token_model_m->get($model_id);
+		$this->audit_log(
+			audit_log_token_create_message($id, $created ?: array('serial_number' => $serial), $model ? $model['name'] : NULL),
+			array('action' => 'token.create', 'entity_id' => $id)
+		);
+
+		$this->json_ok($created, array('message' => 'Токен создан'));
 	}
 
 	public function update($id)
@@ -112,12 +119,20 @@ class Tokens extends MY_Controller {
 			return;
 		}
 
-		$this->token_m->update($id, array(
+		$new_model = $this->token_model_m->get($model_id);
+		$after_input = array(
 			'token_model_id' => $model_id,
 			'serial_number'  => $serial,
 			'is_broken'      => $is_broken,
 			'is_lost'        => $is_lost,
-		));
+		);
+
+		$this->token_m->update($id, $after_input);
+
+		foreach (audit_log_token_update_messages($existing, $after_input, $new_model ? $new_model['name'] : NULL) as $audit_message)
+		{
+			$this->audit_log($audit_message, array('action' => 'token.update', 'entity_id' => (int) $id));
+		}
 
 		$this->json_ok($this->token_m->get($id), array('message' => 'Токен обновлён'));
 	}
@@ -140,6 +155,10 @@ class Tokens extends MY_Controller {
 		}
 
 		$this->token_m->soft_delete($id);
+		$this->audit_log(
+			audit_log_token_delete_message($existing),
+			array('action' => 'token.delete', 'entity_id' => (int) $id)
+		);
 		$this->json_ok(array(), array('message' => 'Токен удалён'));
 	}
 
