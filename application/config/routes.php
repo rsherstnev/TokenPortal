@@ -73,9 +73,12 @@ $route['transfer_history/list']               = 'token_transfers/list_json';
 $route['transfer_history/act/(:any)']         = 'token_transfers/transfer_act/$1';
 
 $route['statistics']                          = 'statistics/index';
-$route['statistics/without_token']            = 'statistics/without_token_list_json';
-$route['statistics/multiple_tokens']          = 'statistics/multiple_tokens_list_json';
-$route['statistics/stuck_tokens']             = 'statistics/stuck_tokens_list_json';
+$route['statistics/without_token']            = 'statistics/without_token';
+$route['statistics/multiple_tokens']          = 'statistics/multiple_tokens';
+$route['statistics/stuck_tokens']             = 'statistics/stuck_tokens';
+$route['statistics/without_token/list']       = 'statistics/without_token_list_json';
+$route['statistics/multiple_tokens/list']     = 'statistics/multiple_tokens_list_json';
+$route['statistics/stuck_tokens/list']        = 'statistics/stuck_tokens_list_json';
 
 $route['token_transfers/create/(:any)']       = 'token_transfers/create/$1';
 $route['token_transfers/get/(:any)']           = 'token_transfers/get/$1';

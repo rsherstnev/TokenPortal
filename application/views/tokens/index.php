@@ -2,7 +2,7 @@
 <div id="tokens-page" class="row">
 
     <!-- ============================== Tokens column ===================== -->
-    <div class="col-lg-8 mb-4">
+    <div class="col-12 tokens-page-main mb-4">
         <div class="skzi-section">
             <div class="skzi-section-header">
                 <div class="skzi-section-title">
@@ -13,12 +13,12 @@
                     <i class="bi bi-plus-lg"></i> Добавить
                 </button>
             </div>
-            <div class="row no-gutters mb-2">
-                <div class="col-md-9 pr-md-2 mb-2 mb-md-0">
+            <div class="tokens-filters mb-2">
+                <div class="tokens-filters-search">
                     <input type="text" class="form-control search-input" id="tokens-search"
                                placeholder="Поиск по сотруднику, модели, серийному номеру, комментарию…">
                 </div>
-                <div class="col-md-3">
+                <div class="tokens-filters-status">
                     <select class="custom-select" id="tokens-status">
                         <option value="all" selected>Все</option>
                         <option value="issued">Выданные</option>
@@ -28,6 +28,7 @@
                     </select>
                 </div>
             </div>
+
 
             <div class="table-responsive">
                 <table class="skzi-table">
@@ -50,7 +51,7 @@
     </div>
 
     <!-- ============================== Token Models column =============== -->
-    <div class="col-lg-4 mb-4">
+    <div class="col-12 tokens-page-side mb-4">
         <div class="skzi-section">
             <div class="skzi-section-header">
                 <div class="skzi-section-title">

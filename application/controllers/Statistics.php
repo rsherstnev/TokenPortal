@@ -11,11 +11,32 @@ class Statistics extends MY_Controller {
 
 	public function index()
 	{
+		redirect('statistics/without_token');
+	}
+
+	public function without_token()
+	{
+		$this->render_section('without_token');
+	}
+
+	public function multiple_tokens()
+	{
+		$this->render_section('multiple_tokens');
+	}
+
+	public function stuck_tokens()
+	{
+		$this->render_section('stuck_tokens');
+	}
+
+	private function render_section($section)
+	{
 		$data = array(
-			'active_nav' => 'statistics',
+			'active_nav'            => 'statistics',
+			'active_statistics_tab' => $section,
 		);
 		$this->load->view('templates/header', $data);
-		$this->load->view('statistics/index', $data);
+		$this->load->view('statistics/' . $section, $data);
 		$this->load->view('templates/footer', $data);
 	}
 

@@ -1237,15 +1237,30 @@
         },
 
         init() {
-            this.initTable('without', 'statistics/without_token', (rows, total, query) => this.renderWithoutList(rows, total, query));
-            this.initTable('multiple', 'statistics/multiple_tokens', (rows, total, query) => this.renderMultipleList(rows, total, query));
-            this.initTable('stuck', 'statistics/stuck_tokens', (rows, total, query) => this.renderStuckList(rows, total, query));
-            App.initSearchTabCycle([
-                this.without.$search,
-                this.multiple.$search,
-                this.stuck.$search,
-            ]);
-            App.autofocusSearch(this.without.$search);
+            const section = $('#statistics-page').data('section');
+            const sections = {
+                without: {
+                    key: 'without',
+                    url: 'statistics/without_token/list',
+                    render: (rows, total, query) => this.renderWithoutList(rows, total, query),
+                },
+                multiple: {
+                    key: 'multiple',
+                    url: 'statistics/multiple_tokens/list',
+                    render: (rows, total, query) => this.renderMultipleList(rows, total, query),
+                },
+                stuck: {
+                    key: 'stuck',
+                    url: 'statistics/stuck_tokens/list',
+                    render: (rows, total, query) => this.renderStuckList(rows, total, query),
+                },
+            };
+            const current = sections[section];
+            if (!current) return;
+
+            this.initTable(current.key, current.url, current.render);
+            App.initSearchTabCycle([this[current.key].$search]);
+            App.autofocusSearch(this[current.key].$search);
         },
 
         initTable(key, url, renderFn) {
