@@ -342,13 +342,12 @@ html, body {
 }
 .skzi-table tbody tr:last-child td { border-bottom: none; }
 .skzi-table tbody tr:hover { background: var(--skzi-surface-hover); }
-.skzi-table .actions-cell {
+.skzi-table tbody .actions-cell {
     text-align: right;
     white-space: nowrap;
 }
 .skzi-table .actions-cell-header {
     width: 140px;
-    text-align: right;
 }
 .skzi-table--token-models .actions-cell {
     width: 1%;

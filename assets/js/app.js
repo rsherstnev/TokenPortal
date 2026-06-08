@@ -625,7 +625,7 @@
             const n = rows.length;
             this.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
             if (!rows.length) {
-                this.$list.html('<tr><td colspan="5" class="empty-cell">Нет токенов</td></tr>');
+                this.$list.html('<tr><td colspan="6" class="empty-cell">Нет токенов</td></tr>');
                 return;
             }
             const html = rows.map((r) => {
@@ -640,11 +640,15 @@
                 const employee = r.employee_fullname && r.employee_fullname.trim().length
                     ? App.formatEmployeeName(r.employee_fullname, r.employee_is_fired, query)
                     : '<span class="text-muted">—</span>';
+                const comment = r.comment && r.comment.trim()
+                    ? App.highlightMatch(r.comment, query)
+                    : '<span class="text-muted">—</span>';
                 return ''
                     + '<tr data-id="' + App.escape(r.id) + '">'
                     +   '<td>' + employee + '</td>'
                     +   '<td>' + App.highlightMatch(r.model_name || '', query) + '</td>'
                     +   '<td><span class="copy-serial" data-serial="' + App.escape(r.serial_number || '') + '" title="Нажмите, чтобы скопировать серийный номер">' + App.highlightMatch(r.serial_number || '', query) + '</span></td>'
+                    +   '<td>' + comment + '</td>'
                     +   '<td class="status-cell">' + statusHtml + issuedAtHtml + '</td>'
                     +   '<td class="actions-cell">'
                     +     '<button type="button" class="btn-icon transfer action-transfer" data-id="' + App.escape(r.id) + '" title="Передать"><i class="bi bi-arrow-left-right"></i></button>'
@@ -676,6 +680,7 @@
                 App.clearErrors($form);
                 $form.find('[name="id"]').val(t.id);
                 $form.find('[name="serial_number"]').val(t.serial_number);
+                $form.find('[name="comment"]').val(t.comment || '');
                 $form.find('[name="is_broken"]').prop('checked', !!Number(t.is_broken));
                 $form.find('[name="is_lost"]').prop('checked', !!Number(t.is_lost));
                 return TokenModels.fillSelect($form.find('select[name="token_model_id"]'), t.token_model_id);
@@ -690,6 +695,7 @@
             const payload = {
                 token_model_id: $form.find('select[name="token_model_id"]').val(),
                 serial_number:  $form.find('[name="serial_number"]').val(),
+                comment:        $form.find('[name="comment"]').val(),
                 is_broken: $form.find('[name="is_broken"]').is(':checked') ? 1 : 0,
                 is_lost:   $form.find('[name="is_lost"]').is(':checked')   ? 1 : 0,
             };

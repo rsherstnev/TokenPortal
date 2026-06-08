@@ -20,6 +20,7 @@ class Token_m extends CI_Model {
 			t.employee_id,
 			t.is_broken,
 			t.is_lost,
+			t.comment,
 			t.created_at,
 			t.updated_at,
 			tm.name AS model_name,
@@ -73,6 +74,7 @@ class Token_m extends CI_Model {
 				"LOWER(t.serial_number) LIKE '%".$this->db->escape_like_str($lc)."%'",
 				"LOWER(tm.name) LIKE '%".$this->db->escape_like_str($lc)."%'",
 				"LOWER(e.person_name) LIKE '%".$this->db->escape_like_str($lc)."%'",
+				"LOWER(t.comment) LIKE '%".$this->db->escape_like_str($lc)."%'",
 			);
 
 			$this->db->where('('.implode(' OR ', $conditions).')', NULL, FALSE);
@@ -161,11 +163,14 @@ class Token_m extends CI_Model {
 
 	public function create($data)
 	{
+		$comment = isset($data['comment']) ? trim((string) $data['comment']) : '';
+
 		$this->db->insert('tokens', array(
 			'token_model_id' => (int) $data['token_model_id'],
 			'serial_number'  => $data['serial_number'],
 			'is_broken'      => ! empty($data['is_broken']) ? 1 : 0,
 			'is_lost'        => ! empty($data['is_lost']) ? 1 : 0,
+			'comment'        => $comment !== '' ? $comment : NULL,
 			'employee_id'    => NULL,
 			'created_at'     => gmdate('Y-m-d H:i:s'),
 			'updated_at'     => gmdate('Y-m-d H:i:s'),
@@ -175,6 +180,8 @@ class Token_m extends CI_Model {
 
 	public function update($id, $data)
 	{
+		$comment = isset($data['comment']) ? trim((string) $data['comment']) : '';
+
 		return $this->db
 			->where('id', (int) $id)
 			->update('tokens', array(
@@ -182,6 +189,7 @@ class Token_m extends CI_Model {
 				'serial_number'  => $data['serial_number'],
 				'is_broken'      => ! empty($data['is_broken']) ? 1 : 0,
 				'is_lost'        => ! empty($data['is_lost']) ? 1 : 0,
+				'comment'        => $comment !== '' ? $comment : NULL,
 				'updated_at'     => gmdate('Y-m-d H:i:s'),
 			));
 	}

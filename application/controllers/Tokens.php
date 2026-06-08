@@ -65,6 +65,7 @@ class Tokens extends MY_Controller {
 		$serial   = trim((string) $this->input->post('serial_number'));
 		$is_broken = (int) (bool) $this->input->post('is_broken');
 		$is_lost   = (int) (bool) $this->input->post('is_lost');
+		$comment   = trim((string) $this->input->post('comment'));
 
 		$errors = $this->validate_input($model_id, $serial);
 		if ( ! empty($errors))
@@ -78,6 +79,7 @@ class Tokens extends MY_Controller {
 			'serial_number'  => $serial,
 			'is_broken'      => $is_broken,
 			'is_lost'        => $is_lost,
+			'comment'        => $comment,
 		));
 
 		$created = $this->token_m->get($id);
@@ -111,6 +113,7 @@ class Tokens extends MY_Controller {
 		$serial   = trim((string) $this->input->post('serial_number'));
 		$is_broken = (int) (bool) $this->input->post('is_broken');
 		$is_lost   = (int) (bool) $this->input->post('is_lost');
+		$comment   = trim((string) $this->input->post('comment'));
 
 		$errors = $this->validate_input($model_id, $serial, $id);
 		if ( ! empty($errors))
@@ -125,6 +128,7 @@ class Tokens extends MY_Controller {
 			'serial_number'  => $serial,
 			'is_broken'      => $is_broken,
 			'is_lost'        => $is_lost,
+			'comment'        => $comment,
 		);
 
 		$this->token_m->update($id, $after_input);

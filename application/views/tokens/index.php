@@ -16,7 +16,7 @@
             <div class="row no-gutters mb-2">
                 <div class="col-md-9 pr-md-2 mb-2 mb-md-0">
                     <input type="text" class="form-control search-input" id="tokens-search"
-                               placeholder="Поиск по сотруднику, модели, серийному номеру…">
+                               placeholder="Поиск по сотруднику, модели, серийному номеру, комментарию…">
                 </div>
                 <div class="col-md-3">
                     <select class="custom-select" id="tokens-status">
@@ -36,12 +36,13 @@
                             <th data-sort-key="employee_fullname">Сотрудник <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th data-sort-key="model_name">Модель <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th data-sort-key="serial_number">Серийный номер <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th data-sort-key="comment">Комментарий <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th class="status-cell" data-sort-key="status_label">Статус <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th class="actions-cell-header">Действия</th>
                         </tr>
                     </thead>
                     <tbody id="tokens-list">
-                        <tr><td colspan="5" class="empty-cell">Загрузка…</td></tr>
+                        <tr><td colspan="6" class="empty-cell">Загрузка…</td></tr>
                     </tbody>
                 </table>
             </div>

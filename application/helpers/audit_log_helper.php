@@ -74,7 +74,14 @@ if ( ! function_exists('audit_log_token_create_message'))
 				. trim((string) ($token['serial_number'] ?? '')) . '»';
 		}
 
-		return 'Токен (' . $label . ') был создан';
+		$comment_part = '';
+		$comment = trim((string) ($token['comment'] ?? ''));
+		if ($comment !== '')
+		{
+			$comment_part = ', комментарий: «' . $comment . '»';
+		}
+
+		return 'Токен (' . $label . ') был создан' . $comment_part;
 	}
 }
 
@@ -140,6 +147,25 @@ if ( ! function_exists('audit_log_token_update_messages'))
 		{
 			$messages[] = 'У токена с ID ' . $id . ' признак «утерян» был изменён с «'
 				. audit_log_yes_no($old_lost) . '» на «' . audit_log_yes_no($new_lost) . '»';
+		}
+
+		$old_comment = trim((string) ($before['comment'] ?? ''));
+		$new_comment = trim((string) ($after_input['comment'] ?? ''));
+		if ($old_comment !== $new_comment)
+		{
+			if ($old_comment === '' && $new_comment !== '')
+			{
+				$messages[] = 'У токена с ID ' . $id . ' комментарий был установлен: «' . $new_comment . '»';
+			}
+			elseif ($old_comment !== '' && $new_comment === '')
+			{
+				$messages[] = 'У токена с ID ' . $id . ' комментарий «' . $old_comment . '» был удалён';
+			}
+			else
+			{
+				$messages[] = 'У токена с ID ' . $id . ' комментарий был изменён с «' . $old_comment
+					. '» на «' . $new_comment . '»';
+			}
 		}
 
 		if (empty($messages))

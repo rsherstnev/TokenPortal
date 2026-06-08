@@ -32,6 +32,7 @@ CREATE TABLE tokens (
     employee_id     INT           NULL,
     is_broken       TINYINT(1)    NOT NULL DEFAULT 0,
     is_lost         TINYINT(1)    NOT NULL DEFAULT 0,
+    comment         TEXT          NULL,
     created_at      DATETIME      NULL,
     updated_at      DATETIME      NULL,
     deleted_at      DATETIME      NULL,

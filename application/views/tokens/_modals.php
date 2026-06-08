@@ -46,9 +46,13 @@
                             <option value=""></option>
                         </select>
                     </div>
-                    <div class="form-group mb-3">
+                    <div class="form-group">
                         <label class="form-label-required">Серийный номер</label>
                         <input type="text" class="form-control" name="serial_number" placeholder="0123456789" inputmode="numeric" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Комментарий</label>
+                        <textarea class="form-control" name="comment" rows="2" placeholder="Например: выдан по заявке №…"></textarea>
                     </div>
                     <div class="token-flags-section">
                         <div class="token-flags-title">Состояние</div>
