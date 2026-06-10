@@ -184,6 +184,7 @@
             create: false,
             plugins: [],
             dropdownParent: inModal ? 'body' : null,
+            closeAfterSelect: true,
             onFocus: function () {
                 this._prevValue = this.getValue();
                 this.clear(true);
@@ -194,8 +195,19 @@
                 }
                 this._prevValue = undefined;
             },
+            onType: function (str) {
+                if (str && this.items.length) {
+                    this.clear(true);
+                }
+            },
             onItemAdd: function () {
                 this._prevValue = undefined;
+                this.setTextboxValue('');
+                this.close();
+                if (typeof this.inputState === 'function') {
+                    this.inputState();
+                }
+                this.blur();
             },
         }, opts || {}));
     };
@@ -306,7 +318,6 @@
                     handleEscape(self);
                 }, true);
 
-                self.on('type', () => updateClearButton(self));
                 self.on('item_add', () => updateClearButton(self));
                 self.on('clear', () => updateClearButton(self));
 
@@ -336,6 +347,16 @@
                     this.control_input.setAttribute('placeholder', '');
                 }
                 this._prevValue = undefined;
+                updateClearButton(this);
+            },
+            onType: function (str) {
+                if (str && this.items.length) {
+                    this._prevValue = undefined;
+                    this.clear(true);
+                    applyPlaceholder(this, PLACEHOLDER_SEARCH);
+                    this.refreshOptions(false);
+                    this.open();
+                }
                 updateClearButton(this);
             },
             onItemAdd: function () {
