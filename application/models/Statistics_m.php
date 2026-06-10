@@ -15,6 +15,11 @@ class Statistics_m extends CI_Model {
 		return '(SELECT employee_id FROM tokens WHERE '.$active.' AND employee_id IS NOT NULL GROUP BY employee_id HAVING COUNT(*) > 1)';
 	}
 
+	private function has_certificate_select($user_alias = 'u')
+	{
+		return 'EXISTS (SELECT 1 FROM certificates c WHERE c.user_id = '.$user_alias.'.id) AS has_certificate';
+	}
+
 	private function apply_without_token_join()
 	{
 		$this->db->from('token_users u');
@@ -29,7 +34,7 @@ class Statistics_m extends CI_Model {
 
 	public function list_without_token($search = '')
 	{
-		$this->db->select('u.id, u.person_name, u.person_dolj, u.person_department, dj.name AS dolj_name, d.name AS department_name', FALSE);
+		$this->db->select('u.id, u.person_name, u.person_dolj, u.person_department, dj.name AS dolj_name, d.name AS department_name, '.$this->has_certificate_select('u'), FALSE);
 		$this->apply_without_token_join();
 		$this->db->join('dolj dj', 'dj.id = u.person_dolj', 'left');
 		$this->db->join('departments d', 'd.id = u.person_department', 'left');
@@ -47,7 +52,14 @@ class Statistics_m extends CI_Model {
 
 		$this->db->order_by('u.person_name', 'ASC');
 
-		return $this->db->get()->result_array();
+		$rows = $this->db->get()->result_array();
+		foreach ($rows as &$row)
+		{
+			$row['has_certificate'] = ! empty($row['has_certificate']);
+		}
+		unset($row);
+
+		return $rows;
 	}
 
 	public function count_without_token()

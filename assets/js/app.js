@@ -1319,9 +1319,13 @@
                 const deptLabel = (r.department_name && String(r.department_name).trim())
                     ? String(r.department_name).trim()
                     : (r.person_department != null ? String(r.person_department) : '');
+                const nameHtml = App.highlightMatch(r.person_name || '', query);
+                const nameCell = r.has_certificate
+                    ? '<span class="statistics-has-certificate" title="Есть сертификат, нет токена">' + nameHtml + '</span>'
+                    : nameHtml;
                 return ''
                     + '<tr data-id="' + App.escape(r.id) + '">'
-                    +   '<td>' + App.highlightMatch(r.person_name || '', query) + '</td>'
+                    +   '<td>' + nameCell + '</td>'
                     +   '<td>' + App.highlightMatch(deptLabel, query) + '</td>'
                     +   '<td>' + App.highlightMatch(doljLabel, query) + '</td>'
                     + '</tr>';

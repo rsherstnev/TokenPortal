@@ -535,6 +535,14 @@ mark.search-highlight {
     border-radius: 2px;
     font-weight: 500;
 }
+.statistics-has-certificate {
+    color: #fd7e14;
+    font-weight: 600;
+}
+.statistics-has-certificate mark.search-highlight {
+    color: #fd7e14;
+    background-color: rgba(253, 126, 20, 0.2);
+}
 .employee-fired {
     color: #8b0000;
     font-weight: 600;
