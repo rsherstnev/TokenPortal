@@ -3,10 +3,13 @@
 
     const App = window.App = window.App || {};
     const BASE_URL = (window.SKZI_BASE_URL || '/').replace(/\/+$/, '') + '/';
-    // ---- Theme (см. theme.js / SkziTheme, переключатель #themeToggle) --------
+    // ---- Theme (см. theme.js / SkziTheme, меню #themePickerMenu) ------------
     App.theme = {
+        catalog() {
+            return window.SkziTheme ? SkziTheme.CATALOG : [];
+        },
         get() {
-            return window.SkziTheme ? SkziTheme.get() : 'skzi-light';
+            return window.SkziTheme ? SkziTheme.get() : 'theme-sakura';
         },
         set(theme) {
             if (window.SkziTheme) {
@@ -1144,7 +1147,7 @@
             $list: $('#statistics-without-list'),
             $search: $('#statistics-without-search'),
             $count: $('#statistics-without-count'),
-            sortState: { col: 'person_name', dir: 'asc' },
+            sortState: { col: 'person_department', dir: 'asc' },
             lastRows: null,
             lastTotal: null,
             lastQuery: null,

@@ -3,31 +3,7 @@ $active_nav = isset($active_nav) ? $active_nav : '';
 ?><!DOCTYPE html>
 <html lang="ru">
 <head>
-    <script>
-    (function () {
-        var LIGHT = 'skzi-light';
-        var DARK = 'skzi-dark';
-        var LEGACY_LIGHT = { white:1, light:1, green:1, amber:1, wb:1, purple:1, cream:1, blush:1, mist:1, spearmint:1, lilac:1, dune:1, porcelain:1, coral:1, paper:1, sky:1, 'skzi-light':1, 'solarized-light':1 };
-        var ROOT_CLS = 'skzi-light skzi-dark dark light green amber wb purple nord rose-pine github kanagawa white solarized-light cream blush mist spearmint lilac dune porcelain coral paper sky catppuccin tokyonight everforest gruvbox dracula onedark solarized-dark monokai'.split(' ');
-        var raw = localStorage.getItem('skzi-theme') || localStorage.getItem('theme');
-        var theme = LIGHT;
-        if (raw === 'light' || raw === LIGHT) {
-            theme = LIGHT;
-        } else if (raw === 'dark' || raw === DARK) {
-            theme = DARK;
-        } else if (raw && LEGACY_LIGHT[raw]) {
-            theme = LIGHT;
-        } else if (raw) {
-            theme = DARK;
-        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            theme = DARK;
-        }
-        var root = document.documentElement;
-        for (var i = 0; i < ROOT_CLS.length; i++) { root.classList.remove(ROOT_CLS[i]); }
-        root.classList.add(theme);
-        root.setAttribute('data-skzi-tone', theme === LIGHT ? 'light' : 'dark');
-    })();
-    </script>
+    <script src="<?= base_url('assets/js/theme-boot.js') ?>"></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -39,6 +15,7 @@ $active_nav = isset($active_nav) ? $active_nav : '';
     <link rel="stylesheet" href="<?= base_url('assets/vendor/bootstrap-icons/bootstrap-icons.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/vendor/tom-select/tom-select.bootstrap4.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/themes.css') ?>">
     <script>window.SKZI_BASE_URL = '<?= base_url() ?>';</script>
 </head>
 <body>
@@ -68,10 +45,14 @@ $active_nav = isset($active_nav) ? $active_nav : '';
                     </a>
                 </li>
             </ul>
-            <button type="button" class="theme-toggle ml-auto" id="themeToggle" aria-label="Переключить тему" title="Переключить тему">
-                <i class="bi bi-moon-fill" aria-hidden="true"></i>
-                <i class="bi bi-sun-fill" aria-hidden="true"></i>
-            </button>
+            <div class="theme-picker dropdown ml-auto">
+                <button type="button" class="theme-picker-toggle dropdown-toggle" id="themePickerToggle"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        aria-label="Тема оформления" title="Тема оформления">
+                    <i class="bi bi-palette-fill" aria-hidden="true"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right theme-picker-menu" id="themePickerMenu" role="menu" aria-labelledby="themePickerToggle"></div>
+            </div>
         </div>
     </div>
 </nav>

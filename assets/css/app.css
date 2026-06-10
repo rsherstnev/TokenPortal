@@ -1,60 +1,3 @@
-/* Светлая и тёмная тема (класс skzi-light / skzi-dark на html) */
-html.skzi-light {
-    --skzi-bg: #f6f7f9;
-    --skzi-surface: #ffffff;
-    --skzi-surface-muted: #fafbfc;
-    --skzi-surface-hover: #f0f2f5;
-    --skzi-surface-subtle: #f0f1f4;
-    --skzi-border: #e6e9ee;
-    --skzi-border-strong: #ced4da;
-    --skzi-muted: #6c757d;
-    --skzi-text: #21252b;
-    --skzi-text-heading: #21252b;
-    --skzi-navbar-bg: #ffffff;
-    --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-    --skzi-input-bg: #ffffff;
-    --skzi-input-border: #ced4da;
-    --skzi-modal-bg: #ffffff;
-    --skzi-primary: #1aa1b0;
-    --skzi-primary-hover: #168d9b;
-    --skzi-primary-focus-ring: rgba(26, 161, 176, 0.15);
-    --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-    --skzi-highlight-bg: #ffeb3b;
-    --skzi-highlight-text: #21252b;
-    --skzi-scrollbar-thumb: #c2c8d0;
-    --skzi-scrollbar-track: transparent;
-    color-scheme: light;
-}
-
-html.skzi-dark {
-    --skzi-bg: #313338;
-    --skzi-surface: #2b2d31;
-    --skzi-surface-muted: #383a40;
-    --skzi-surface-hover: rgba(79, 84, 92, 0.32);
-    --skzi-surface-subtle: rgba(79, 84, 92, 0.16);
-    --skzi-border: rgba(255, 255, 255, 0.06);
-    --skzi-border-strong: #3f4147;
-    --skzi-muted: #949ba4;
-    --skzi-text: #dbdee1;
-    --skzi-text-heading: #f2f3f5;
-    --skzi-navbar-bg: #1e1f22;
-    --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-    --skzi-input-bg: #1e1f22;
-    --skzi-input-border: #040405;
-    --skzi-modal-bg: #313338;
-    --skzi-primary: #5865f2;
-    --skzi-primary-hover: #4752c4;
-    --skzi-primary-focus-ring: rgba(88, 101, 242, 0.25);
-    --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-    --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-    --skzi-highlight-bg: #fee75c;
-    --skzi-highlight-text: #1e1f22;
-    --skzi-scrollbar-thumb: #1a1b1e;
-    --skzi-scrollbar-track: #2b2d31;
-    color-scheme: dark;
-}
-
 :root {
     --skzi-edit: #f0ad4e;
     --skzi-delete: #dc3545;
@@ -168,8 +111,11 @@ html, body {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28219, 222, 225, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-/* Переключатель светлая / тёмная тема */
-.theme-toggle {
+/* Выбор темы оформления */
+.theme-picker {
+    flex-shrink: 0;
+}
+.theme-picker-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -182,20 +128,79 @@ html, body {
     color: var(--skzi-muted);
     cursor: pointer;
     transition: background 0.15s ease, color 0.15s ease;
-    flex-shrink: 0;
 }
-.theme-toggle:hover {
+.theme-picker-toggle::after {
+    display: none;
+}
+.theme-picker-toggle:hover,
+.theme-picker.show .theme-picker-toggle {
     background: var(--skzi-surface-subtle);
     color: var(--skzi-text);
 }
-.theme-toggle i {
+.theme-picker-toggle i {
     font-size: 1.1rem;
     line-height: 1;
 }
-[data-skzi-tone="dark"] .theme-toggle .bi-sun-fill { display: inline-block; }
-[data-skzi-tone="dark"] .theme-toggle .bi-moon-fill { display: none; }
-.theme-toggle .bi-sun-fill { display: none; }
-.theme-toggle .bi-moon-fill { display: inline-block; }
+.theme-picker-menu {
+    min-width: 12.5rem;
+    max-height: min(70vh, 24rem);
+    overflow-y: auto;
+    padding: 0.35rem 0;
+    background: var(--skzi-modal-bg);
+    border: 1px solid var(--skzi-border);
+    box-shadow: var(--skzi-shadow-strong);
+}
+.theme-picker-menu .dropdown-header {
+    padding: 0.35rem 1rem 0.2rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--skzi-muted);
+}
+.theme-picker-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.45rem 1rem;
+    color: var(--skzi-text);
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+.theme-picker-item:hover,
+.theme-picker-item:focus {
+    background: var(--skzi-surface-hover);
+    color: var(--skzi-text);
+    outline: none;
+}
+.theme-picker-item.active {
+    background: var(--skzi-surface-subtle);
+    font-weight: 600;
+}
+.theme-picker-item.active .theme-picker-label::after {
+    content: '✓';
+    margin-left: 0.45rem;
+    color: var(--skzi-primary);
+    font-weight: 700;
+}
+.theme-picker-swatch {
+    flex-shrink: 0;
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 50%;
+    background: var(--theme-swatch);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+[data-skzi-tone="dark"] .theme-picker-swatch {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+.theme-picker-label {
+    flex: 1;
+    min-width: 0;
+}
 
 .skzi-section {
     background: var(--skzi-surface);

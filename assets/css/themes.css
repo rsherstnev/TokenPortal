@@ -1,844 +1,281 @@
-/* Auto-generated from WebPortal/web/src/index.css */
+/* Палитры оформления приложения */
 
-:root,
-html.dark {
-  --skzi-bg: rgb(32, 34, 37);
-  --skzi-surface: rgb(41, 43, 47);
-  --skzi-surface-muted: rgb(35, 37, 42);
-  --skzi-surface-hover: rgb(47, 49, 54);
-  --skzi-surface-subtle: rgb(54, 57, 62);
-  --skzi-border: rgb(64, 68, 75);
-  --skzi-border-strong: rgb(54, 57, 62);
-  --skzi-muted: rgb(148, 163, 184);
-  --skzi-text: rgb(219, 222, 225);
-  --skzi-text-heading: rgb(242, 243, 245);
-  --skzi-navbar-bg: rgb(32, 34, 37);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: rgb(41, 43, 47);
-  --skzi-input-border: rgb(64, 68, 75);
-  --skzi-modal-bg: rgb(41, 43, 47);
-  --skzi-primary: rgb(0, 150, 184);
-  --skzi-primary-hover: rgb(0, 170, 200);
-  --skzi-primary-focus-ring: rgba(0, 150, 184, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: rgb(254, 231, 92);
-  --skzi-highlight-text: rgb(30, 31, 34);
-  --skzi-scrollbar-thumb: rgb(26, 27, 30);
-  --skzi-scrollbar-track: rgb(41, 43, 47);
-  color-scheme: dark;
-}
-
-html.white {
-  --skzi-bg: rgb(252, 253, 255);
-  --skzi-surface: rgb(248, 250, 252);
-  --skzi-surface-muted: rgb(224, 230, 240);
-  --skzi-surface-hover: rgb(241, 245, 249);
-  --skzi-surface-subtle: rgb(234, 239, 246);
-  --skzi-border: rgb(226, 232, 240);
-  --skzi-border-strong: rgb(234, 239, 246);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(252, 253, 255);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(248, 250, 252);
-  --skzi-input-border: rgb(226, 232, 240);
-  --skzi-modal-bg: rgb(248, 250, 252);
-  --skzi-primary: rgb(0, 150, 184);
-  --skzi-primary-hover: rgb(0, 130, 165);
-  --skzi-primary-focus-ring: rgba(0, 150, 184, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.light {
-  --skzi-bg: rgb(240, 242, 245);
-  --skzi-surface: rgb(232, 234, 237);
-  --skzi-surface-muted: rgb(192, 197, 206);
-  --skzi-surface-hover: rgb(221, 224, 229);
-  --skzi-surface-subtle: rgb(205, 210, 219);
-  --skzi-border: rgb(192, 196, 206);
-  --skzi-border-strong: rgb(205, 210, 219);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(240, 242, 245);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(232, 234, 237);
-  --skzi-input-border: rgb(192, 196, 206);
-  --skzi-modal-bg: rgb(232, 234, 237);
-  --skzi-primary: rgb(0, 150, 184);
-  --skzi-primary-hover: rgb(0, 130, 165);
-  --skzi-primary-focus-ring: rgba(0, 150, 184, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.green {
-  --skzi-bg: rgb(238, 245, 235);
-  --skzi-surface: rgb(230, 240, 222);
-  --skzi-surface-muted: rgb(186, 206, 172);
-  --skzi-surface-hover: rgb(218, 232, 208);
-  --skzi-surface-subtle: rgb(200, 218, 188);
-  --skzi-border: rgb(188, 208, 175);
-  --skzi-border-strong: rgb(200, 218, 188);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(238, 245, 235);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(230, 240, 222);
-  --skzi-input-border: rgb(188, 208, 175);
-  --skzi-modal-bg: rgb(230, 240, 222);
-  --skzi-primary: rgb(61, 122, 79);
-  --skzi-primary-hover: rgb(45, 100, 62);
-  --skzi-primary-focus-ring: rgba(61, 122, 79, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.amber {
-  --skzi-bg: rgb(250, 246, 238);
-  --skzi-surface: rgb(245, 238, 226);
-  --skzi-surface-muted: rgb(216, 198, 175);
-  --skzi-surface-hover: rgb(238, 226, 210);
-  --skzi-surface-subtle: rgb(226, 210, 188);
-  --skzi-border: rgb(212, 195, 172);
-  --skzi-border-strong: rgb(226, 210, 188);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(250, 246, 238);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(245, 238, 226);
-  --skzi-input-border: rgb(212, 195, 172);
-  --skzi-modal-bg: rgb(245, 238, 226);
-  --skzi-primary: rgb(180, 83, 9);
-  --skzi-primary-hover: rgb(146, 64, 14);
-  --skzi-primary-focus-ring: rgba(180, 83, 9, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.wb {
-  --skzi-bg: rgb(250, 243, 249);
-  --skzi-surface: rgb(246, 233, 245);
-  --skzi-surface-muted: rgb(218, 182, 212);
-  --skzi-surface-hover: rgb(240, 218, 238);
-  --skzi-surface-subtle: rgb(230, 198, 226);
-  --skzi-border: rgb(218, 178, 212);
-  --skzi-border-strong: rgb(230, 198, 226);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(250, 243, 249);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(246, 233, 245);
-  --skzi-input-border: rgb(218, 178, 212);
-  --skzi-modal-bg: rgb(246, 233, 245);
-  --skzi-primary: rgb(203, 17, 171);
-  --skzi-primary-hover: rgb(168, 14, 142);
-  --skzi-primary-focus-ring: rgba(203, 17, 171, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.purple {
-  --skzi-bg: rgb(238, 230, 250);
-  --skzi-surface: rgb(230, 219, 245);
-  --skzi-surface-muted: rgb(192, 170, 222);
-  --skzi-surface-hover: rgb(221, 204, 238);
-  --skzi-surface-subtle: rgb(206, 181, 228);
-  --skzi-border: rgb(192, 165, 220);
-  --skzi-border-strong: rgb(206, 181, 228);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(238, 230, 250);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(230, 219, 245);
-  --skzi-input-border: rgb(192, 165, 220);
-  --skzi-modal-bg: rgb(230, 219, 245);
-  --skzi-primary: rgb(124, 58, 237);
-  --skzi-primary-hover: rgb(109, 40, 217);
-  --skzi-primary-focus-ring: rgba(124, 58, 237, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.cream {
-  --skzi-bg: rgb(250, 248, 243);
-  --skzi-surface: rgb(245, 242, 235);
-  --skzi-surface-muted: rgb(210, 200, 185);
-  --skzi-surface-hover: rgb(235, 230, 220);
-  --skzi-surface-subtle: rgb(220, 212, 198);
-  --skzi-border: rgb(200, 190, 175);
-  --skzi-border-strong: rgb(220, 212, 198);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(250, 248, 243);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(245, 242, 235);
-  --skzi-input-border: rgb(200, 190, 175);
-  --skzi-modal-bg: rgb(245, 242, 235);
-  --skzi-primary: rgb(180, 83, 9);
-  --skzi-primary-hover: rgb(154, 52, 18);
-  --skzi-primary-focus-ring: rgba(180, 83, 9, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.blush {
-  --skzi-bg: rgb(253, 242, 248);
-  --skzi-surface: rgb(252, 231, 243);
-  --skzi-surface-muted: rgb(230, 165, 200);
-  --skzi-surface-hover: rgb(251, 207, 232);
-  --skzi-surface-subtle: rgb(244, 173, 208);
-  --skzi-border: rgb(236, 150, 195);
-  --skzi-border-strong: rgb(244, 173, 208);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(253, 242, 248);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(252, 231, 243);
-  --skzi-input-border: rgb(236, 150, 195);
-  --skzi-modal-bg: rgb(252, 231, 243);
-  --skzi-primary: rgb(219, 39, 119);
-  --skzi-primary-hover: rgb(190, 24, 93);
-  --skzi-primary-focus-ring: rgba(219, 39, 119, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.mist {
-  --skzi-bg: rgb(241, 245, 249);
-  --skzi-surface: rgb(226, 232, 240);
-  --skzi-surface-muted: rgb(198, 208, 222);
-  --skzi-surface-hover: rgb(203, 213, 225);
-  --skzi-surface-subtle: rgb(186, 198, 215);
-  --skzi-border: rgb(148, 163, 184);
-  --skzi-border-strong: rgb(186, 198, 215);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(241, 245, 249);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(226, 232, 240);
-  --skzi-input-border: rgb(148, 163, 184);
-  --skzi-modal-bg: rgb(226, 232, 240);
-  --skzi-primary: rgb(3, 105, 161);
-  --skzi-primary-hover: rgb(2, 88, 138);
-  --skzi-primary-focus-ring: rgba(3, 105, 161, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.spearmint {
-  --skzi-bg: rgb(240, 253, 244);
-  --skzi-surface: rgb(220, 252, 231);
-  --skzi-surface-muted: rgb(160, 230, 185);
-  --skzi-surface-hover: rgb(187, 247, 208);
-  --skzi-surface-subtle: rgb(134, 239, 172);
-  --skzi-border: rgb(110, 210, 150);
-  --skzi-border-strong: rgb(134, 239, 172);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(240, 253, 244);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(220, 252, 231);
-  --skzi-input-border: rgb(110, 210, 150);
-  --skzi-modal-bg: rgb(220, 252, 231);
-  --skzi-primary: rgb(5, 150, 105);
-  --skzi-primary-hover: rgb(4, 120, 87);
-  --skzi-primary-focus-ring: rgba(5, 150, 105, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.lilac {
-  --skzi-bg: rgb(250, 245, 255);
-  --skzi-surface: rgb(243, 232, 255);
-  --skzi-surface-muted: rgb(208, 188, 245);
-  --skzi-surface-hover: rgb(233, 213, 255);
-  --skzi-surface-subtle: rgb(216, 180, 254);
-  --skzi-border: rgb(196, 160, 245);
-  --skzi-border-strong: rgb(216, 180, 254);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(250, 245, 255);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(243, 232, 255);
-  --skzi-input-border: rgb(196, 160, 245);
-  --skzi-modal-bg: rgb(243, 232, 255);
-  --skzi-primary: rgb(124, 58, 237);
-  --skzi-primary-hover: rgb(109, 40, 217);
-  --skzi-primary-focus-ring: rgba(124, 58, 237, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.dune {
-  --skzi-bg: rgb(250, 246, 239);
-  --skzi-surface: rgb(242, 235, 223);
-  --skzi-surface-muted: rgb(200, 182, 158);
-  --skzi-surface-hover: rgb(228, 216, 196);
-  --skzi-surface-subtle: rgb(210, 192, 168);
-  --skzi-border: rgb(185, 165, 139);
-  --skzi-border-strong: rgb(210, 192, 168);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(250, 246, 239);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(242, 235, 223);
-  --skzi-input-border: rgb(185, 165, 139);
-  --skzi-modal-bg: rgb(242, 235, 223);
-  --skzi-primary: rgb(161, 98, 7);
-  --skzi-primary-hover: rgb(133, 77, 14);
-  --skzi-primary-focus-ring: rgba(161, 98, 7, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.porcelain {
-  --skzi-bg: rgb(248, 250, 252);
-  --skzi-surface: rgb(241, 245, 249);
-  --skzi-surface-muted: rgb(215, 224, 234);
-  --skzi-surface-hover: rgb(226, 232, 240);
-  --skzi-surface-subtle: rgb(203, 213, 225);
-  --skzi-border: rgb(148, 163, 184);
-  --skzi-border-strong: rgb(203, 213, 225);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(248, 250, 252);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(241, 245, 249);
-  --skzi-input-border: rgb(148, 163, 184);
-  --skzi-modal-bg: rgb(241, 245, 249);
-  --skzi-primary: rgb(14, 116, 144);
-  --skzi-primary-hover: rgb(8, 98, 122);
-  --skzi-primary-focus-ring: rgba(14, 116, 144, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.coral {
-  --skzi-bg: rgb(255, 247, 237);
-  --skzi-surface: rgb(255, 237, 213);
-  --skzi-surface-muted: rgb(245, 200, 150);
-  --skzi-surface-hover: rgb(254, 215, 170);
-  --skzi-surface-subtle: rgb(251, 191, 133);
-  --skzi-border: rgb(248, 171, 100);
-  --skzi-border-strong: rgb(251, 191, 133);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(255, 247, 237);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(255, 237, 213);
-  --skzi-input-border: rgb(248, 171, 100);
-  --skzi-modal-bg: rgb(255, 237, 213);
-  --skzi-primary: rgb(234, 88, 12);
-  --skzi-primary-hover: rgb(194, 65, 12);
-  --skzi-primary-focus-ring: rgba(234, 88, 12, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.paper {
-  --skzi-bg: rgb(252, 251, 249);
-  --skzi-surface: rgb(247, 245, 242);
-  --skzi-surface-muted: rgb(228, 224, 218);
-  --skzi-surface-hover: rgb(237, 234, 229);
-  --skzi-surface-subtle: rgb(224, 220, 214);
-  --skzi-border: rgb(210, 205, 198);
-  --skzi-border-strong: rgb(224, 220, 214);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(252, 251, 249);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(247, 245, 242);
-  --skzi-input-border: rgb(210, 205, 198);
-  --skzi-modal-bg: rgb(247, 245, 242);
-  --skzi-primary: rgb(79, 70, 229);
-  --skzi-primary-hover: rgb(67, 56, 202);
-  --skzi-primary-focus-ring: rgba(79, 70, 229, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.sky {
-  --skzi-bg: rgb(240, 249, 255);
-  --skzi-surface: rgb(224, 242, 254);
-  --skzi-surface-muted: rgb(190, 220, 245);
-  --skzi-surface-hover: rgb(186, 230, 253);
-  --skzi-surface-subtle: rgb(125, 211, 252);
-  --skzi-border: rgb(56, 189, 248);
-  --skzi-border-strong: rgb(125, 211, 252);
-  --skzi-muted: rgb(100, 116, 139);
-  --skzi-text: rgb(30, 41, 59);
-  --skzi-text-heading: rgb(30, 41, 59);
-  --skzi-navbar-bg: rgb(240, 249, 255);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: rgb(224, 242, 254);
-  --skzi-input-border: rgb(56, 189, 248);
-  --skzi-modal-bg: rgb(224, 242, 254);
-  --skzi-primary: rgb(2, 132, 199);
-  --skzi-primary-hover: rgb(3, 105, 161);
-  --skzi-primary-focus-ring: rgba(2, 132, 199, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: rgb(255, 235, 59);
-  --skzi-highlight-text: rgb(33, 37, 41);
-  --skzi-scrollbar-thumb: rgb(194, 200, 208);
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
-}
-
-html.github {
-  --skzi-bg: rgb(13, 17, 23);
-  --skzi-surface: rgb(22, 27, 34);
-  --skzi-surface-muted: rgb(16, 20, 26);
-  --skzi-surface-hover: rgb(33, 38, 45);
-  --skzi-surface-subtle: rgb(48, 54, 61);
-  --skzi-border: rgb(48, 54, 61);
-  --skzi-border-strong: rgb(48, 54, 61);
-  --skzi-muted: rgb(148, 163, 184);
-  --skzi-text: rgb(219, 222, 225);
-  --skzi-text-heading: rgb(242, 243, 245);
-  --skzi-navbar-bg: rgb(13, 17, 23);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: rgb(22, 27, 34);
-  --skzi-input-border: rgb(48, 54, 61);
-  --skzi-modal-bg: rgb(22, 27, 34);
-  --skzi-primary: rgb(88, 166, 255);
-  --skzi-primary-hover: rgb(121, 192, 255);
-  --skzi-primary-focus-ring: rgba(88, 166, 255, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: rgb(254, 231, 92);
-  --skzi-highlight-text: rgb(30, 31, 34);
-  --skzi-scrollbar-thumb: rgb(26, 27, 30);
-  --skzi-scrollbar-track: rgb(22, 27, 34);
-  color-scheme: dark;
-}
-
-html.rose-pine {
-  --skzi-bg: rgb(25, 23, 36);
-  --skzi-surface: rgb(31, 29, 46);
-  --skzi-surface-muted: rgb(27, 25, 39);
-  --skzi-surface-hover: rgb(38, 35, 58);
-  --skzi-surface-subtle: rgb(64, 61, 82);
-  --skzi-border: rgb(64, 61, 82);
-  --skzi-border-strong: rgb(64, 61, 82);
-  --skzi-muted: rgb(148, 163, 184);
-  --skzi-text: rgb(219, 222, 225);
-  --skzi-text-heading: rgb(242, 243, 245);
-  --skzi-navbar-bg: rgb(25, 23, 36);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: rgb(31, 29, 46);
-  --skzi-input-border: rgb(64, 61, 82);
-  --skzi-modal-bg: rgb(31, 29, 46);
-  --skzi-primary: rgb(184, 84, 112);
-  --skzi-primary-hover: rgb(214, 105, 132);
-  --skzi-primary-focus-ring: rgba(184, 84, 112, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: rgb(254, 231, 92);
-  --skzi-highlight-text: rgb(30, 31, 34);
-  --skzi-scrollbar-thumb: rgb(26, 27, 30);
-  --skzi-scrollbar-track: rgb(31, 29, 46);
-  color-scheme: dark;
-}
-
-html.kanagawa {
-  --skzi-bg: rgb(31, 31, 40);
-  --skzi-surface: rgb(42, 42, 55);
-  --skzi-surface-muted: rgb(34, 34, 46);
-  --skzi-surface-hover: rgb(54, 54, 70);
-  --skzi-surface-subtle: rgb(84, 84, 109);
-  --skzi-border: rgb(84, 84, 109);
-  --skzi-border-strong: rgb(84, 84, 109);
-  --skzi-muted: rgb(148, 163, 184);
-  --skzi-text: rgb(219, 222, 225);
-  --skzi-text-heading: rgb(242, 243, 245);
-  --skzi-navbar-bg: rgb(31, 31, 40);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: rgb(42, 42, 55);
-  --skzi-input-border: rgb(84, 84, 109);
-  --skzi-modal-bg: rgb(42, 42, 55);
-  --skzi-primary: rgb(62, 128, 138);
-  --skzi-primary-hover: rgb(82, 158, 172);
-  --skzi-primary-focus-ring: rgba(62, 128, 138, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: rgb(254, 231, 92);
-  --skzi-highlight-text: rgb(30, 31, 34);
-  --skzi-scrollbar-thumb: rgb(26, 27, 30);
-  --skzi-scrollbar-track: rgb(42, 42, 55);
-  color-scheme: dark;
-}
-
-html.catppuccin {
-  --skzi-bg: rgb(30, 30, 46);
-  --skzi-surface: rgb(24, 24, 37);
-  --skzi-surface-muted: rgb(22, 22, 34);
-  --skzi-surface-hover: rgb(49, 50, 68);
-  --skzi-surface-subtle: rgb(69, 71, 90);
-  --skzi-border: rgb(88, 91, 112);
-  --skzi-border-strong: rgb(69, 71, 90);
-  --skzi-muted: rgb(148, 163, 184);
-  --skzi-text: rgb(219, 222, 225);
-  --skzi-text-heading: rgb(242, 243, 245);
-  --skzi-navbar-bg: rgb(30, 30, 46);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: rgb(24, 24, 37);
-  --skzi-input-border: rgb(88, 91, 112);
-  --skzi-modal-bg: rgb(24, 24, 37);
-  --skzi-primary: rgb(137, 180, 250);
-  --skzi-primary-hover: rgb(165, 200, 252);
-  --skzi-primary-focus-ring: rgba(137, 180, 250, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: rgb(254, 231, 92);
-  --skzi-highlight-text: rgb(30, 31, 34);
-  --skzi-scrollbar-thumb: rgb(26, 27, 30);
-  --skzi-scrollbar-track: rgb(24, 24, 37);
-  color-scheme: dark;
-}
-
-html.tokyonight {
-  --skzi-bg: rgb(26, 27, 38);
-  --skzi-surface: rgb(22, 22, 30);
-  --skzi-surface-muted: rgb(20, 21, 30);
-  --skzi-surface-hover: rgb(41, 46, 66);
-  --skzi-surface-subtle: rgb(65, 72, 104);
-  --skzi-border: rgb(65, 72, 104);
-  --skzi-border-strong: rgb(65, 72, 104);
-  --skzi-muted: rgb(148, 163, 184);
-  --skzi-text: rgb(219, 222, 225);
-  --skzi-text-heading: rgb(242, 243, 245);
-  --skzi-navbar-bg: rgb(26, 27, 38);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: rgb(22, 22, 30);
-  --skzi-input-border: rgb(65, 72, 104);
-  --skzi-modal-bg: rgb(22, 22, 30);
-  --skzi-primary: rgb(122, 162, 247);
-  --skzi-primary-hover: rgb(147, 184, 252);
-  --skzi-primary-focus-ring: rgba(122, 162, 247, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: rgb(254, 231, 92);
-  --skzi-highlight-text: rgb(30, 31, 34);
-  --skzi-scrollbar-thumb: rgb(26, 27, 30);
-  --skzi-scrollbar-track: rgb(22, 22, 30);
-  color-scheme: dark;
-}
-
-html.everforest {
-  --skzi-bg: rgb(45, 53, 59);
-  --skzi-surface: rgb(47, 56, 62);
-  --skzi-surface-muted: rgb(40, 48, 52);
-  --skzi-surface-hover: rgb(55, 65, 69);
-  --skzi-surface-subtle: rgb(77, 95, 78);
-  --skzi-border: rgb(95, 110, 96);
-  --skzi-border-strong: rgb(77, 95, 78);
-  --skzi-muted: rgb(148, 163, 184);
-  --skzi-text: rgb(219, 222, 225);
-  --skzi-text-heading: rgb(242, 243, 245);
-  --skzi-navbar-bg: rgb(45, 53, 59);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: rgb(47, 56, 62);
-  --skzi-input-border: rgb(95, 110, 96);
-  --skzi-modal-bg: rgb(47, 56, 62);
-  --skzi-primary: rgb(127, 187, 179);
-  --skzi-primary-hover: rgb(152, 205, 198);
-  --skzi-primary-focus-ring: rgba(127, 187, 179, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: rgb(254, 231, 92);
-  --skzi-highlight-text: rgb(30, 31, 34);
-  --skzi-scrollbar-thumb: rgb(26, 27, 30);
-  --skzi-scrollbar-track: rgb(47, 56, 62);
-  color-scheme: dark;
-}
-
-html.gruvbox {
-  --skzi-bg: rgb(29, 32, 33);
-  --skzi-surface: rgb(40, 40, 40);
-  --skzi-surface-muted: rgb(32, 35, 36);
-  --skzi-surface-hover: rgb(60, 56, 54);
-  --skzi-surface-subtle: rgb(80, 73, 69);
-  --skzi-border: rgb(102, 92, 84);
-  --skzi-border-strong: rgb(80, 73, 69);
-  --skzi-muted: rgb(148, 163, 184);
-  --skzi-text: rgb(219, 222, 225);
-  --skzi-text-heading: rgb(242, 243, 245);
-  --skzi-navbar-bg: rgb(29, 32, 33);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: rgb(40, 40, 40);
-  --skzi-input-border: rgb(102, 92, 84);
-  --skzi-modal-bg: rgb(40, 40, 40);
-  --skzi-primary: rgb(254, 128, 25);
-  --skzi-primary-hover: rgb(250, 155, 60);
-  --skzi-primary-focus-ring: rgba(254, 128, 25, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: rgb(254, 231, 92);
-  --skzi-highlight-text: rgb(30, 31, 34);
-  --skzi-scrollbar-thumb: rgb(26, 27, 30);
-  --skzi-scrollbar-track: rgb(40, 40, 40);
-  color-scheme: dark;
-}
-
-html.dracula {
-  --skzi-bg: rgb(40, 42, 54);
-  --skzi-surface: rgb(33, 34, 44);
-  --skzi-surface-muted: rgb(34, 36, 48);
-  --skzi-surface-hover: rgb(68, 71, 90);
-  --skzi-surface-subtle: rgb(98, 114, 164);
-  --skzi-border: rgb(98, 114, 164);
-  --skzi-border-strong: rgb(98, 114, 164);
-  --skzi-muted: rgb(148, 163, 184);
-  --skzi-text: rgb(219, 222, 225);
-  --skzi-text-heading: rgb(242, 243, 245);
-  --skzi-navbar-bg: rgb(40, 42, 54);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: rgb(33, 34, 44);
-  --skzi-input-border: rgb(98, 114, 164);
-  --skzi-modal-bg: rgb(33, 34, 44);
-  --skzi-primary: rgb(189, 147, 249);
-  --skzi-primary-hover: rgb(210, 175, 252);
-  --skzi-primary-focus-ring: rgba(189, 147, 249, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: rgb(254, 231, 92);
-  --skzi-highlight-text: rgb(30, 31, 34);
-  --skzi-scrollbar-thumb: rgb(26, 27, 30);
-  --skzi-scrollbar-track: rgb(33, 34, 44);
-  color-scheme: dark;
-}
-
-html.onedark {
-  --skzi-bg: rgb(40, 44, 52);
-  --skzi-surface: rgb(33, 37, 43);
-  --skzi-surface-muted: rgb(30, 34, 40);
-  --skzi-surface-hover: rgb(50, 56, 66);
-  --skzi-surface-subtle: rgb(76, 82, 99);
-  --skzi-border: rgb(76, 82, 99);
-  --skzi-border-strong: rgb(76, 82, 99);
-  --skzi-muted: rgb(148, 163, 184);
-  --skzi-text: rgb(219, 222, 225);
-  --skzi-text-heading: rgb(242, 243, 245);
-  --skzi-navbar-bg: rgb(40, 44, 52);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: rgb(33, 37, 43);
-  --skzi-input-border: rgb(76, 82, 99);
-  --skzi-modal-bg: rgb(33, 37, 43);
-  --skzi-primary: rgb(97, 175, 239);
-  --skzi-primary-hover: rgb(130, 195, 252);
-  --skzi-primary-focus-ring: rgba(97, 175, 239, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: rgb(254, 231, 92);
-  --skzi-highlight-text: rgb(30, 31, 34);
-  --skzi-scrollbar-thumb: rgb(26, 27, 30);
-  --skzi-scrollbar-track: rgb(33, 37, 43);
-  color-scheme: dark;
-}
-
-html.monokai {
-  --skzi-bg: rgb(39, 40, 34);
-  --skzi-surface: rgb(46, 46, 40);
-  --skzi-surface-muted: rgb(34, 35, 30);
-  --skzi-surface-hover: rgb(62, 61, 50);
-  --skzi-surface-subtle: rgb(73, 72, 62);
-  --skzi-border: rgb(117, 113, 94);
-  --skzi-border-strong: rgb(73, 72, 62);
-  --skzi-muted: rgb(148, 163, 184);
-  --skzi-text: rgb(219, 222, 225);
-  --skzi-text-heading: rgb(242, 243, 245);
-  --skzi-navbar-bg: rgb(39, 40, 34);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: rgb(46, 46, 40);
-  --skzi-input-border: rgb(117, 113, 94);
-  --skzi-modal-bg: rgb(46, 46, 40);
-  --skzi-primary: rgb(253, 151, 31);
-  --skzi-primary-hover: rgb(255, 175, 70);
-  --skzi-primary-focus-ring: rgba(253, 151, 31, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: rgb(254, 231, 92);
-  --skzi-highlight-text: rgb(30, 31, 34);
-  --skzi-scrollbar-thumb: rgb(26, 27, 30);
-  --skzi-scrollbar-track: rgb(46, 46, 40);
-  color-scheme: dark;
-}
-
-/* Классические темы приложения (до палитр WebPortal) */
 html.skzi-light {
-  --skzi-bg: #f6f7f9;
-  --skzi-surface: #ffffff;
-  --skzi-surface-muted: #fafbfc;
-  --skzi-surface-hover: #f0f2f5;
-  --skzi-surface-subtle: #f0f1f4;
-  --skzi-border: #e6e9ee;
-  --skzi-border-strong: #ced4da;
-  --skzi-muted: #6c757d;
-  --skzi-text: #21252b;
-  --skzi-text-heading: #21252b;
-  --skzi-navbar-bg: #ffffff;
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  --skzi-input-bg: #ffffff;
-  --skzi-input-border: #ced4da;
-  --skzi-modal-bg: #ffffff;
-  --skzi-primary: #1aa1b0;
-  --skzi-primary-hover: #168d9b;
-  --skzi-primary-focus-ring: rgba(26, 161, 176, 0.15);
-  --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --skzi-highlight-bg: #ffeb3b;
-  --skzi-highlight-text: #21252b;
-  --skzi-scrollbar-thumb: #c2c8d0;
-  --skzi-scrollbar-track: transparent;
-  color-scheme: light;
+    --skzi-bg: #f6f7f9;
+    --skzi-surface: #ffffff;
+    --skzi-surface-muted: #fafbfc;
+    --skzi-surface-hover: #f0f2f5;
+    --skzi-surface-subtle: #f0f1f4;
+    --skzi-border: #e6e9ee;
+    --skzi-border-strong: #ced4da;
+    --skzi-muted: #6c757d;
+    --skzi-text: #21252b;
+    --skzi-text-heading: #21252b;
+    --skzi-navbar-bg: #ffffff;
+    --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+    --skzi-input-bg: #ffffff;
+    --skzi-input-border: #ced4da;
+    --skzi-modal-bg: #ffffff;
+    --skzi-primary: #1aa1b0;
+    --skzi-primary-hover: #168d9b;
+    --skzi-primary-focus-ring: rgba(26, 161, 176, 0.15);
+    --skzi-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --skzi-shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.18);
+    --skzi-highlight-bg: #ffeb3b;
+    --skzi-highlight-text: #21252b;
+    --skzi-scrollbar-thumb: #c2c8d0;
+    --skzi-scrollbar-track: transparent;
+    color-scheme: light;
 }
 
 html.skzi-dark {
-  --skzi-bg: #313338;
-  --skzi-surface: #2b2d31;
-  --skzi-surface-muted: #383a40;
-  --skzi-surface-hover: rgba(79, 84, 92, 0.32);
-  --skzi-surface-subtle: rgba(79, 84, 92, 0.16);
-  --skzi-border: rgba(255, 255, 255, 0.06);
-  --skzi-border-strong: #3f4147;
-  --skzi-muted: #949ba4;
-  --skzi-text: #dbdee1;
-  --skzi-text-heading: #f2f3f5;
-  --skzi-navbar-bg: #1e1f22;
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: #1e1f22;
-  --skzi-input-border: #040405;
-  --skzi-modal-bg: #313338;
-  --skzi-primary: #5865f2;
-  --skzi-primary-hover: #4752c4;
-  --skzi-primary-focus-ring: rgba(88, 101, 242, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: #fee75c;
-  --skzi-highlight-text: #1e1f22;
-  --skzi-scrollbar-thumb: #1a1b1e;
-  --skzi-scrollbar-track: #2b2d31;
-  color-scheme: dark;
+    --skzi-bg: #313338;
+    --skzi-surface: #2b2d31;
+    --skzi-surface-muted: #383a40;
+    --skzi-surface-hover: rgba(79, 84, 92, 0.32);
+    --skzi-surface-subtle: rgba(79, 84, 92, 0.16);
+    --skzi-border: rgba(255, 255, 255, 0.06);
+    --skzi-border-strong: #3f4147;
+    --skzi-muted: #949ba4;
+    --skzi-text: #dbdee1;
+    --skzi-text-heading: #f2f3f5;
+    --skzi-navbar-bg: #1e1f22;
+    --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
+    --skzi-input-bg: #1e1f22;
+    --skzi-input-border: #040405;
+    --skzi-modal-bg: #313338;
+    --skzi-primary: #5865f2;
+    --skzi-primary-hover: #4752c4;
+    --skzi-primary-focus-ring: rgba(88, 101, 242, 0.25);
+    --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
+    --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --skzi-highlight-bg: #fee75c;
+    --skzi-highlight-text: #1e1f22;
+    --skzi-scrollbar-thumb: #1a1b1e;
+    --skzi-scrollbar-track: #2b2d31;
+    color-scheme: dark;
 }
 
-html.solarized-dark {
-  --skzi-bg: rgb(0, 43, 54);
-  --skzi-surface: rgb(7, 54, 66);
-  --skzi-surface-muted: rgb(0, 38, 48);
-  --skzi-surface-hover: rgb(0, 54, 68);
-  --skzi-surface-subtle: rgb(88, 110, 117);
-  --skzi-border: rgb(101, 123, 131);
-  --skzi-border-strong: rgb(88, 110, 117);
-  --skzi-muted: rgb(148, 163, 184);
-  --skzi-text: rgb(219, 222, 225);
-  --skzi-text-heading: rgb(242, 243, 245);
-  --skzi-navbar-bg: rgb(0, 43, 54);
-  --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
-  --skzi-input-bg: rgb(7, 54, 66);
-  --skzi-input-border: rgb(101, 123, 131);
-  --skzi-modal-bg: rgb(7, 54, 66);
-  --skzi-primary: rgb(42, 161, 152);
-  --skzi-primary-hover: rgb(62, 188, 178);
-  --skzi-primary-focus-ring: rgba(42, 161, 152, 0.25);
-  --skzi-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-  --skzi-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --skzi-highlight-bg: rgb(254, 231, 92);
-  --skzi-highlight-text: rgb(30, 31, 34);
-  --skzi-scrollbar-thumb: rgb(26, 27, 30);
-  --skzi-scrollbar-track: rgb(7, 54, 66);
-  color-scheme: dark;
+html.theme-sakura {
+    --skzi-bg: #fff5f8;
+    --skzi-surface: #fffbfc;
+    --skzi-surface-muted: #fce8f0;
+    --skzi-surface-hover: #fbd5e5;
+    --skzi-surface-subtle: #fdeaf2;
+    --skzi-border: #f5c4d8;
+    --skzi-border-strong: #eda4c0;
+    --skzi-muted: #9d5c7a;
+    --skzi-text: #4a1535;
+    --skzi-text-heading: #3b0f2a;
+    --skzi-navbar-bg: #fffbfc;
+    --skzi-navbar-shadow: 0 1px 0 rgba(74, 21, 53, 0.05);
+    --skzi-input-bg: #fffbfc;
+    --skzi-input-border: #eda4c0;
+    --skzi-modal-bg: #fffbfc;
+    --skzi-primary: #e84a8a;
+    --skzi-primary-hover: #d63384;
+    --skzi-primary-focus-ring: rgba(232, 74, 138, 0.22);
+    --skzi-shadow: 0 4px 14px rgba(74, 21, 53, 0.07);
+    --skzi-shadow-strong: 0 10px 28px rgba(74, 21, 53, 0.12);
+    --skzi-highlight-bg: #ffc2dd;
+    --skzi-highlight-text: #4a1535;
+    --skzi-scrollbar-thumb: #eda4c0;
+    --skzi-scrollbar-track: transparent;
+    color-scheme: light;
 }
 
+html.theme-linen {
+    --skzi-bg: #faf7f2;
+    --skzi-surface: #fffdf9;
+    --skzi-surface-muted: #f3ede4;
+    --skzi-surface-hover: #ebe3d6;
+    --skzi-surface-subtle: #f0e9de;
+    --skzi-border: #e8dfd0;
+    --skzi-border-strong: #d9cdb8;
+    --skzi-muted: #8b7e6e;
+    --skzi-text: #2c2419;
+    --skzi-text-heading: #2c2419;
+    --skzi-navbar-bg: #fffdf9;
+    --skzi-navbar-shadow: 0 1px 0 rgba(44, 36, 25, 0.05);
+    --skzi-input-bg: #fffdf9;
+    --skzi-input-border: #d9cdb8;
+    --skzi-modal-bg: #fffdf9;
+    --skzi-primary: #c45c26;
+    --skzi-primary-hover: #a84d1f;
+    --skzi-primary-focus-ring: rgba(196, 92, 38, 0.18);
+    --skzi-shadow: 0 4px 14px rgba(44, 36, 25, 0.06);
+    --skzi-shadow-strong: 0 10px 28px rgba(44, 36, 25, 0.11);
+    --skzi-highlight-bg: #fcd34d;
+    --skzi-highlight-text: #2c2419;
+    --skzi-scrollbar-thumb: #d9cdb8;
+    --skzi-scrollbar-track: transparent;
+    color-scheme: light;
+}
+
+html.theme-sage {
+    --skzi-bg: #f4f7f4;
+    --skzi-surface: #fafcfa;
+    --skzi-surface-muted: #e8efe8;
+    --skzi-surface-hover: #d9e6d9;
+    --skzi-surface-subtle: #e3ebe3;
+    --skzi-border: #d0ddd0;
+    --skzi-border-strong: #b8c9b8;
+    --skzi-muted: #5f7360;
+    --skzi-text: #1a2e1c;
+    --skzi-text-heading: #1a2e1c;
+    --skzi-navbar-bg: #fafcfa;
+    --skzi-navbar-shadow: 0 1px 0 rgba(26, 46, 28, 0.05);
+    --skzi-input-bg: #fafcfa;
+    --skzi-input-border: #b8c9b8;
+    --skzi-modal-bg: #fafcfa;
+    --skzi-primary: #2d6a4f;
+    --skzi-primary-hover: #245a42;
+    --skzi-primary-focus-ring: rgba(45, 106, 79, 0.18);
+    --skzi-shadow: 0 4px 14px rgba(26, 46, 28, 0.06);
+    --skzi-shadow-strong: 0 10px 28px rgba(26, 46, 28, 0.1);
+    --skzi-highlight-bg: #fef08a;
+    --skzi-highlight-text: #1a2e1c;
+    --skzi-scrollbar-thumb: #b8c9b8;
+    --skzi-scrollbar-track: transparent;
+    color-scheme: light;
+}
+
+html.theme-frost {
+    --skzi-bg: #f0f4f8;
+    --skzi-surface: #f8fbfd;
+    --skzi-surface-muted: #e4ebf2;
+    --skzi-surface-hover: #d5e0eb;
+    --skzi-surface-subtle: #dce6ef;
+    --skzi-border: #c8d6e3;
+    --skzi-border-strong: #a8bdd0;
+    --skzi-muted: #5c6f82;
+    --skzi-text: #142033;
+    --skzi-text-heading: #142033;
+    --skzi-navbar-bg: #f8fbfd;
+    --skzi-navbar-shadow: 0 1px 0 rgba(20, 32, 51, 0.05);
+    --skzi-input-bg: #f8fbfd;
+    --skzi-input-border: #a8bdd0;
+    --skzi-modal-bg: #f8fbfd;
+    --skzi-primary: #0e7490;
+    --skzi-primary-hover: #0c6378;
+    --skzi-primary-focus-ring: rgba(14, 116, 144, 0.18);
+    --skzi-shadow: 0 4px 14px rgba(20, 32, 51, 0.06);
+    --skzi-shadow-strong: 0 10px 28px rgba(20, 32, 51, 0.11);
+    --skzi-highlight-bg: #a5f3fc;
+    --skzi-highlight-text: #142033;
+    --skzi-scrollbar-thumb: #a8bdd0;
+    --skzi-scrollbar-track: transparent;
+    color-scheme: light;
+}
+
+html.theme-midnight {
+    --skzi-bg: #0f1117;
+    --skzi-surface: #161922;
+    --skzi-surface-muted: #1c1f2b;
+    --skzi-surface-hover: rgba(99, 102, 241, 0.12);
+    --skzi-surface-subtle: rgba(255, 255, 255, 0.04);
+    --skzi-border: rgba(255, 255, 255, 0.08);
+    --skzi-border-strong: #2a2f3d;
+    --skzi-muted: #8b93a7;
+    --skzi-text: #e8eaef;
+    --skzi-text-heading: #f4f5f8;
+    --skzi-navbar-bg: #0c0e14;
+    --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+    --skzi-input-bg: #12151e;
+    --skzi-input-border: #2a2f3d;
+    --skzi-modal-bg: #161922;
+    --skzi-primary: #6366f1;
+    --skzi-primary-hover: #818cf8;
+    --skzi-primary-focus-ring: rgba(99, 102, 241, 0.3);
+    --skzi-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    --skzi-shadow-strong: 0 14px 36px rgba(0, 0, 0, 0.5);
+    --skzi-highlight-bg: #fbbf24;
+    --skzi-highlight-text: #0f1117;
+    --skzi-scrollbar-thumb: #2a2f3d;
+    --skzi-scrollbar-track: #161922;
+    color-scheme: dark;
+}
+
+html.theme-obsidian {
+    --skzi-bg: #141414;
+    --skzi-surface: #1c1c1c;
+    --skzi-surface-muted: #242424;
+    --skzi-surface-hover: rgba(255, 255, 255, 0.06);
+    --skzi-surface-subtle: rgba(255, 255, 255, 0.04);
+    --skzi-border: rgba(255, 255, 255, 0.1);
+    --skzi-border-strong: #333333;
+    --skzi-muted: #9ca3af;
+    --skzi-text: #e5e5e5;
+    --skzi-text-heading: #fafafa;
+    --skzi-navbar-bg: #0f0f0f;
+    --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    --skzi-input-bg: #1a1a1a;
+    --skzi-input-border: #333333;
+    --skzi-modal-bg: #1c1c1c;
+    --skzi-primary: #22d3ee;
+    --skzi-primary-hover: #06b6d4;
+    --skzi-primary-focus-ring: rgba(34, 211, 238, 0.25);
+    --skzi-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    --skzi-shadow-strong: 0 14px 36px rgba(0, 0, 0, 0.55);
+    --skzi-highlight-bg: #fde047;
+    --skzi-highlight-text: #141414;
+    --skzi-scrollbar-thumb: #333333;
+    --skzi-scrollbar-track: #1c1c1c;
+    color-scheme: dark;
+}
+
+html.theme-aurora {
+    --skzi-bg: #0b1220;
+    --skzi-surface: #111a2e;
+    --skzi-surface-muted: #162038;
+    --skzi-surface-hover: rgba(52, 211, 153, 0.1);
+    --skzi-surface-subtle: rgba(255, 255, 255, 0.04);
+    --skzi-border: rgba(94, 234, 212, 0.12);
+    --skzi-border-strong: #1e3a5f;
+    --skzi-muted: #7da3b8;
+    --skzi-text: #d4e8f5;
+    --skzi-text-heading: #ecf8ff;
+    --skzi-navbar-bg: #080e18;
+    --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+    --skzi-input-bg: #0e1628;
+    --skzi-input-border: #1e3a5f;
+    --skzi-modal-bg: #111a2e;
+    --skzi-primary: #34d399;
+    --skzi-primary-hover: #10b981;
+    --skzi-primary-focus-ring: rgba(52, 211, 153, 0.25);
+    --skzi-shadow: 0 8px 20px rgba(0, 0, 0, 0.38);
+    --skzi-shadow-strong: 0 14px 36px rgba(0, 0, 0, 0.52);
+    --skzi-highlight-bg: #67e8f9;
+    --skzi-highlight-text: #0b1220;
+    --skzi-scrollbar-thumb: #1e3a5f;
+    --skzi-scrollbar-track: #111a2e;
+    color-scheme: dark;
+}
+
+html.theme-plum {
+    --skzi-bg: #130f1a;
+    --skzi-surface: #1a1524;
+    --skzi-surface-muted: #221c2e;
+    --skzi-surface-hover: rgba(192, 132, 252, 0.12);
+    --skzi-surface-subtle: rgba(255, 255, 255, 0.04);
+    --skzi-border: rgba(192, 132, 252, 0.15);
+    --skzi-border-strong: #352a45;
+    --skzi-muted: #a394b8;
+    --skzi-text: #e8e0f0;
+    --skzi-text-heading: #f5f0fa;
+    --skzi-navbar-bg: #0f0b14;
+    --skzi-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+    --skzi-input-bg: #16101f;
+    --skzi-input-border: #352a45;
+    --skzi-modal-bg: #1a1524;
+    --skzi-primary: #c084fc;
+    --skzi-primary-hover: #a855f7;
+    --skzi-primary-focus-ring: rgba(192, 132, 252, 0.28);
+    --skzi-shadow: 0 8px 20px rgba(0, 0, 0, 0.38);
+    --skzi-shadow-strong: 0 14px 36px rgba(0, 0, 0, 0.52);
+    --skzi-highlight-bg: #f0abfc;
+    --skzi-highlight-text: #130f1a;
+    --skzi-scrollbar-thumb: #352a45;
+    --skzi-scrollbar-track: #1a1524;
+    color-scheme: dark;
+}
