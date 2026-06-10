@@ -246,6 +246,52 @@ class Token_transfers extends MY_Controller {
 			return;
 		}
 
+		if ($scope === 'transfer')
+		{
+			$comment = trim((string) $this->input->post('comment'));
+			$raw_date = trim((string) $this->input->post('transferred_at'));
+			if ($raw_date === '')
+			{
+				$this->json_error('Укажите дату передачи', 422, array('transferred_at' => 'Укажите дату'));
+				return;
+			}
+
+			$d = DateTime::createFromFormat('Y-m-d', $raw_date);
+			if ( ! $d || $d->format('Y-m-d') !== $raw_date)
+			{
+				$this->json_error('Некорректная дата передачи', 422, array('transferred_at' => 'Укажите корректную дату'));
+				return;
+			}
+
+			$transferred_at = $d->format('Y-m-d') . ' 00:00:00';
+			$old_comment = isset($existing['comment']) ? (string) $existing['comment'] : '';
+			$old_date = isset($existing['transferred_at']) ? (string) $existing['transferred_at'] : '';
+			if ( ! $this->token_transfer_m->update_edit_fields($id, $comment, $transferred_at))
+			{
+				$this->json_error('Не удалось сохранить передачу', 500);
+				return;
+			}
+
+			$row = $this->token_transfer_m->get($id);
+			$token = $this->token_m->get($existing['token_id']);
+			if (trim($old_comment) !== $comment)
+			{
+				$this->audit_log(
+					audit_log_transfer_comment_message($id, $old_comment, $comment, $token ?: array()),
+					array('action' => 'token_transfer.update_comment', 'entity_id' => (int) $id)
+				);
+			}
+			if ($old_date !== $transferred_at)
+			{
+				$this->audit_log(
+					audit_log_transfer_date_message($id, $old_date, $transferred_at, $token ?: array()),
+					array('action' => 'token_transfer.update_date', 'entity_id' => (int) $id)
+				);
+			}
+			$this->json_ok($row, array('message' => 'Передача обновлена'));
+			return;
+		}
+
 		$this->json_error('Нет данных для обновления', 422);
 	}
 

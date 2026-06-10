@@ -1,10 +1,10 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<div class="modal fade skzi-modal" id="transferCommentModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade skzi-modal" id="transferEditModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <form id="transferCommentForm" novalidate autocomplete="off">
+            <form id="transferEditForm" novalidate autocomplete="off">
                 <div class="modal-header">
-                    <h5 class="modal-title">Редактирование комментария</h5>
+                    <h5 class="modal-title">Редактирование передачи</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -13,11 +13,15 @@
                     <input type="hidden" name="id" value="">
                     <div class="form-group">
                         <label>Токен</label>
-                        <div class="form-control bg-light" id="transfer-comment-token" style="user-select: none;">—</div>
+                        <div class="form-control bg-light" id="transfer-edit-token" style="user-select: none;">—</div>
                     </div>
                     <div class="form-group">
                         <label>Передача</label>
-                        <div class="form-control bg-light" id="transfer-comment-route" style="user-select: none;">—</div>
+                        <div class="form-control bg-light" id="transfer-edit-route" style="user-select: none;">—</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Дата передачи</label>
+                        <input type="date" class="form-control" id="transfer-edit-at" name="transferred_at" required>
                     </div>
                     <div class="form-group mb-0">
                         <label>Комментарий</label>

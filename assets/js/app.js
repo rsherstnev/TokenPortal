@@ -666,6 +666,7 @@
             $form[0].reset();
             $form.find('[name="id"]').val('');
             $('#tokenModalTitle').text('Добавление токена');
+            $form.find('[type="submit"]').text('Создать');
             App.clearErrors($form);
             TokenModels.fillSelect($form.find('select[name="token_model_id"]'));
             $('#tokenModal').modal('show');
@@ -677,6 +678,7 @@
                 const $form = $('#tokenForm');
                 $form[0].reset();
                 $('#tokenModalTitle').text('Редактирование токена');
+                $form.find('[type="submit"]').text('Обновить');
                 App.clearErrors($form);
                 $form.find('[name="id"]').val(t.id);
                 $form.find('[name="serial_number"]').val(t.serial_number);
@@ -790,6 +792,7 @@
             $form[0].reset();
             $form.find('[name="id"]').val('');
             $('#tokenModelModalTitle').text('Добавление модели токена');
+            $form.find('[type="submit"]').text('Создать');
             App.clearErrors($form);
             $('#tokenModelModal').modal('show');
         },
@@ -802,6 +805,7 @@
                 $form.find('[name="id"]').val(res.data.id);
                 $form.find('[name="name"]').val(res.data.name);
                 $('#tokenModelModalTitle').text('Редактирование модели токена');
+                $form.find('[type="submit"]').text('Обновить');
                 $('#tokenModelModal').modal('show');
             });
         },
@@ -939,85 +943,18 @@
 })(jQuery);
 
 // =============================================================================
-// Transfer comment edit (transfer history page)
+// Transfer edit (transfer history page)
 // =============================================================================
 (function ($) {
     'use strict';
-    if (!$('#transferCommentForm').length) return;
+    if (!$('#transferEditForm').length) return;
     const App = window.App;
 
-    const TransferComment = {
+    const TransferEdit = {
         _onSaved: null,
 
         init() {
-            $('#transferCommentForm').on('submit', (e) => { e.preventDefault(); this.save(); });
-        },
-
-        formatRoute(tr) {
-            const from = tr.from_fullname && tr.from_fullname.trim() ? tr.from_fullname : 'Склад';
-            const to   = tr.to_fullname && tr.to_fullname.trim()   ? tr.to_fullname   : 'Склад';
-            return from + ' → ' + to + (tr.transferred_at ? ' · ' + App.formatDateOnly(tr.transferred_at) : '');
-        },
-
-        openEdit(id, options) {
-            options = options || {};
-            this._onSaved = options.onSaved || null;
-            App.getJSON('token_transfers/get/' + id).then((res) => {
-                const tr = res.data || {};
-                const $form = $('#transferCommentForm');
-                $form[0].reset();
-                App.clearErrors($form);
-                $form.find('[name="id"]').val(tr.id);
-                $form.find('[name="comment"]').val(tr.comment || '');
-                $('#transfer-comment-token').text(
-                    (tr.model_name || '—') + ' · ' + (tr.serial_number || '—')
-                );
-                $('#transfer-comment-route').text(this.formatRoute(tr));
-                $('#transferCommentModal').modal('show');
-            }).catch((res) => {
-                App.toast((res && res.message) || 'Не удалось загрузить запись', 'error');
-            });
-        },
-
-        save() {
-            const $form = $('#transferCommentForm');
-            const id = $form.find('[name="id"]').val();
-            const payload = {
-                update_scope: 'comment',
-                comment: $form.find('[name="comment"]').val(),
-            };
-            App.postJSON('token_transfers/update/' + id, payload)
-                .then((res) => {
-                    $('#transferCommentModal').modal('hide');
-                    App.toast(res.message || 'Сохранено', 'success');
-                    if (typeof this._onSaved === 'function') {
-                        this._onSaved(res.data);
-                    }
-                })
-                .catch((res) => {
-                    if (res.errors) App.applyErrors($form, res.errors);
-                    App.toast(res.message || 'Не удалось сохранить', 'error');
-                });
-        },
-    };
-
-    window.TransferComment = TransferComment;
-    $(function () { TransferComment.init(); });
-})(jQuery);
-
-// =============================================================================
-// Transfer date edit (transfer history page)
-// =============================================================================
-(function ($) {
-    'use strict';
-    if (!$('#transferDateForm').length) return;
-    const App = window.App;
-
-    const TransferDate = {
-        _onSaved: null,
-
-        init() {
-            $('#transferDateForm').on('submit', (e) => { e.preventDefault(); this.save(); });
+            $('#transferEditForm').on('submit', (e) => { e.preventDefault(); this.save(); });
         },
 
         formatRoute(tr) {
@@ -1031,36 +968,38 @@
             this._onSaved = options.onSaved || null;
             App.getJSON('token_transfers/get/' + id).then((res) => {
                 const tr = res.data || {};
-                const $form = $('#transferDateForm');
+                const $form = $('#transferEditForm');
                 $form[0].reset();
                 App.clearErrors($form);
                 $form.find('[name="id"]').val(tr.id);
-                $('#transfer-date-at').val(App.utcDatetimeToLocalDateInput(tr.transferred_at));
-                $('#transfer-date-token').text(
+                $form.find('[name="comment"]').val(tr.comment || '');
+                $('#transfer-edit-at').val(App.utcDatetimeToLocalDateInput(tr.transferred_at));
+                $('#transfer-edit-token').text(
                     (tr.model_name || '—') + ' · ' + (tr.serial_number || '—')
                 );
-                $('#transfer-date-route').text(this.formatRoute(tr));
-                $('#transferDateModal').modal('show');
+                $('#transfer-edit-route').text(this.formatRoute(tr));
+                $('#transferEditModal').modal('show');
             }).catch((res) => {
                 App.toast((res && res.message) || 'Не удалось загрузить запись', 'error');
             });
         },
 
         save() {
-            const $form = $('#transferDateForm');
+            const $form = $('#transferEditForm');
             const id = $form.find('[name="id"]').val();
-            const transferredAt = $('#transfer-date-at').val();
+            const transferredAt = $('#transfer-edit-at').val();
             if (!transferredAt) {
                 App.toast('Укажите дату передачи', 'error');
                 return;
             }
             const payload = {
-                update_scope: 'transferred_at',
+                update_scope: 'transfer',
                 transferred_at: transferredAt,
+                comment: $form.find('[name="comment"]').val(),
             };
             App.postJSON('token_transfers/update/' + id, payload)
                 .then((res) => {
-                    $('#transferDateModal').modal('hide');
+                    $('#transferEditModal').modal('hide');
                     App.toast(res.message || 'Сохранено', 'success');
                     if (typeof this._onSaved === 'function') {
                         this._onSaved(res.data);
@@ -1073,8 +1012,8 @@
         },
     };
 
-    window.TransferDate = TransferDate;
-    $(function () { TransferDate.init(); });
+    window.TransferEdit = TransferEdit;
+    $(function () { TransferEdit.init(); });
 })(jQuery);
 // =============================================================================
 // Transfer history page logic
@@ -1101,16 +1040,10 @@
             this.$dateFrom.on('change', () => this.refresh());
             this.$dateTo.on('change', () => this.refresh());
             $('#transfer-history-reset-dates').on('click', () => this.resetDates());
-            this.$list.on('click', '.action-edit-transfer-comment', (e) => {
+            this.$list.on('click', '.action-edit-transfer', (e) => {
                 const id = $(e.currentTarget).data('id');
-                if (window.TransferComment) {
-                    window.TransferComment.openEdit(id, { onSaved: () => this.refresh() });
-                }
-            });
-            this.$list.on('click', '.action-edit-transfer-date', (e) => {
-                const id = $(e.currentTarget).data('id');
-                if (window.TransferDate) {
-                    window.TransferDate.openEdit(id, { onSaved: () => this.refresh() });
+                if (window.TransferEdit) {
+                    window.TransferEdit.openEdit(id, { onSaved: () => this.refresh() });
                 }
             });
             this.$list.on('click', '.action-download-transfer-act', (e) => {
@@ -1186,8 +1119,7 @@
                     +   '<td>' + App.escape(App.formatDateOnly(r.transferred_at)) + '</td>'
                     +   '<td>' + comment + '</td>'
                     +   '<td class="actions-cell">'
-                    +     '<button type="button" class="btn-icon edit action-edit-transfer-date" data-id="' + App.escape(r.id) + '" title="Редактировать дату передачи"><i class="bi bi-calendar3"></i></button>'
-                    +     '<button type="button" class="btn-icon edit action-edit-transfer-comment" data-id="' + App.escape(r.id) + '" title="Редактировать комментарий"><i class="bi bi-pencil"></i></button>'
+                    +     '<button type="button" class="btn-icon edit action-edit-transfer" data-id="' + App.escape(r.id) + '" title="Редактировать передачу"><i class="bi bi-pencil"></i></button>'
                     +     '<button type="button" class="btn-icon document action-download-transfer-act" data-id="' + App.escape(r.id) + '" title="Сформировать акт приёма-передачи"><i class="bi bi-file-earmark-text"></i></button>'
                     +   '</td>'
                     + '</tr>';
