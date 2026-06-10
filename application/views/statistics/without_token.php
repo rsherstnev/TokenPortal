@@ -11,19 +11,20 @@
             </div>
             <div class="mb-2">
                 <input type="text" class="form-control search-input" id="statistics-without-search"
-                       placeholder="Поиск по ФИО, должности, отделу…">
+                       placeholder="Поиск по ФИО, отделу, должности…">
             </div>
             <div class="table-responsive">
                 <table class="skzi-table">
                     <thead>
                         <tr>
+                            <th class="statistics-token-indicator-col" data-sort-key="is_token_needed" aria-label="Токен нужен"><i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th data-sort-key="person_name">ФИО <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th data-sort-key="person_department">Отдел <i class="bi bi-arrow-down-up sort-icon"></i></th>
                             <th data-sort-key="person_dolj">Должность <i class="bi bi-arrow-down-up sort-icon"></i></th>
                         </tr>
                     </thead>
                     <tbody id="statistics-without-list">
-                        <tr><td colspan="3" class="empty-cell">Загрузка…</td></tr>
+                        <tr><td colspan="4" class="empty-cell">Загрузка…</td></tr>
                     </tbody>
                 </table>
             </div>

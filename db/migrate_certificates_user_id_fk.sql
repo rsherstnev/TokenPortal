@@ -1,5 +1,6 @@
 -- Приводит certificates.user_id к INT UNSIGNED и добавляет FK на token_users.id.
 -- Для БД, где таблица уже создана со старой схемой (user_id VARCHAR).
+-- Выполняется до migrate_certificates_to_token_certificates.sql.
 -- Использование:
 --   mysql -u USER -p skzi_tokens < db/migrate_certificates_user_id_fk.sql
 

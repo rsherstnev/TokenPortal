@@ -11,7 +11,7 @@
             </div>
             <div class="mb-2">
                 <input type="text" class="form-control search-input" id="statistics-stuck-search"
-                       placeholder="Поиск по ФИО, модели, серийному номеру…">
+                       placeholder="Поиск по ФИО, отделу, должности, модели, серийному номеру…">
             </div>
             <div class="table-responsive">
                 <table class="skzi-table">

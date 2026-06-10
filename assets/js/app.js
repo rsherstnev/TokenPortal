@@ -1259,6 +1259,14 @@
             if (!current) return;
 
             this.initTable(current.key, current.url, current.render);
+            if (section === 'without') {
+                this.without.$list.on('click', '.statistics-token-indicator-btn', (e) => {
+                    e.preventDefault();
+                    const $btn = $(e.currentTarget);
+                    if ($btn.prop('disabled')) return;
+                    this.toggleTokenNeeded($btn.data('id'), $btn);
+                });
+            }
             App.initSearchTabCycle([this[current.key].$search]);
             App.autofocusSearch(this[current.key].$search);
         },
@@ -1276,6 +1284,25 @@
                 }
             });
             this.refreshTable(key, url, renderFn);
+        },
+
+        toggleTokenNeeded(id, $btn) {
+            const block = this.without;
+            const row = (block.lastRows || []).find((r) => String(r.id) === String(id));
+            if (!row) return;
+
+            const newValue = !row.is_token_needed;
+            $btn.prop('disabled', true);
+
+            App.postJSON('employees/update/' + id, { is_token_needed: newValue ? 1 : 0 })
+                .then(() => {
+                    row.is_token_needed = newValue;
+                    this.renderWithoutList(block.lastRows, block.lastTotal, block.lastQuery);
+                })
+                .catch((res) => {
+                    $btn.prop('disabled', false);
+                    App.toast((res && res.message) || 'Не удалось сохранить', 'error');
+                });
         },
 
         refreshTable(key, url, renderFn) {
@@ -1299,6 +1326,7 @@
             block.lastQuery = query;
 
             rows = App.sortRows(rows, block.sortState, function (r, key) {
+                if (key === 'is_token_needed') return r.is_token_needed ? 1 : 0;
                 if (key === 'person_dolj') return (r.dolj_name || '').toLowerCase();
                 if (key === 'person_department') return (r.department_name || '').toLowerCase();
                 return r[key] || '';
@@ -1308,7 +1336,7 @@
             block.$count.text((total != null && n !== total) ? n + ' из ' + total : n);
 
             if (!rows.length) {
-                block.$list.html('<tr><td colspan="3" class="empty-cell">Нет записей</td></tr>');
+                block.$list.html('<tr><td colspan="4" class="empty-cell">Нет записей</td></tr>');
                 return;
             }
 
@@ -1320,11 +1348,18 @@
                     ? String(r.department_name).trim()
                     : (r.person_department != null ? String(r.person_department) : '');
                 const nameHtml = App.highlightMatch(r.person_name || '', query);
+                const indicatorClass = r.is_token_needed ? 'statistics-token-indicator--needed' : 'statistics-token-indicator--not-needed';
+                const indicatorTitle = r.is_token_needed
+                    ? 'Токен нужен — нажмите, чтобы отметить как не нужный'
+                    : 'Токен не нужен — нажмите, чтобы отметить как нужный';
                 const nameCell = r.has_certificate
                     ? '<span class="statistics-has-certificate" title="Есть сертификат, нет токена">' + nameHtml + '</span>'
                     : nameHtml;
                 return ''
                     + '<tr data-id="' + App.escape(r.id) + '">'
+                    +   '<td class="statistics-token-indicator-col">'
+                    +     '<button type="button" class="statistics-token-indicator-btn statistics-token-indicator ' + indicatorClass + '" data-id="' + App.escape(r.id) + '" title="' + App.escape(indicatorTitle) + '" aria-label="' + App.escape(indicatorTitle) + '"></button>'
+                    +   '</td>'
                     +   '<td>' + nameCell + '</td>'
                     +   '<td>' + App.highlightMatch(deptLabel, query) + '</td>'
                     +   '<td>' + App.highlightMatch(doljLabel, query) + '</td>'

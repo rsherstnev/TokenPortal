@@ -1,0 +1,20 @@
+-- Переименовывает таблицу certificates в token_certificates.
+-- Запускать только если в БД ещё есть таблица certificates (старые установки).
+-- Использование:
+--   mysql -u USER -p skzi_tokens < db/migrate_certificates_to_token_certificates.sql
+
+SET NAMES utf8mb4;
+
+USE skzi_tokens;
+
+RENAME TABLE certificates TO token_certificates;
+
+ALTER TABLE token_certificates
+    DROP FOREIGN KEY fk_certificates_user_id;
+
+ALTER TABLE token_certificates
+    RENAME INDEX idx_certificates_user_id TO idx_token_certificates_user_id;
+
+ALTER TABLE token_certificates
+    ADD CONSTRAINT fk_token_certificates_user_id
+        FOREIGN KEY (user_id) REFERENCES token_users (id);

@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS token_users (
     id_printed          DATETIME        NULL,
     not_print           TINYINT(1)      NOT NULL DEFAULT 0,
     is_fired            TINYINT(1)      NOT NULL DEFAULT 0,
+    is_token_needed     TINYINT(1)      NOT NULL DEFAULT 1,
     cr_date             DATETIME        NULL DEFAULT CURRENT_TIMESTAMP,
     updated             DATETIME        NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),

@@ -86,3 +86,6 @@ $route['token_transfers/update/(:any)']       = 'token_transfers/update/$1';
 $route['token_transfers/history/(:any)']      = 'token_transfers/history/$1';
 
 $route['tokens/employee_options']             = 'tokens/employee_options';
+
+$route['employees/get/(:any)']                = 'employees/get/$1';
+$route['employees/update/(:any)']             = 'employees/update/$1';

@@ -535,6 +535,44 @@ mark.search-highlight {
     border-radius: 2px;
     font-weight: 500;
 }
+.skzi-table .statistics-token-indicator-col {
+    width: 2rem;
+    text-align: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+.skzi-table td.statistics-token-indicator-col {
+    text-align: center;
+}
+.statistics-token-indicator-btn.statistics-token-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.statistics-token-indicator-btn.statistics-token-indicator:hover:not(:disabled) {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+}
+.statistics-token-indicator-btn.statistics-token-indicator:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.35);
+}
+.statistics-token-indicator-btn.statistics-token-indicator:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}
+.statistics-token-indicator--needed {
+    background-color: #28a745;
+}
+.statistics-token-indicator--not-needed {
+    background-color: #dc3545;
+}
 .statistics-has-certificate {
     color: #fd7e14;
     font-weight: 600;
