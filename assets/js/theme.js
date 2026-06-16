@@ -3,7 +3,7 @@
 
     var STORAGE_KEY = 'skzi-theme';
     var ALT_KEY = 'theme';
-    var DEFAULT_THEME = 'theme-sakura';
+    var DEFAULT_THEME = 'skzi-light';
     var DEFAULT_DARK_THEME = 'theme-midnight';
 
     var CATALOG = [
@@ -81,9 +81,6 @@
         var saved = readStoredTheme();
         if (saved) {
             return saved;
-        }
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            return DEFAULT_DARK_THEME;
         }
         return DEFAULT_THEME;
     }

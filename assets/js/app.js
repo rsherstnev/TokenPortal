@@ -9,7 +9,7 @@
             return window.SkziTheme ? SkziTheme.CATALOG : [];
         },
         get() {
-            return window.SkziTheme ? SkziTheme.get() : 'theme-sakura';
+            return window.SkziTheme ? SkziTheme.get() : 'skzi-light';
         },
         set(theme) {
             if (window.SkziTheme) {

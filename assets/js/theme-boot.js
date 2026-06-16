@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var DEFAULT_THEME = 'theme-sakura';
+    var DEFAULT_THEME = 'skzi-light';
     var DEFAULT_DARK_THEME = 'theme-midnight';
     var KNOWN = {
         'skzi-light': 1, 'skzi-dark': 1,
@@ -45,9 +45,6 @@
             return DEFAULT_THEME;
         }
         if (raw) {
-            return DEFAULT_DARK_THEME;
-        }
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             return DEFAULT_DARK_THEME;
         }
         return DEFAULT_THEME;
