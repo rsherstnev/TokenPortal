@@ -534,11 +534,11 @@ html, body {
 }
 
 mark.search-highlight {
-    background-color: var(--skzi-highlight-bg);
-    color: var(--skzi-highlight-text);
+    background-color: color-mix(in srgb, var(--skzi-primary) 28%, transparent);
+    color: var(--skzi-primary);
     padding: 0 2px;
     border-radius: 2px;
-    font-weight: 500;
+    font-weight: 600;
 }
 .skzi-table .statistics-token-indicator-col {
     width: 2rem;
@@ -581,10 +581,6 @@ mark.search-highlight {
 .statistics-has-certificate {
     color: #fd7e14;
     font-weight: 600;
-}
-.statistics-has-certificate mark.search-highlight {
-    color: #fd7e14;
-    background-color: rgba(253, 126, 20, 0.2);
 }
 .employee-fired {
     color: #8b0000;
