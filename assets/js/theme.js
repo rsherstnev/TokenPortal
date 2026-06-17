@@ -13,10 +13,30 @@
         { id: 'theme-linen', label: 'Лён', group: 'Светлые', tone: 'light', accent: '#c45c26' },
         { id: 'theme-sage', label: 'Шалфей', group: 'Светлые', tone: 'light', accent: '#2d6a4f' },
         { id: 'theme-frost', label: 'Иней', group: 'Светлые', tone: 'light', accent: '#0e7490' },
+        { id: 'theme-pearl', label: 'Жемчуг', group: 'Светлые', tone: 'light', accent: '#64748b' },
+        { id: 'theme-honey', label: 'Мёд', group: 'Светлые', tone: 'light', accent: '#d97706' },
+        { id: 'theme-lavender', label: 'Лаванда', group: 'Светлые', tone: 'light', accent: '#7c3aed' },
+        { id: 'theme-mint', label: 'Мята', group: 'Светлые', tone: 'light', accent: '#059669' },
+        { id: 'theme-sand', label: 'Песок', group: 'Светлые', tone: 'light', accent: '#b45309' },
+        { id: 'theme-azure', label: 'Лазурь', group: 'Светлые', tone: 'light', accent: '#2563eb' },
+        { id: 'theme-rose', label: 'Роза', group: 'Светлые', tone: 'light', accent: '#e11d48' },
+        { id: 'theme-ivory', label: 'Слоновая кость', group: 'Светлые', tone: 'light', accent: '#a16207' },
+        { id: 'theme-seafoam', label: 'Морская пена', group: 'Светлые', tone: 'light', accent: '#0d9488' },
+        { id: 'theme-apricot', label: 'Абрикос', group: 'Светлые', tone: 'light', accent: '#ea580c' },
         { id: 'theme-midnight', label: 'Полночь', group: 'Тёмные', tone: 'dark', accent: '#6366f1' },
         { id: 'theme-obsidian', label: 'Обсидиан', group: 'Тёмные', tone: 'dark', accent: '#22d3ee' },
         { id: 'theme-aurora', label: 'Аврора', group: 'Тёмные', tone: 'dark', accent: '#34d399' },
         { id: 'theme-plum', label: 'Слива', group: 'Тёмные', tone: 'dark', accent: '#c084fc' },
+        { id: 'theme-graphite', label: 'Графит', group: 'Тёмные', tone: 'dark', accent: '#94a3b8' },
+        { id: 'theme-emerald', label: 'Изумруд', group: 'Тёмные', tone: 'dark', accent: '#10b981' },
+        { id: 'theme-crimson', label: 'Багрянец', group: 'Тёмные', tone: 'dark', accent: '#f43f5e' },
+        { id: 'theme-ocean', label: 'Океан', group: 'Тёмные', tone: 'dark', accent: '#3b82f6' },
+        { id: 'theme-violet', label: 'Фиалка', group: 'Тёмные', tone: 'dark', accent: '#8b5cf6' },
+        { id: 'theme-copper', label: 'Медь', group: 'Тёмные', tone: 'dark', accent: '#f59e0b' },
+        { id: 'theme-slate', label: 'Сланец', group: 'Тёмные', tone: 'dark', accent: '#38bdf8' },
+        { id: 'theme-forest', label: 'Лес', group: 'Тёмные', tone: 'dark', accent: '#4ade80' },
+        { id: 'theme-wine', label: 'Вино', group: 'Тёмные', tone: 'dark', accent: '#fb7185' },
+        { id: 'theme-amberglow', label: 'Янтарь', group: 'Тёмные', tone: 'dark', accent: '#fbbf24' },
     ];
 
     var THEME_IDS = CATALOG.map(function (item) { return item.id; });
@@ -24,7 +44,11 @@
     var LEGACY_ROOT_CLASSES = [
         'skzi-light', 'skzi-dark',
         'theme-sakura', 'theme-dawn', 'theme-linen', 'theme-sage', 'theme-frost',
+        'theme-pearl', 'theme-honey', 'theme-lavender', 'theme-mint', 'theme-sand',
+        'theme-azure', 'theme-rose', 'theme-ivory', 'theme-seafoam', 'theme-apricot',
         'theme-midnight', 'theme-obsidian', 'theme-aurora', 'theme-plum',
+        'theme-graphite', 'theme-emerald', 'theme-crimson', 'theme-ocean', 'theme-violet',
+        'theme-copper', 'theme-slate', 'theme-forest', 'theme-wine', 'theme-amberglow',
         'dark', 'light', 'green', 'amber', 'wb', 'purple', 'nord', 'rose-pine', 'github',
         'kanagawa', 'white', 'solarized-light', 'cream', 'blush', 'mist', 'spearmint',
         'lilac', 'dune', 'porcelain', 'coral', 'paper', 'sky', 'catppuccin', 'tokyonight',
@@ -36,6 +60,8 @@
         mist: 1, spearmint: 1, lilac: 1, dune: 1, porcelain: 1, coral: 1, paper: 1, sky: 1,
         'skzi-light': 1, 'solarized-light': 1,
         'theme-sakura': 1, 'theme-linen': 1, 'theme-sage': 1, 'theme-frost': 1,
+        'theme-pearl': 1, 'theme-honey': 1, 'theme-lavender': 1, 'theme-mint': 1, 'theme-sand': 1,
+        'theme-azure': 1, 'theme-rose': 1, 'theme-ivory': 1, 'theme-seafoam': 1, 'theme-apricot': 1,
     };
 
     var CATALOG_BY_ID = {};
