@@ -115,6 +115,11 @@ class Token_transfers extends MY_Controller {
 				$this->json_error('Пользователь не найден', 422, array('to_employee_id' => 'Пользователь не найден'));
 				return;
 			}
+			if ( ! empty($emp['is_fired']))
+			{
+				$this->json_error('Нельзя передать токен уволенному пользователю', 422, array('to_employee_id' => 'Пользователь уволен'));
+				return;
+			}
 			$to_name = $emp['person_name'];
 		}
 

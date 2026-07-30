@@ -12,6 +12,7 @@ class Employee_m extends CI_Model {
 	{
 		$this->db->select('id, person_name');
 		$this->db->from('token_users');
+		$this->db->where('is_fired', 0);
 		$this->db->order_by('person_name', 'ASC');
 		return $this->db->get()->result_array();
 	}
