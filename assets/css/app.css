@@ -4,7 +4,11 @@
     --skzi-navbar-height: 3.5rem;
     --skzi-main-vertical-spacing: 4.5rem;
     --skzi-section-chrome: 5.5rem;
+    --skzi-filters-height: 3rem;
     --skzi-statistics-subnav-height: 3.25rem;
+    --skzi-page-body-height: calc(
+        100vh - var(--skzi-navbar-height) - var(--skzi-main-vertical-spacing)
+    );
 }
 
 [data-skzi-tone="dark"] {
@@ -306,7 +310,9 @@ html, body {
 }
 
 .skzi-section > .table-responsive {
-    max-height: calc(100vh - 320px);
+    max-height: calc(
+        var(--skzi-page-body-height) - var(--skzi-section-chrome) - var(--skzi-filters-height)
+    );
     overflow: auto;
     scrollbar-gutter: stable;
 }
@@ -334,8 +340,23 @@ html, body {
     width: 100%;
 }
 
-/* Tokens page: main table 80%, models sidebar 20% */
+/* Tokens page: one-screen layout; scroll inside tables; main 80% / models 20% */
 @media (min-width: 992px) {
+    #tokens-page {
+        height: var(--skzi-page-body-height);
+        max-height: var(--skzi-page-body-height);
+        align-items: stretch;
+        overflow: hidden;
+    }
+    #tokens-page > .tokens-page-main,
+    #tokens-page > .tokens-page-side {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0;
+        min-height: 0;
+        max-height: 100%;
+        overflow: hidden;
+    }
     #tokens-page > .tokens-page-main {
         flex: 0 0 80%;
         max-width: 80%;
@@ -343,6 +364,21 @@ html, body {
     #tokens-page > .tokens-page-side {
         flex: 0 0 20%;
         max-width: 20%;
+    }
+    #tokens-page .skzi-section {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        height: 100%;
+        max-height: 100%;
+        overflow: hidden;
+    }
+    #tokens-page .skzi-section > .table-responsive {
+        flex: 1 1 auto;
+        min-height: 0;
+        max-height: none;
+        overflow: auto;
     }
 }
 
